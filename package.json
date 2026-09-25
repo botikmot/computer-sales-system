@@ -1,0 +1,19 @@
+{
+  "name": "computer-sales-system",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Computer Sales and Services Management System",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@11.27.1",
+  "type": "module"
+}
