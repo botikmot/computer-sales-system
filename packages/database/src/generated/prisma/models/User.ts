@@ -222,6 +222,11 @@ export type UserWhereInput = {
   branchId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestListRelationFilter
+  supplierQuotationsCreated?: Prisma.SupplierQuotationListRelationFilter
+  purchaseOrdersCreated?: Prisma.PurchaseOrderListRelationFilter
+  receivingsCreated?: Prisma.ReceivingListRelationFilter
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }
@@ -237,6 +242,11 @@ export type UserOrderByWithRelationInput = {
   branchId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  purchaseRequestsCreated?: Prisma.PurchaseRequestOrderByRelationAggregateInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationOrderByRelationAggregateInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderOrderByRelationAggregateInput
+  receivingsCreated?: Prisma.ReceivingOrderByRelationAggregateInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceOrderByRelationAggregateInput
   branch?: Prisma.BranchOrderByWithRelationInput
   inventoryMovements?: Prisma.InventoryMovementOrderByRelationAggregateInput
 }
@@ -255,6 +265,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   branchId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestListRelationFilter
+  supplierQuotationsCreated?: Prisma.SupplierQuotationListRelationFilter
+  purchaseOrdersCreated?: Prisma.PurchaseOrderListRelationFilter
+  receivingsCreated?: Prisma.ReceivingListRelationFilter
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }, "id" | "username" | "email">
@@ -301,6 +316,11 @@ export type UserCreateInput = {
   status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -316,6 +336,11 @@ export type UserUncheckedCreateInput = {
   branchId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -329,6 +354,11 @@ export type UserUpdateInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -344,6 +374,11 @@ export type UserUncheckedUpdateInput = {
   branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -505,6 +540,86 @@ export type UserUpdateOneWithoutInventoryMovementsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInventoryMovementsInput, Prisma.UserUpdateWithoutInventoryMovementsInput>, Prisma.UserUncheckedUpdateWithoutInventoryMovementsInput>
 }
 
+export type UserCreateNestedOneWithoutPurchaseRequestsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPurchaseRequestsCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseRequestsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchaseRequestsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPurchaseRequestsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPurchaseRequestsCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseRequestsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchaseRequestsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPurchaseRequestsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPurchaseRequestsCreatedInput, Prisma.UserUpdateWithoutPurchaseRequestsCreatedInput>, Prisma.UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutSupplierQuotationsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupplierQuotationsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierQuotationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupplierQuotationsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSupplierQuotationsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupplierQuotationsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierQuotationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupplierQuotationsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutSupplierQuotationsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupplierQuotationsCreatedInput, Prisma.UserUpdateWithoutSupplierQuotationsCreatedInput>, Prisma.UserUncheckedUpdateWithoutSupplierQuotationsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutPurchaseOrdersCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPurchaseOrdersCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseOrdersCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchaseOrdersCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPurchaseOrdersCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPurchaseOrdersCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseOrdersCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchaseOrdersCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPurchaseOrdersCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPurchaseOrdersCreatedInput, Prisma.UserUpdateWithoutPurchaseOrdersCreatedInput>, Prisma.UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutReceivingsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCreatedInput, Prisma.UserUncheckedCreateWithoutReceivingsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivingsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutReceivingsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCreatedInput, Prisma.UserUncheckedCreateWithoutReceivingsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivingsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutReceivingsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivingsCreatedInput, Prisma.UserUpdateWithoutReceivingsCreatedInput>, Prisma.UserUncheckedUpdateWithoutReceivingsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutPurchaseInvoicesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPurchaseInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseInvoicesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchaseInvoicesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPurchaseInvoicesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPurchaseInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseInvoicesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchaseInvoicesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPurchaseInvoicesCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPurchaseInvoicesCreatedInput, Prisma.UserUpdateWithoutPurchaseInvoicesCreatedInput>, Prisma.UserUncheckedUpdateWithoutPurchaseInvoicesCreatedInput>
+}
+
 export type UserCreateWithoutBranchInput = {
   id?: string
   username: string
@@ -515,6 +630,11 @@ export type UserCreateWithoutBranchInput = {
   status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
 
@@ -528,6 +648,11 @@ export type UserUncheckedCreateWithoutBranchInput = {
   status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -583,6 +708,11 @@ export type UserCreateWithoutInventoryMovementsInput = {
   status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
 }
 
@@ -597,6 +727,11 @@ export type UserUncheckedCreateWithoutInventoryMovementsInput = {
   branchId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutInventoryMovementsInput = {
@@ -625,6 +760,11 @@ export type UserUpdateWithoutInventoryMovementsInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
 }
 
@@ -639,6 +779,451 @@ export type UserUncheckedUpdateWithoutInventoryMovementsInput = {
   branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutPurchaseRequestsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPurchaseRequestsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPurchaseRequestsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPurchaseRequestsCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseRequestsCreatedInput>
+}
+
+export type UserUpsertWithoutPurchaseRequestsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPurchaseRequestsCreatedInput, Prisma.UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPurchaseRequestsCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseRequestsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPurchaseRequestsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPurchaseRequestsCreatedInput, Prisma.UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput>
+}
+
+export type UserUpdateWithoutPurchaseRequestsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutSupplierQuotationsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutSupplierQuotationsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutSupplierQuotationsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupplierQuotationsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierQuotationsCreatedInput>
+}
+
+export type UserUpsertWithoutSupplierQuotationsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupplierQuotationsCreatedInput, Prisma.UserUncheckedUpdateWithoutSupplierQuotationsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupplierQuotationsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierQuotationsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupplierQuotationsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupplierQuotationsCreatedInput, Prisma.UserUncheckedUpdateWithoutSupplierQuotationsCreatedInput>
+}
+
+export type UserUpdateWithoutSupplierQuotationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupplierQuotationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutPurchaseOrdersCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPurchaseOrdersCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPurchaseOrdersCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPurchaseOrdersCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseOrdersCreatedInput>
+}
+
+export type UserUpsertWithoutPurchaseOrdersCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPurchaseOrdersCreatedInput, Prisma.UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPurchaseOrdersCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseOrdersCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPurchaseOrdersCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPurchaseOrdersCreatedInput, Prisma.UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput>
+}
+
+export type UserUpdateWithoutPurchaseOrdersCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutReceivingsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutReceivingsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutReceivingsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCreatedInput, Prisma.UserUncheckedCreateWithoutReceivingsCreatedInput>
+}
+
+export type UserUpsertWithoutReceivingsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivingsCreatedInput, Prisma.UserUncheckedUpdateWithoutReceivingsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCreatedInput, Prisma.UserUncheckedCreateWithoutReceivingsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReceivingsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivingsCreatedInput, Prisma.UserUncheckedUpdateWithoutReceivingsCreatedInput>
+}
+
+export type UserUpdateWithoutReceivingsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReceivingsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutPurchaseInvoicesCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPurchaseInvoicesCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPurchaseInvoicesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPurchaseInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseInvoicesCreatedInput>
+}
+
+export type UserUpsertWithoutPurchaseInvoicesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPurchaseInvoicesCreatedInput, Prisma.UserUncheckedUpdateWithoutPurchaseInvoicesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPurchaseInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutPurchaseInvoicesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPurchaseInvoicesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPurchaseInvoicesCreatedInput, Prisma.UserUncheckedUpdateWithoutPurchaseInvoicesCreatedInput>
+}
+
+export type UserUpdateWithoutPurchaseInvoicesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPurchaseInvoicesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyBranchInput = {
@@ -663,6 +1248,11 @@ export type UserUpdateWithoutBranchInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -676,6 +1266,11 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -697,10 +1292,20 @@ export type UserUncheckedUpdateManyWithoutBranchInput = {
  */
 
 export type UserCountOutputType = {
+  purchaseRequestsCreated: number
+  supplierQuotationsCreated: number
+  purchaseOrdersCreated: number
+  receivingsCreated: number
+  purchaseInvoicesCreated: number
   inventoryMovements: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  purchaseRequestsCreated?: boolean | UserCountOutputTypeCountPurchaseRequestsCreatedArgs
+  supplierQuotationsCreated?: boolean | UserCountOutputTypeCountSupplierQuotationsCreatedArgs
+  purchaseOrdersCreated?: boolean | UserCountOutputTypeCountPurchaseOrdersCreatedArgs
+  receivingsCreated?: boolean | UserCountOutputTypeCountReceivingsCreatedArgs
+  purchaseInvoicesCreated?: boolean | UserCountOutputTypeCountPurchaseInvoicesCreatedArgs
   inventoryMovements?: boolean | UserCountOutputTypeCountInventoryMovementsArgs
 }
 
@@ -712,6 +1317,41 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPurchaseRequestsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupplierQuotationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupplierQuotationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPurchaseOrdersCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseOrderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReceivingsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceivingWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPurchaseInvoicesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseInvoiceWhereInput
 }
 
 /**
@@ -733,6 +1373,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   branchId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  purchaseRequestsCreated?: boolean | Prisma.User$purchaseRequestsCreatedArgs<ExtArgs>
+  supplierQuotationsCreated?: boolean | Prisma.User$supplierQuotationsCreatedArgs<ExtArgs>
+  purchaseOrdersCreated?: boolean | Prisma.User$purchaseOrdersCreatedArgs<ExtArgs>
+  receivingsCreated?: boolean | Prisma.User$receivingsCreatedArgs<ExtArgs>
+  purchaseInvoicesCreated?: boolean | Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs>
   branch?: boolean | Prisma.User$branchArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -781,6 +1426,11 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "email" | "fullName" | "passwordHash" | "role" | "status" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  purchaseRequestsCreated?: boolean | Prisma.User$purchaseRequestsCreatedArgs<ExtArgs>
+  supplierQuotationsCreated?: boolean | Prisma.User$supplierQuotationsCreatedArgs<ExtArgs>
+  purchaseOrdersCreated?: boolean | Prisma.User$purchaseOrdersCreatedArgs<ExtArgs>
+  receivingsCreated?: boolean | Prisma.User$receivingsCreatedArgs<ExtArgs>
+  purchaseInvoicesCreated?: boolean | Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs>
   branch?: boolean | Prisma.User$branchArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -795,6 +1445,11 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    purchaseRequestsCreated: Prisma.$PurchaseRequestPayload<ExtArgs>[]
+    supplierQuotationsCreated: Prisma.$SupplierQuotationPayload<ExtArgs>[]
+    purchaseOrdersCreated: Prisma.$PurchaseOrderPayload<ExtArgs>[]
+    receivingsCreated: Prisma.$ReceivingPayload<ExtArgs>[]
+    purchaseInvoicesCreated: Prisma.$PurchaseInvoicePayload<ExtArgs>[]
     branch: Prisma.$BranchPayload<ExtArgs> | null
     inventoryMovements: Prisma.$InventoryMovementPayload<ExtArgs>[]
   }
@@ -1203,6 +1858,11 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  purchaseRequestsCreated<T extends Prisma.User$purchaseRequestsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$purchaseRequestsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supplierQuotationsCreated<T extends Prisma.User$supplierQuotationsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supplierQuotationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseOrdersCreated<T extends Prisma.User$purchaseOrdersCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$purchaseOrdersCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivingsCreated<T extends Prisma.User$receivingsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivingsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseInvoicesCreated<T extends Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   branch<T extends Prisma.User$branchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$branchArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inventoryMovements<T extends Prisma.User$inventoryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inventoryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1642,6 +2302,126 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.purchaseRequestsCreated
+ */
+export type User$purchaseRequestsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseRequest
+   */
+  select?: Prisma.PurchaseRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseRequest
+   */
+  omit?: Prisma.PurchaseRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseRequestInclude<ExtArgs> | null
+  where?: Prisma.PurchaseRequestWhereInput
+  orderBy?: Prisma.PurchaseRequestOrderByWithRelationInput | Prisma.PurchaseRequestOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseRequestScalarFieldEnum | Prisma.PurchaseRequestScalarFieldEnum[]
+}
+
+/**
+ * User.supplierQuotationsCreated
+ */
+export type User$supplierQuotationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupplierQuotation
+   */
+  select?: Prisma.SupplierQuotationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupplierQuotation
+   */
+  omit?: Prisma.SupplierQuotationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupplierQuotationInclude<ExtArgs> | null
+  where?: Prisma.SupplierQuotationWhereInput
+  orderBy?: Prisma.SupplierQuotationOrderByWithRelationInput | Prisma.SupplierQuotationOrderByWithRelationInput[]
+  cursor?: Prisma.SupplierQuotationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupplierQuotationScalarFieldEnum | Prisma.SupplierQuotationScalarFieldEnum[]
+}
+
+/**
+ * User.purchaseOrdersCreated
+ */
+export type User$purchaseOrdersCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseOrder
+   */
+  select?: Prisma.PurchaseOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseOrder
+   */
+  omit?: Prisma.PurchaseOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseOrderInclude<ExtArgs> | null
+  where?: Prisma.PurchaseOrderWhereInput
+  orderBy?: Prisma.PurchaseOrderOrderByWithRelationInput | Prisma.PurchaseOrderOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseOrderScalarFieldEnum | Prisma.PurchaseOrderScalarFieldEnum[]
+}
+
+/**
+ * User.receivingsCreated
+ */
+export type User$receivingsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receiving
+   */
+  select?: Prisma.ReceivingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receiving
+   */
+  omit?: Prisma.ReceivingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceivingInclude<ExtArgs> | null
+  where?: Prisma.ReceivingWhereInput
+  orderBy?: Prisma.ReceivingOrderByWithRelationInput | Prisma.ReceivingOrderByWithRelationInput[]
+  cursor?: Prisma.ReceivingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReceivingScalarFieldEnum | Prisma.ReceivingScalarFieldEnum[]
+}
+
+/**
+ * User.purchaseInvoicesCreated
+ */
+export type User$purchaseInvoicesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseInvoice
+   */
+  select?: Prisma.PurchaseInvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseInvoice
+   */
+  omit?: Prisma.PurchaseInvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseInvoiceInclude<ExtArgs> | null
+  where?: Prisma.PurchaseInvoiceWhereInput
+  orderBy?: Prisma.PurchaseInvoiceOrderByWithRelationInput | Prisma.PurchaseInvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseInvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseInvoiceScalarFieldEnum | Prisma.PurchaseInvoiceScalarFieldEnum[]
 }
 
 /**

@@ -214,6 +214,11 @@ export type BranchWhereInput = {
   isActive?: Prisma.BoolFilter<"Branch"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Branch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Branch"> | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestListRelationFilter
+  supplierQuotations?: Prisma.SupplierQuotationListRelationFilter
+  purchaseOrders?: Prisma.PurchaseOrderListRelationFilter
+  receivings?: Prisma.ReceivingListRelationFilter
+  purchaseInvoices?: Prisma.PurchaseInvoiceListRelationFilter
   users?: Prisma.UserListRelationFilter
   inventoryBalances?: Prisma.InventoryBalanceListRelationFilter
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
@@ -230,6 +235,11 @@ export type BranchOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  purchaseRequests?: Prisma.PurchaseRequestOrderByRelationAggregateInput
+  supplierQuotations?: Prisma.SupplierQuotationOrderByRelationAggregateInput
+  purchaseOrders?: Prisma.PurchaseOrderOrderByRelationAggregateInput
+  receivings?: Prisma.ReceivingOrderByRelationAggregateInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceOrderByRelationAggregateInput
   users?: Prisma.UserOrderByRelationAggregateInput
   inventoryBalances?: Prisma.InventoryBalanceOrderByRelationAggregateInput
   inventoryMovements?: Prisma.InventoryMovementOrderByRelationAggregateInput
@@ -249,6 +259,11 @@ export type BranchWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"Branch"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Branch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Branch"> | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestListRelationFilter
+  supplierQuotations?: Prisma.SupplierQuotationListRelationFilter
+  purchaseOrders?: Prisma.PurchaseOrderListRelationFilter
+  receivings?: Prisma.ReceivingListRelationFilter
+  purchaseInvoices?: Prisma.PurchaseInvoiceListRelationFilter
   users?: Prisma.UserListRelationFilter
   inventoryBalances?: Prisma.InventoryBalanceListRelationFilter
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
@@ -295,6 +310,11 @@ export type BranchCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
   users?: Prisma.UserCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
@@ -311,6 +331,11 @@ export type BranchUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
@@ -327,6 +352,11 @@ export type BranchUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
@@ -343,6 +373,11 @@ export type BranchUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
@@ -505,6 +540,76 @@ export type BranchUpdateOneRequiredWithoutAssembliesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutAssembliesInput, Prisma.BranchUpdateWithoutAssembliesInput>, Prisma.BranchUncheckedUpdateWithoutAssembliesInput>
 }
 
+export type BranchCreateNestedOneWithoutPurchaseRequestsInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseRequestsInput, Prisma.BranchUncheckedCreateWithoutPurchaseRequestsInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutPurchaseRequestsInput
+  connect?: Prisma.BranchWhereUniqueInput
+}
+
+export type BranchUpdateOneRequiredWithoutPurchaseRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseRequestsInput, Prisma.BranchUncheckedCreateWithoutPurchaseRequestsInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutPurchaseRequestsInput
+  upsert?: Prisma.BranchUpsertWithoutPurchaseRequestsInput
+  connect?: Prisma.BranchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutPurchaseRequestsInput, Prisma.BranchUpdateWithoutPurchaseRequestsInput>, Prisma.BranchUncheckedUpdateWithoutPurchaseRequestsInput>
+}
+
+export type BranchCreateNestedOneWithoutSupplierQuotationsInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutSupplierQuotationsInput, Prisma.BranchUncheckedCreateWithoutSupplierQuotationsInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutSupplierQuotationsInput
+  connect?: Prisma.BranchWhereUniqueInput
+}
+
+export type BranchUpdateOneRequiredWithoutSupplierQuotationsNestedInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutSupplierQuotationsInput, Prisma.BranchUncheckedCreateWithoutSupplierQuotationsInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutSupplierQuotationsInput
+  upsert?: Prisma.BranchUpsertWithoutSupplierQuotationsInput
+  connect?: Prisma.BranchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutSupplierQuotationsInput, Prisma.BranchUpdateWithoutSupplierQuotationsInput>, Prisma.BranchUncheckedUpdateWithoutSupplierQuotationsInput>
+}
+
+export type BranchCreateNestedOneWithoutPurchaseOrdersInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseOrdersInput, Prisma.BranchUncheckedCreateWithoutPurchaseOrdersInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutPurchaseOrdersInput
+  connect?: Prisma.BranchWhereUniqueInput
+}
+
+export type BranchUpdateOneRequiredWithoutPurchaseOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseOrdersInput, Prisma.BranchUncheckedCreateWithoutPurchaseOrdersInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutPurchaseOrdersInput
+  upsert?: Prisma.BranchUpsertWithoutPurchaseOrdersInput
+  connect?: Prisma.BranchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutPurchaseOrdersInput, Prisma.BranchUpdateWithoutPurchaseOrdersInput>, Prisma.BranchUncheckedUpdateWithoutPurchaseOrdersInput>
+}
+
+export type BranchCreateNestedOneWithoutReceivingsInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutReceivingsInput, Prisma.BranchUncheckedCreateWithoutReceivingsInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutReceivingsInput
+  connect?: Prisma.BranchWhereUniqueInput
+}
+
+export type BranchUpdateOneRequiredWithoutReceivingsNestedInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutReceivingsInput, Prisma.BranchUncheckedCreateWithoutReceivingsInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutReceivingsInput
+  upsert?: Prisma.BranchUpsertWithoutReceivingsInput
+  connect?: Prisma.BranchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutReceivingsInput, Prisma.BranchUpdateWithoutReceivingsInput>, Prisma.BranchUncheckedUpdateWithoutReceivingsInput>
+}
+
+export type BranchCreateNestedOneWithoutPurchaseInvoicesInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseInvoicesInput, Prisma.BranchUncheckedCreateWithoutPurchaseInvoicesInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutPurchaseInvoicesInput
+  connect?: Prisma.BranchWhereUniqueInput
+}
+
+export type BranchUpdateOneRequiredWithoutPurchaseInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseInvoicesInput, Prisma.BranchUncheckedCreateWithoutPurchaseInvoicesInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutPurchaseInvoicesInput
+  upsert?: Prisma.BranchUpsertWithoutPurchaseInvoicesInput
+  connect?: Prisma.BranchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutPurchaseInvoicesInput, Prisma.BranchUpdateWithoutPurchaseInvoicesInput>, Prisma.BranchUncheckedUpdateWithoutPurchaseInvoicesInput>
+}
+
 export type BranchCreateWithoutUsersInput = {
   id?: string
   code: string
@@ -515,6 +620,11 @@ export type BranchCreateWithoutUsersInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
   assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
@@ -530,6 +640,11 @@ export type BranchUncheckedCreateWithoutUsersInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
   assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
@@ -561,6 +676,11 @@ export type BranchUpdateWithoutUsersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
   assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
@@ -576,6 +696,11 @@ export type BranchUncheckedUpdateWithoutUsersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
   assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
@@ -591,6 +716,11 @@ export type BranchCreateWithoutInventoryBalancesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
   users?: Prisma.UserCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
   assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
@@ -606,6 +736,11 @@ export type BranchUncheckedCreateWithoutInventoryBalancesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
   assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
@@ -637,6 +772,11 @@ export type BranchUpdateWithoutInventoryBalancesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
   assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
@@ -652,6 +792,11 @@ export type BranchUncheckedUpdateWithoutInventoryBalancesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
   assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
@@ -667,6 +812,11 @@ export type BranchCreateWithoutInventoryMovementsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
   users?: Prisma.UserCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
   assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
@@ -682,6 +832,11 @@ export type BranchUncheckedCreateWithoutInventoryMovementsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
   assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
@@ -713,6 +868,11 @@ export type BranchUpdateWithoutInventoryMovementsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
   assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
@@ -728,6 +888,11 @@ export type BranchUncheckedUpdateWithoutInventoryMovementsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
   assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
@@ -743,6 +908,11 @@ export type BranchCreateWithoutAssembliesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
   users?: Prisma.UserCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
@@ -758,6 +928,11 @@ export type BranchUncheckedCreateWithoutAssembliesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
@@ -789,6 +964,11 @@ export type BranchUpdateWithoutAssembliesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
@@ -804,9 +984,494 @@ export type BranchUncheckedUpdateWithoutAssembliesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchCreateWithoutPurchaseRequestsInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
+}
+
+export type BranchUncheckedCreateWithoutPurchaseRequestsInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
+}
+
+export type BranchCreateOrConnectWithoutPurchaseRequestsInput = {
+  where: Prisma.BranchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseRequestsInput, Prisma.BranchUncheckedCreateWithoutPurchaseRequestsInput>
+}
+
+export type BranchUpsertWithoutPurchaseRequestsInput = {
+  update: Prisma.XOR<Prisma.BranchUpdateWithoutPurchaseRequestsInput, Prisma.BranchUncheckedUpdateWithoutPurchaseRequestsInput>
+  create: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseRequestsInput, Prisma.BranchUncheckedCreateWithoutPurchaseRequestsInput>
+  where?: Prisma.BranchWhereInput
+}
+
+export type BranchUpdateToOneWithWhereWithoutPurchaseRequestsInput = {
+  where?: Prisma.BranchWhereInput
+  data: Prisma.XOR<Prisma.BranchUpdateWithoutPurchaseRequestsInput, Prisma.BranchUncheckedUpdateWithoutPurchaseRequestsInput>
+}
+
+export type BranchUpdateWithoutPurchaseRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchUncheckedUpdateWithoutPurchaseRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchCreateWithoutSupplierQuotationsInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
+}
+
+export type BranchUncheckedCreateWithoutSupplierQuotationsInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
+}
+
+export type BranchCreateOrConnectWithoutSupplierQuotationsInput = {
+  where: Prisma.BranchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BranchCreateWithoutSupplierQuotationsInput, Prisma.BranchUncheckedCreateWithoutSupplierQuotationsInput>
+}
+
+export type BranchUpsertWithoutSupplierQuotationsInput = {
+  update: Prisma.XOR<Prisma.BranchUpdateWithoutSupplierQuotationsInput, Prisma.BranchUncheckedUpdateWithoutSupplierQuotationsInput>
+  create: Prisma.XOR<Prisma.BranchCreateWithoutSupplierQuotationsInput, Prisma.BranchUncheckedCreateWithoutSupplierQuotationsInput>
+  where?: Prisma.BranchWhereInput
+}
+
+export type BranchUpdateToOneWithWhereWithoutSupplierQuotationsInput = {
+  where?: Prisma.BranchWhereInput
+  data: Prisma.XOR<Prisma.BranchUpdateWithoutSupplierQuotationsInput, Prisma.BranchUncheckedUpdateWithoutSupplierQuotationsInput>
+}
+
+export type BranchUpdateWithoutSupplierQuotationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchUncheckedUpdateWithoutSupplierQuotationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchCreateWithoutPurchaseOrdersInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
+}
+
+export type BranchUncheckedCreateWithoutPurchaseOrdersInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
+}
+
+export type BranchCreateOrConnectWithoutPurchaseOrdersInput = {
+  where: Prisma.BranchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseOrdersInput, Prisma.BranchUncheckedCreateWithoutPurchaseOrdersInput>
+}
+
+export type BranchUpsertWithoutPurchaseOrdersInput = {
+  update: Prisma.XOR<Prisma.BranchUpdateWithoutPurchaseOrdersInput, Prisma.BranchUncheckedUpdateWithoutPurchaseOrdersInput>
+  create: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseOrdersInput, Prisma.BranchUncheckedCreateWithoutPurchaseOrdersInput>
+  where?: Prisma.BranchWhereInput
+}
+
+export type BranchUpdateToOneWithWhereWithoutPurchaseOrdersInput = {
+  where?: Prisma.BranchWhereInput
+  data: Prisma.XOR<Prisma.BranchUpdateWithoutPurchaseOrdersInput, Prisma.BranchUncheckedUpdateWithoutPurchaseOrdersInput>
+}
+
+export type BranchUpdateWithoutPurchaseOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchUncheckedUpdateWithoutPurchaseOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchCreateWithoutReceivingsInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
+}
+
+export type BranchUncheckedCreateWithoutReceivingsInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
+}
+
+export type BranchCreateOrConnectWithoutReceivingsInput = {
+  where: Prisma.BranchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BranchCreateWithoutReceivingsInput, Prisma.BranchUncheckedCreateWithoutReceivingsInput>
+}
+
+export type BranchUpsertWithoutReceivingsInput = {
+  update: Prisma.XOR<Prisma.BranchUpdateWithoutReceivingsInput, Prisma.BranchUncheckedUpdateWithoutReceivingsInput>
+  create: Prisma.XOR<Prisma.BranchCreateWithoutReceivingsInput, Prisma.BranchUncheckedCreateWithoutReceivingsInput>
+  where?: Prisma.BranchWhereInput
+}
+
+export type BranchUpdateToOneWithWhereWithoutReceivingsInput = {
+  where?: Prisma.BranchWhereInput
+  data: Prisma.XOR<Prisma.BranchUpdateWithoutReceivingsInput, Prisma.BranchUncheckedUpdateWithoutReceivingsInput>
+}
+
+export type BranchUpdateWithoutReceivingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchUncheckedUpdateWithoutReceivingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchCreateWithoutPurchaseInvoicesInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyCreateNestedManyWithoutBranchInput
+}
+
+export type BranchUncheckedCreateWithoutPurchaseInvoicesInput = {
+  id?: string
+  code: string
+  name: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBranchInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutBranchInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutBranchInput
+  receivings?: Prisma.ReceivingUncheckedCreateNestedManyWithoutBranchInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutBranchInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutBranchInput
+  assemblies?: Prisma.AssemblyUncheckedCreateNestedManyWithoutBranchInput
+}
+
+export type BranchCreateOrConnectWithoutPurchaseInvoicesInput = {
+  where: Prisma.BranchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseInvoicesInput, Prisma.BranchUncheckedCreateWithoutPurchaseInvoicesInput>
+}
+
+export type BranchUpsertWithoutPurchaseInvoicesInput = {
+  update: Prisma.XOR<Prisma.BranchUpdateWithoutPurchaseInvoicesInput, Prisma.BranchUncheckedUpdateWithoutPurchaseInvoicesInput>
+  create: Prisma.XOR<Prisma.BranchCreateWithoutPurchaseInvoicesInput, Prisma.BranchUncheckedCreateWithoutPurchaseInvoicesInput>
+  where?: Prisma.BranchWhereInput
+}
+
+export type BranchUpdateToOneWithWhereWithoutPurchaseInvoicesInput = {
+  where?: Prisma.BranchWhereInput
+  data: Prisma.XOR<Prisma.BranchUpdateWithoutPurchaseInvoicesInput, Prisma.BranchUncheckedUpdateWithoutPurchaseInvoicesInput>
+}
+
+export type BranchUpdateWithoutPurchaseInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchUncheckedUpdateWithoutPurchaseInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBranchNestedInput
+  supplierQuotations?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutBranchNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutBranchNestedInput
+  receivings?: Prisma.ReceivingUncheckedUpdateManyWithoutBranchNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutBranchNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutBranchNestedInput
+  assemblies?: Prisma.AssemblyUncheckedUpdateManyWithoutBranchNestedInput
 }
 
 
@@ -815,6 +1480,11 @@ export type BranchUncheckedUpdateWithoutAssembliesInput = {
  */
 
 export type BranchCountOutputType = {
+  purchaseRequests: number
+  supplierQuotations: number
+  purchaseOrders: number
+  receivings: number
+  purchaseInvoices: number
   users: number
   inventoryBalances: number
   inventoryMovements: number
@@ -822,6 +1492,11 @@ export type BranchCountOutputType = {
 }
 
 export type BranchCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  purchaseRequests?: boolean | BranchCountOutputTypeCountPurchaseRequestsArgs
+  supplierQuotations?: boolean | BranchCountOutputTypeCountSupplierQuotationsArgs
+  purchaseOrders?: boolean | BranchCountOutputTypeCountPurchaseOrdersArgs
+  receivings?: boolean | BranchCountOutputTypeCountReceivingsArgs
+  purchaseInvoices?: boolean | BranchCountOutputTypeCountPurchaseInvoicesArgs
   users?: boolean | BranchCountOutputTypeCountUsersArgs
   inventoryBalances?: boolean | BranchCountOutputTypeCountInventoryBalancesArgs
   inventoryMovements?: boolean | BranchCountOutputTypeCountInventoryMovementsArgs
@@ -836,6 +1511,41 @@ export type BranchCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
    * Select specific fields to fetch from the BranchCountOutputType
    */
   select?: Prisma.BranchCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * BranchCountOutputType without action
+ */
+export type BranchCountOutputTypeCountPurchaseRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseRequestWhereInput
+}
+
+/**
+ * BranchCountOutputType without action
+ */
+export type BranchCountOutputTypeCountSupplierQuotationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupplierQuotationWhereInput
+}
+
+/**
+ * BranchCountOutputType without action
+ */
+export type BranchCountOutputTypeCountPurchaseOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseOrderWhereInput
+}
+
+/**
+ * BranchCountOutputType without action
+ */
+export type BranchCountOutputTypeCountReceivingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceivingWhereInput
+}
+
+/**
+ * BranchCountOutputType without action
+ */
+export type BranchCountOutputTypeCountPurchaseInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseInvoiceWhereInput
 }
 
 /**
@@ -877,6 +1587,11 @@ export type BranchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  purchaseRequests?: boolean | Prisma.Branch$purchaseRequestsArgs<ExtArgs>
+  supplierQuotations?: boolean | Prisma.Branch$supplierQuotationsArgs<ExtArgs>
+  purchaseOrders?: boolean | Prisma.Branch$purchaseOrdersArgs<ExtArgs>
+  receivings?: boolean | Prisma.Branch$receivingsArgs<ExtArgs>
+  purchaseInvoices?: boolean | Prisma.Branch$purchaseInvoicesArgs<ExtArgs>
   users?: boolean | Prisma.Branch$usersArgs<ExtArgs>
   inventoryBalances?: boolean | Prisma.Branch$inventoryBalancesArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.Branch$inventoryMovementsArgs<ExtArgs>
@@ -922,6 +1637,11 @@ export type BranchSelectScalar = {
 
 export type BranchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "address" | "phone" | "email" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["branch"]>
 export type BranchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  purchaseRequests?: boolean | Prisma.Branch$purchaseRequestsArgs<ExtArgs>
+  supplierQuotations?: boolean | Prisma.Branch$supplierQuotationsArgs<ExtArgs>
+  purchaseOrders?: boolean | Prisma.Branch$purchaseOrdersArgs<ExtArgs>
+  receivings?: boolean | Prisma.Branch$receivingsArgs<ExtArgs>
+  purchaseInvoices?: boolean | Prisma.Branch$purchaseInvoicesArgs<ExtArgs>
   users?: boolean | Prisma.Branch$usersArgs<ExtArgs>
   inventoryBalances?: boolean | Prisma.Branch$inventoryBalancesArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.Branch$inventoryMovementsArgs<ExtArgs>
@@ -934,6 +1654,11 @@ export type BranchIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type $BranchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Branch"
   objects: {
+    purchaseRequests: Prisma.$PurchaseRequestPayload<ExtArgs>[]
+    supplierQuotations: Prisma.$SupplierQuotationPayload<ExtArgs>[]
+    purchaseOrders: Prisma.$PurchaseOrderPayload<ExtArgs>[]
+    receivings: Prisma.$ReceivingPayload<ExtArgs>[]
+    purchaseInvoices: Prisma.$PurchaseInvoicePayload<ExtArgs>[]
     users: Prisma.$UserPayload<ExtArgs>[]
     inventoryBalances: Prisma.$InventoryBalancePayload<ExtArgs>[]
     inventoryMovements: Prisma.$InventoryMovementPayload<ExtArgs>[]
@@ -1343,6 +2068,11 @@ readonly fields: BranchFieldRefs;
  */
 export interface Prisma__BranchClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  purchaseRequests<T extends Prisma.Branch$purchaseRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$purchaseRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supplierQuotations<T extends Prisma.Branch$supplierQuotationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$supplierQuotationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseOrders<T extends Prisma.Branch$purchaseOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$purchaseOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivings<T extends Prisma.Branch$receivingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$receivingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseInvoices<T extends Prisma.Branch$purchaseInvoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$purchaseInvoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   users<T extends Prisma.Branch$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inventoryBalances<T extends Prisma.Branch$inventoryBalancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$inventoryBalancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inventoryMovements<T extends Prisma.Branch$inventoryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$inventoryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1775,6 +2505,126 @@ export type BranchDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Branches to delete.
    */
   limit?: number
+}
+
+/**
+ * Branch.purchaseRequests
+ */
+export type Branch$purchaseRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseRequest
+   */
+  select?: Prisma.PurchaseRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseRequest
+   */
+  omit?: Prisma.PurchaseRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseRequestInclude<ExtArgs> | null
+  where?: Prisma.PurchaseRequestWhereInput
+  orderBy?: Prisma.PurchaseRequestOrderByWithRelationInput | Prisma.PurchaseRequestOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseRequestScalarFieldEnum | Prisma.PurchaseRequestScalarFieldEnum[]
+}
+
+/**
+ * Branch.supplierQuotations
+ */
+export type Branch$supplierQuotationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupplierQuotation
+   */
+  select?: Prisma.SupplierQuotationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupplierQuotation
+   */
+  omit?: Prisma.SupplierQuotationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupplierQuotationInclude<ExtArgs> | null
+  where?: Prisma.SupplierQuotationWhereInput
+  orderBy?: Prisma.SupplierQuotationOrderByWithRelationInput | Prisma.SupplierQuotationOrderByWithRelationInput[]
+  cursor?: Prisma.SupplierQuotationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupplierQuotationScalarFieldEnum | Prisma.SupplierQuotationScalarFieldEnum[]
+}
+
+/**
+ * Branch.purchaseOrders
+ */
+export type Branch$purchaseOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseOrder
+   */
+  select?: Prisma.PurchaseOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseOrder
+   */
+  omit?: Prisma.PurchaseOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseOrderInclude<ExtArgs> | null
+  where?: Prisma.PurchaseOrderWhereInput
+  orderBy?: Prisma.PurchaseOrderOrderByWithRelationInput | Prisma.PurchaseOrderOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseOrderScalarFieldEnum | Prisma.PurchaseOrderScalarFieldEnum[]
+}
+
+/**
+ * Branch.receivings
+ */
+export type Branch$receivingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receiving
+   */
+  select?: Prisma.ReceivingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receiving
+   */
+  omit?: Prisma.ReceivingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceivingInclude<ExtArgs> | null
+  where?: Prisma.ReceivingWhereInput
+  orderBy?: Prisma.ReceivingOrderByWithRelationInput | Prisma.ReceivingOrderByWithRelationInput[]
+  cursor?: Prisma.ReceivingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReceivingScalarFieldEnum | Prisma.ReceivingScalarFieldEnum[]
+}
+
+/**
+ * Branch.purchaseInvoices
+ */
+export type Branch$purchaseInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseInvoice
+   */
+  select?: Prisma.PurchaseInvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseInvoice
+   */
+  omit?: Prisma.PurchaseInvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseInvoiceInclude<ExtArgs> | null
+  where?: Prisma.PurchaseInvoiceWhereInput
+  orderBy?: Prisma.PurchaseInvoiceOrderByWithRelationInput | Prisma.PurchaseInvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseInvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseInvoiceScalarFieldEnum | Prisma.PurchaseInvoiceScalarFieldEnum[]
 }
 
 /**

@@ -48,3 +48,58 @@ export const AssemblyStatus = {
 } as const
 
 export type AssemblyStatus = (typeof AssemblyStatus)[keyof typeof AssemblyStatus]
+
+
+export const PurchaseRequestStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PurchaseRequestStatus = (typeof PurchaseRequestStatus)[keyof typeof PurchaseRequestStatus]
+
+
+export const SupplierQuotationStatus = {
+  DRAFT: 'DRAFT',
+  RECEIVED: 'RECEIVED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SupplierQuotationStatus = (typeof SupplierQuotationStatus)[keyof typeof SupplierQuotationStatus]
+
+
+export const PurchaseOrderStatus = {
+  DRAFT: 'DRAFT',
+  APPROVED: 'APPROVED',
+  SENT: 'SENT',
+  PARTIALLY_RECEIVED: 'PARTIALLY_RECEIVED',
+  RECEIVED: 'RECEIVED',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PurchaseOrderStatus = (typeof PurchaseOrderStatus)[keyof typeof PurchaseOrderStatus]
+
+
+export const ReceivingStatus = {
+  DRAFT: 'DRAFT',
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ReceivingStatus = (typeof ReceivingStatus)[keyof typeof ReceivingStatus]
+
+
+export const PurchaseInvoiceStatus = {
+  DRAFT: 'DRAFT',
+  POSTED: 'POSTED',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PurchaseInvoiceStatus = (typeof PurchaseInvoiceStatus)[keyof typeof PurchaseInvoiceStatus]

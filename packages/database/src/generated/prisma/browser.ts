@@ -77,3 +77,53 @@ export type Assembly = Prisma.AssemblyModel
  * 
  */
 export type AssemblyComponent = Prisma.AssemblyComponentModel
+/**
+ * Model PurchaseRequest
+ * 
+ */
+export type PurchaseRequest = Prisma.PurchaseRequestModel
+/**
+ * Model PurchaseRequestItem
+ * 
+ */
+export type PurchaseRequestItem = Prisma.PurchaseRequestItemModel
+/**
+ * Model SupplierQuotation
+ * 
+ */
+export type SupplierQuotation = Prisma.SupplierQuotationModel
+/**
+ * Model SupplierQuotationItem
+ * 
+ */
+export type SupplierQuotationItem = Prisma.SupplierQuotationItemModel
+/**
+ * Model PurchaseOrder
+ * 
+ */
+export type PurchaseOrder = Prisma.PurchaseOrderModel
+/**
+ * Model PurchaseOrderItem
+ * 
+ */
+export type PurchaseOrderItem = Prisma.PurchaseOrderItemModel
+/**
+ * Model Receiving
+ * 
+ */
+export type Receiving = Prisma.ReceivingModel
+/**
+ * Model ReceivingItem
+ * 
+ */
+export type ReceivingItem = Prisma.ReceivingItemModel
+/**
+ * Model PurchaseInvoice
+ * 
+ */
+export type PurchaseInvoice = Prisma.PurchaseInvoiceModel
+/**
+ * Model PurchaseInvoiceItem
+ * 
+ */
+export type PurchaseInvoiceItem = Prisma.PurchaseInvoiceItemModel
