@@ -17,15 +17,20 @@
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "studio": "prisma studio",
-    "validate": "prisma validate"
+    "validate": "prisma validate",
+    "seed": "prisma db seed"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@prisma/adapter-pg": "7.10.0",
     "@types/node": "^26.6.2",
+    "@types/pg": "^8.23.1",
+    "pg": "^8.23.0",
     "prisma": "7.10.0",
+    "tsx": "^4.23.15",
     "typescript": "6.0.3"
   },
   "dependencies": {
