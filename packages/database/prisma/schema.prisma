@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  SALES
+  PURCHASING
+  INVENTORY
+  TECHNICIAN
+  CASHIER
+}
+
+enum InventoryMovementType {
+  PURCHASE_RECEIPT
+  SALE_OUT
+  REPAIR_ISSUE
+  ASSEMBLY_CONSUMPTION
+  ASSEMBLY_OUTPUT
+  ADJUSTMENT
+}
+
+enum AssemblyStatus {
+  COMPLETED
+  CANCELLED
+}
+
+model Branch {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users              User[]
+  inventoryBalances  InventoryBalance[]
+  inventoryMovements InventoryMovement[]
+  assemblies         Assembly[]
+
+  @@index([isActive])
+}
+
+model User {
+  id           String     @id @default(uuid())
+  username     String     @unique
+  email        String?    @unique
+  fullName     String
+  passwordHash String
+  role         UserRole   @default(SALES)
+  status       UserStatus @default(ACTIVE)
+
+  branchId String?
+  branch   Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  inventoryMovements InventoryMovement[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([status])
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  code          String   @unique
+  name          String
+  contactNumber String?
+  email         String?
+  address       String?
+  taxId         String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([name])
+  @@index([isActive])
+}
+
+model Supplier {
+  id            String   @id @default(uuid())
+  code          String   @unique
+  name          String
+  contactPerson String?
+  contactNumber String?
+  email         String?
+  address       String?
+  taxId         String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([name])
+  @@index([isActive])
+}
+
+model ProductCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  id                  String   @id @default(uuid())
+  sku                 String   @unique
+  name                String
+  description         String?
+  brand               String?
+  model               String?
+  unit                String   @default("pcs")
+
+  defaultSellingPrice Decimal? @db.Decimal(12, 2)
+  defaultCostPrice    Decimal? @db.Decimal(12, 2)
+
+  isActive       Boolean @default(true)
+  trackInventory Boolean @default(true)
+
+  categoryId String?
+  category   ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  inventoryBalances InventoryBalance[]
+  inventoryMovements InventoryMovement[]
+
+  finishedBom      BillOfMaterial? @relation("BOMFinishedProduct")
+  bomComponents    BillOfMaterialItem[] @relation("BOMComponent")
+
+  assemblyOutputs  Assembly[]          @relation("AssemblyFinishedProduct")
+  assemblyComponents AssemblyComponent[] @relation("AssemblyComponentProduct")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([brand])
+  @@index([categoryId])
+  @@index([isActive])
+}
+
+model InventoryBalance {
+  id        String   @id @default(uuid())
+  branchId  String
+  productId String
+  quantity  Int      @default(0)
+
+  branch  Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([branchId, productId])
+  @@index([productId])
+}
+
+model InventoryMovement {
+  id              String                  @id @default(uuid())
+  branchId        String
+  productId       String
+  type            InventoryMovementType
+  quantityChange  Int
+  balanceAfter    Int
+  referenceType   String?
+  referenceId     String?
+  notes           String?
+
+  branch  Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdById String?
+  createdBy   User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  assemblyId String?
+  assembly   Assembly? @relation("AssemblyInventoryMovement", fields: [assemblyId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([branchId, productId])
+  @@index([type])
+  @@index([referenceType, referenceId])
+  @@index([assemblyId])
+  @@index([createdAt])
+}
+
+model BillOfMaterial {
+  id        String   @id @default(uuid())
+  productId String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+
+  product Product @relation("BOMFinishedProduct", fields: [productId], references: [id], onDelete: Cascade)
+
+  items     BillOfMaterialItem[]
+  assemblies Assembly[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BillOfMaterialItem {
+  id              String @id @default(uuid())
+  billOfMaterialId String
+  componentProductId String
+  quantity         Int
+
+  billOfMaterial BillOfMaterial @relation(fields: [billOfMaterialId], references: [id], onDelete: Cascade)
+
+  componentProduct Product @relation("BOMComponent", fields: [componentProductId], references: [id], onDelete: Restrict)
+
+  @@unique([billOfMaterialId, componentProductId])
+  @@index([componentProductId])
+}
+
+model Assembly {
+  id               String         @id @default(uuid())
+  branchId         String
+  billOfMaterialId String
+  finishedProductId String
+
+  quantityProduced Int
+  status           AssemblyStatus @default(COMPLETED)
+
+  notes String?
+
+  branch         Branch        @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  billOfMaterial BillOfMaterial @relation(fields: [billOfMaterialId], references: [id], onDelete: Restrict)
+
+  finishedProduct Product @relation("AssemblyFinishedProduct", fields: [finishedProductId], references: [id], onDelete: Restrict)
+
+  components AssemblyComponent[]
+
+  inventoryMovements InventoryMovement[] @relation("AssemblyInventoryMovement")
+
+  createdAt DateTime @default(now())
+
+  @@index([branchId])
+  @@index([finishedProductId])
+  @@index([billOfMaterialId])
+  @@index([createdAt])
+}
+
+model AssemblyComponent {
+  id                String @id @default(uuid())
+  assemblyId        String
+  componentProductId String
+  quantityConsumed   Int
+
+  assembly Assembly @relation(fields: [assemblyId], references: [id], onDelete: Cascade)
+
+  componentProduct Product @relation("AssemblyComponentProduct", fields: [componentProductId], references: [id], onDelete: Restrict)
+
+  @@unique([assemblyId, componentProductId])
+  @@index([componentProductId])
+}
