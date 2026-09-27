@@ -107,6 +107,7 @@ enum CashBankAccountType {
 
 enum CashBankTransactionType {
   SUPPLIER_PAYMENT
+  CUSTOMER_PAYMENT
 }
 
 enum CashBankTransactionDirection {
@@ -114,26 +115,93 @@ enum CashBankTransactionDirection {
   OUT
 }
 
+enum SalesInquiryStatus {
+  OPEN
+  QUOTED
+  CONVERTED
+  CANCELLED
+}
+
+enum SalesQuotationStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  CONVERTED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+enum SalesOrderStatus {
+  CONFIRMED
+  RESERVED
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum SalesOrderDeliveryMode {
+  DELIVERY
+  CUSTOMER_PICKUP
+}
+
+enum InventoryReservationStatus {
+  RESERVED
+  RELEASED
+  CONSUMED
+  CANCELLED
+}
+
+enum SalesInvoiceStatus {
+  DRAFT
+  POSTED
+  CANCELLED
+}
+
+enum SalesPaymentMode {
+  CASH
+  CREDIT
+}
+
+enum CustomerPaymentStatus {
+  POSTED
+  CANCELLED
+}
+
+enum AccountsReceivableStatus {
+  OPEN
+  PARTIALLY_PAID
+  PAID
+  CANCELLED
+}
+
 model Branch {
-  id                   String                @id @default(uuid())
-  code                 String                @unique
-  name                 String
-  address              String?
-  phone                String?
-  email                String?
-  isActive             Boolean               @default(true)
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  purchaseRequests     PurchaseRequest[]
-  supplierQuotations   SupplierQuotation[]
-  purchaseOrders       PurchaseOrder[]
-  receivings           Receiving[]
-  purchaseInvoices     PurchaseInvoice[]
-  accountsPayables     AccountsPayable[]
-  supplierPayments     SupplierPayment[]
-  cashBankTransactions CashBankTransaction[]
-  cashBankAccounts     CashBankAccount[]
-  paymentVouchers      PaymentVoucher[]
+  id                    String                 @id @default(uuid())
+  code                  String                 @unique
+  name                  String
+  address               String?
+  phone                 String?
+  email                 String?
+  isActive              Boolean                @default(true)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  purchaseRequests      PurchaseRequest[]
+  supplierQuotations    SupplierQuotation[]
+  purchaseOrders        PurchaseOrder[]
+  receivings            Receiving[]
+  purchaseInvoices      PurchaseInvoice[]
+  accountsPayables      AccountsPayable[]
+  supplierPayments      SupplierPayment[]
+  cashBankTransactions  CashBankTransaction[]
+  cashBankAccounts      CashBankAccount[]
+  paymentVouchers       PaymentVoucher[]
+  salesInquiries        SalesInquiry[]
+  salesQuotations       SalesQuotation[]
+  salesOrders           SalesOrder[]
+  inventoryReservations InventoryReservation[]
+  salesInvoices         SalesInvoice[]
+  customerPayments      CustomerPayment[]
+  accountsReceivables   AccountsReceivable[]
 
   users              User[]
   inventoryBalances  InventoryBalance[]
@@ -161,6 +229,12 @@ model User {
   supplierPaymentsCreated     SupplierPayment[]     @relation("SupplierPaymentsCreated")
   cashBankTransactionsCreated CashBankTransaction[] @relation("CashBankTransactionsCreated")
   paymentVouchersCreated      PaymentVoucher[]      @relation("PaymentVouchersCreated")
+  salesInquiriesCreated       SalesInquiry[]        @relation("SalesInquiriesCreated")
+  salesQuotationsCreated      SalesQuotation[]      @relation("SalesQuotationsCreated")
+  salesOrdersCreated          SalesOrder[]          @relation("SalesOrdersCreated")
+  salesInvoicesCreated        SalesInvoice[]        @relation("SalesInvoicesCreated")
+  customerPaymentsCreated     CustomerPayment[]     @relation("CustomerPaymentsCreated")
+  accountsReceivablesCreated  AccountsReceivable[]  @relation("AccountsReceivablesCreated")
 
   branchId String?
   branch   Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
@@ -175,16 +249,22 @@ model User {
 }
 
 model Customer {
-  id            String   @id @default(uuid())
-  code          String   @unique
-  name          String
-  contactNumber String?
-  email         String?
-  address       String?
-  taxId         String?
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                  String               @id @default(uuid())
+  code                String               @unique
+  name                String
+  contactNumber       String?
+  email               String?
+  address             String?
+  taxId               String?
+  isActive            Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  salesInquiries      SalesInquiry[]
+  salesQuotations     SalesQuotation[]
+  salesOrders         SalesOrder[]
+  salesInvoices       SalesInvoice[]
+  customerPayments    CustomerPayment[]
+  accountsReceivables AccountsReceivable[]
 
   @@index([name])
   @@index([isActive])
@@ -241,6 +321,11 @@ model Product {
   purchaseOrderItems     PurchaseOrderItem[]
   receivingItems         ReceivingItem[]
   purchaseInvoiceItems   PurchaseInvoiceItem[]
+  salesInquiryItems      SalesInquiryItem[]
+  salesQuotationItems    SalesQuotationItem[]
+  salesOrderItems        SalesOrderItem[]
+  inventoryReservations  InventoryReservation[]
+  salesInvoiceItems      SalesInvoiceItem[]
 
   categoryId String?
   category   ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
@@ -753,7 +838,8 @@ model CashBankTransaction {
   id String @id @default(uuid())
 
   branchId          String
-  supplierPaymentId String @unique
+  supplierPaymentId String? @unique
+  customerPaymentId String? @unique
 
   accountId String
 
@@ -773,7 +859,8 @@ model CashBankTransaction {
 
   account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
 
-  supplierPayment SupplierPayment @relation(fields: [supplierPaymentId], references: [id], onDelete: Restrict)
+  supplierPayment SupplierPayment? @relation(fields: [supplierPaymentId], references: [id], onDelete: Restrict)
+  customerPayment CustomerPayment? @relation(fields: [customerPaymentId], references: [id], onDelete: Restrict)
 
   createdById String?
   createdBy   User?   @relation("CashBankTransactionsCreated", fields: [createdById], references: [id], onDelete: SetNull)
@@ -805,6 +892,7 @@ model CashBankAccount {
 
   supplierPayments SupplierPayment[]
   transactions     CashBankTransaction[]
+  customerPayments CustomerPayment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -841,4 +929,361 @@ model PaymentVoucher {
   @@index([branchId])
   @@index([voucherDate])
   @@index([payeeName])
+}
+
+model SalesInquiry {
+  id String @id @default(uuid())
+
+  inquiryNo String @unique
+
+  branchId   String
+  customerId String
+
+  status SalesInquiryStatus @default(OPEN)
+
+  inquiryDate DateTime @default(now())
+
+  notes String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  items SalesInquiryItem[]
+
+  createdById String?
+  createdBy   User?   @relation("SalesInquiriesCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  quotations SalesQuotation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([status])
+  @@index([inquiryDate])
+}
+
+model SalesInquiryItem {
+  id String @id @default(uuid())
+
+  salesInquiryId String
+  productId      String
+
+  quantity Int
+
+  notes String?
+
+  salesInquiry SalesInquiry @relation(fields: [salesInquiryId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([salesInquiryId])
+  @@index([productId])
+}
+
+model SalesQuotation {
+  id String @id @default(uuid())
+
+  quotationNo String @unique
+
+  branchId   String
+  customerId String
+  inquiryId  String
+
+  status SalesQuotationStatus @default(DRAFT)
+
+  quotationDate DateTime  @default(now())
+  validUntil    DateTime?
+
+  subtotal Decimal @db.Decimal(12, 2)
+  discount Decimal @default(0) @db.Decimal(12, 2)
+  tax      Decimal @default(0) @db.Decimal(12, 2)
+  total    Decimal @db.Decimal(12, 2)
+
+  notes String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  inquiry SalesInquiry @relation(fields: [inquiryId], references: [id], onDelete: Restrict)
+
+  items      SalesQuotationItem[]
+  salesOrder SalesOrder?
+
+  createdById String?
+  createdBy   User?   @relation("SalesQuotationsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([inquiryId])
+  @@index([status])
+  @@index([quotationDate])
+}
+
+model SalesQuotationItem {
+  id String @id @default(uuid())
+
+  salesQuotationId String
+  productId        String
+
+  quantity  Int
+  unitPrice Decimal @db.Decimal(12, 2)
+  subtotal  Decimal @db.Decimal(12, 2)
+
+  salesQuotation SalesQuotation @relation(fields: [salesQuotationId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([salesQuotationId])
+  @@index([productId])
+}
+
+model SalesOrder {
+  id String @id @default(uuid())
+
+  orderNo String @unique
+
+  branchId    String
+  customerId  String
+  quotationId String @unique
+
+  status SalesOrderStatus @default(CONFIRMED)
+
+  orderDate DateTime @default(now())
+
+  deliveryMode SalesOrderDeliveryMode?
+  deliveryDate DateTime?
+
+  subtotal Decimal @db.Decimal(12, 2)
+  discount Decimal @default(0) @db.Decimal(12, 2)
+  tax      Decimal @default(0) @db.Decimal(12, 2)
+  total    Decimal @db.Decimal(12, 2)
+
+  notes String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  quotation SalesQuotation @relation(fields: [quotationId], references: [id], onDelete: Restrict)
+
+  items                 SalesOrderItem[]
+  inventoryReservations InventoryReservation[]
+  salesInvoice          SalesInvoice?
+
+  createdById String?
+  createdBy   User?   @relation("SalesOrdersCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([status])
+  @@index([orderDate])
+}
+
+model SalesOrderItem {
+  id String @id @default(uuid())
+
+  salesOrderId String
+  productId    String
+
+  quantity Int
+
+  unitPrice Decimal @db.Decimal(12, 2)
+  subtotal  Decimal @db.Decimal(12, 2)
+
+  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  inventoryReservation InventoryReservation?
+
+  @@index([salesOrderId])
+  @@index([productId])
+}
+
+model InventoryReservation {
+  id String @id @default(uuid())
+
+  branchId String
+
+  salesOrderId     String
+  salesOrderItemId String @unique
+  productId        String
+
+  quantity Int
+
+  status InventoryReservationStatus @default(RESERVED)
+
+  reservedAt DateTime  @default(now())
+  releasedAt DateTime?
+  consumedAt DateTime?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Restrict)
+
+  salesOrderItem SalesOrderItem @relation(fields: [salesOrderItemId], references: [id], onDelete: Restrict)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([salesOrderId])
+  @@index([productId])
+  @@index([status])
+}
+
+model SalesInvoice {
+  id String @id @default(uuid())
+
+  invoiceNo String @unique
+
+  branchId     String
+  customerId   String
+  salesOrderId String @unique
+
+  status      SalesInvoiceStatus @default(DRAFT)
+  paymentMode SalesPaymentMode
+
+  invoiceDate DateTime  @default(now())
+  dueDate     DateTime?
+
+  subtotal Decimal @db.Decimal(12, 2)
+  discount Decimal @default(0) @db.Decimal(12, 2)
+  tax      Decimal @default(0) @db.Decimal(12, 2)
+  total    Decimal @db.Decimal(12, 2)
+
+  amountPaid Decimal @default(0) @db.Decimal(12, 2)
+  balanceDue Decimal @db.Decimal(12, 2)
+
+  notes String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Restrict)
+
+  items              SalesInvoiceItem[]
+  customerPayments   CustomerPayment[]
+  accountsReceivable AccountsReceivable?
+
+  createdById String?
+  createdBy   User?   @relation("SalesInvoicesCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([status])
+  @@index([paymentMode])
+  @@index([invoiceDate])
+  @@index([dueDate])
+}
+
+model SalesInvoiceItem {
+  id String @id @default(uuid())
+
+  salesInvoiceId String
+  productId      String
+
+  quantity Int
+
+  unitPrice Decimal @db.Decimal(12, 2)
+  subtotal  Decimal @db.Decimal(12, 2)
+
+  salesInvoice SalesInvoice @relation(fields: [salesInvoiceId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([salesInvoiceId])
+  @@index([productId])
+}
+
+model CustomerPayment {
+  id String @id @default(uuid())
+
+  paymentNo String @unique
+
+  branchId       String
+  customerId     String
+  salesInvoiceId String
+  accountId      String
+
+  amount Decimal @db.Decimal(12, 2)
+
+  paymentDate DateTime @default(now())
+  referenceNo String?
+  notes       String?
+
+  status CustomerPaymentStatus @default(POSTED)
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  salesInvoice SalesInvoice @relation(fields: [salesInvoiceId], references: [id], onDelete: Restrict)
+
+  account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  cashBankTransaction CashBankTransaction?
+
+  createdById String?
+  createdBy   User?   @relation("CustomerPaymentsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([salesInvoiceId])
+  @@index([accountId])
+  @@index([paymentDate])
+  @@index([status])
+}
+
+model AccountsReceivable {
+  id             String @id @default(uuid())
+  branchId       String
+  customerId     String
+  salesInvoiceId String @unique
+
+  originalAmount Decimal @db.Decimal(12, 2)
+  amountPaid     Decimal @default(0) @db.Decimal(12, 2)
+  balanceDue     Decimal @db.Decimal(12, 2)
+
+  status AccountsReceivableStatus @default(OPEN)
+
+  dueDate DateTime?
+  notes   String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  salesInvoice SalesInvoice @relation(fields: [salesInvoiceId], references: [id], onDelete: Restrict)
+
+  createdById String?
+  createdBy   User?   @relation("AccountsReceivablesCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([createdAt])
 }

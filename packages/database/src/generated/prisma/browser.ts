@@ -152,3 +152,58 @@ export type CashBankAccount = Prisma.CashBankAccountModel
  * 
  */
 export type PaymentVoucher = Prisma.PaymentVoucherModel
+/**
+ * Model SalesInquiry
+ * 
+ */
+export type SalesInquiry = Prisma.SalesInquiryModel
+/**
+ * Model SalesInquiryItem
+ * 
+ */
+export type SalesInquiryItem = Prisma.SalesInquiryItemModel
+/**
+ * Model SalesQuotation
+ * 
+ */
+export type SalesQuotation = Prisma.SalesQuotationModel
+/**
+ * Model SalesQuotationItem
+ * 
+ */
+export type SalesQuotationItem = Prisma.SalesQuotationItemModel
+/**
+ * Model SalesOrder
+ * 
+ */
+export type SalesOrder = Prisma.SalesOrderModel
+/**
+ * Model SalesOrderItem
+ * 
+ */
+export type SalesOrderItem = Prisma.SalesOrderItemModel
+/**
+ * Model InventoryReservation
+ * 
+ */
+export type InventoryReservation = Prisma.InventoryReservationModel
+/**
+ * Model SalesInvoice
+ * 
+ */
+export type SalesInvoice = Prisma.SalesInvoiceModel
+/**
+ * Model SalesInvoiceItem
+ * 
+ */
+export type SalesInvoiceItem = Prisma.SalesInvoiceItemModel
+/**
+ * Model CustomerPayment
+ * 
+ */
+export type CustomerPayment = Prisma.CustomerPaymentModel
+/**
+ * Model AccountsReceivable
+ * 
+ */
+export type AccountsReceivable = Prisma.AccountsReceivableModel

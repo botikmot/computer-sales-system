@@ -603,6 +603,11 @@ export type SupplierPaymentSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
 }
 
+export type SupplierPaymentNullableScalarRelationFilter = {
+  is?: Prisma.SupplierPaymentWhereInput | null
+  isNot?: Prisma.SupplierPaymentWhereInput | null
+}
+
 export type SupplierPaymentScalarRelationFilter = {
   is?: Prisma.SupplierPaymentWhereInput
   isNot?: Prisma.SupplierPaymentWhereInput
@@ -790,10 +795,12 @@ export type SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput = {
   connect?: Prisma.SupplierPaymentWhereUniqueInput
 }
 
-export type SupplierPaymentUpdateOneRequiredWithoutCashBankTransactionNestedInput = {
+export type SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput = {
   create?: Prisma.XOR<Prisma.SupplierPaymentCreateWithoutCashBankTransactionInput, Prisma.SupplierPaymentUncheckedCreateWithoutCashBankTransactionInput>
   connectOrCreate?: Prisma.SupplierPaymentCreateOrConnectWithoutCashBankTransactionInput
   upsert?: Prisma.SupplierPaymentUpsertWithoutCashBankTransactionInput
+  disconnect?: Prisma.SupplierPaymentWhereInput | boolean
+  delete?: Prisma.SupplierPaymentWhereInput | boolean
   connect?: Prisma.SupplierPaymentWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.SupplierPaymentUpdateToOneWithWhereWithoutCashBankTransactionInput, Prisma.SupplierPaymentUpdateWithoutCashBankTransactionInput>, Prisma.SupplierPaymentUncheckedUpdateWithoutCashBankTransactionInput>
 }

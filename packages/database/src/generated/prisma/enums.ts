@@ -150,7 +150,8 @@ export type CashBankAccountType = (typeof CashBankAccountType)[keyof typeof Cash
 
 
 export const CashBankTransactionType = {
-  SUPPLIER_PAYMENT: 'SUPPLIER_PAYMENT'
+  SUPPLIER_PAYMENT: 'SUPPLIER_PAYMENT',
+  CUSTOMER_PAYMENT: 'CUSTOMER_PAYMENT'
 } as const
 
 export type CashBankTransactionType = (typeof CashBankTransactionType)[keyof typeof CashBankTransactionType]
@@ -162,3 +163,90 @@ export const CashBankTransactionDirection = {
 } as const
 
 export type CashBankTransactionDirection = (typeof CashBankTransactionDirection)[keyof typeof CashBankTransactionDirection]
+
+
+export const SalesInquiryStatus = {
+  OPEN: 'OPEN',
+  QUOTED: 'QUOTED',
+  CONVERTED: 'CONVERTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SalesInquiryStatus = (typeof SalesInquiryStatus)[keyof typeof SalesInquiryStatus]
+
+
+export const SalesQuotationStatus = {
+  DRAFT: 'DRAFT',
+  SENT: 'SENT',
+  ACCEPTED: 'ACCEPTED',
+  CONVERTED: 'CONVERTED',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SalesQuotationStatus = (typeof SalesQuotationStatus)[keyof typeof SalesQuotationStatus]
+
+
+export const SalesOrderStatus = {
+  CONFIRMED: 'CONFIRMED',
+  RESERVED: 'RESERVED',
+  READY: 'READY',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SalesOrderStatus = (typeof SalesOrderStatus)[keyof typeof SalesOrderStatus]
+
+
+export const SalesOrderDeliveryMode = {
+  DELIVERY: 'DELIVERY',
+  CUSTOMER_PICKUP: 'CUSTOMER_PICKUP'
+} as const
+
+export type SalesOrderDeliveryMode = (typeof SalesOrderDeliveryMode)[keyof typeof SalesOrderDeliveryMode]
+
+
+export const InventoryReservationStatus = {
+  RESERVED: 'RESERVED',
+  RELEASED: 'RELEASED',
+  CONSUMED: 'CONSUMED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type InventoryReservationStatus = (typeof InventoryReservationStatus)[keyof typeof InventoryReservationStatus]
+
+
+export const SalesInvoiceStatus = {
+  DRAFT: 'DRAFT',
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SalesInvoiceStatus = (typeof SalesInvoiceStatus)[keyof typeof SalesInvoiceStatus]
+
+
+export const SalesPaymentMode = {
+  CASH: 'CASH',
+  CREDIT: 'CREDIT'
+} as const
+
+export type SalesPaymentMode = (typeof SalesPaymentMode)[keyof typeof SalesPaymentMode]
+
+
+export const CustomerPaymentStatus = {
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type CustomerPaymentStatus = (typeof CustomerPaymentStatus)[keyof typeof CustomerPaymentStatus]
+
+
+export const AccountsReceivableStatus = {
+  OPEN: 'OPEN',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type AccountsReceivableStatus = (typeof AccountsReceivableStatus)[keyof typeof AccountsReceivableStatus]
