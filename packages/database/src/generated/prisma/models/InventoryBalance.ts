@@ -28,10 +28,12 @@ export type AggregateInventoryBalance = {
 
 export type InventoryBalanceAvgAggregateOutputType = {
   quantity: number | null
+  averageCost: runtime.Decimal | null
 }
 
 export type InventoryBalanceSumAggregateOutputType = {
   quantity: number | null
+  averageCost: runtime.Decimal | null
 }
 
 export type InventoryBalanceMinAggregateOutputType = {
@@ -39,6 +41,7 @@ export type InventoryBalanceMinAggregateOutputType = {
   branchId: string | null
   productId: string | null
   quantity: number | null
+  averageCost: runtime.Decimal | null
   updatedAt: Date | null
 }
 
@@ -47,6 +50,7 @@ export type InventoryBalanceMaxAggregateOutputType = {
   branchId: string | null
   productId: string | null
   quantity: number | null
+  averageCost: runtime.Decimal | null
   updatedAt: Date | null
 }
 
@@ -55,6 +59,7 @@ export type InventoryBalanceCountAggregateOutputType = {
   branchId: number
   productId: number
   quantity: number
+  averageCost: number
   updatedAt: number
   _all: number
 }
@@ -62,10 +67,12 @@ export type InventoryBalanceCountAggregateOutputType = {
 
 export type InventoryBalanceAvgAggregateInputType = {
   quantity?: true
+  averageCost?: true
 }
 
 export type InventoryBalanceSumAggregateInputType = {
   quantity?: true
+  averageCost?: true
 }
 
 export type InventoryBalanceMinAggregateInputType = {
@@ -73,6 +80,7 @@ export type InventoryBalanceMinAggregateInputType = {
   branchId?: true
   productId?: true
   quantity?: true
+  averageCost?: true
   updatedAt?: true
 }
 
@@ -81,6 +89,7 @@ export type InventoryBalanceMaxAggregateInputType = {
   branchId?: true
   productId?: true
   quantity?: true
+  averageCost?: true
   updatedAt?: true
 }
 
@@ -89,6 +98,7 @@ export type InventoryBalanceCountAggregateInputType = {
   branchId?: true
   productId?: true
   quantity?: true
+  averageCost?: true
   updatedAt?: true
   _all?: true
 }
@@ -184,6 +194,7 @@ export type InventoryBalanceGroupByOutputType = {
   branchId: string
   productId: string
   quantity: number
+  averageCost: runtime.Decimal
   updatedAt: Date
   _count: InventoryBalanceCountAggregateOutputType | null
   _avg: InventoryBalanceAvgAggregateOutputType | null
@@ -215,6 +226,7 @@ export type InventoryBalanceWhereInput = {
   branchId?: Prisma.StringFilter<"InventoryBalance"> | string
   productId?: Prisma.StringFilter<"InventoryBalance"> | string
   quantity?: Prisma.IntFilter<"InventoryBalance"> | number
+  averageCost?: Prisma.DecimalFilter<"InventoryBalance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFilter<"InventoryBalance"> | Date | string
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
@@ -225,6 +237,7 @@ export type InventoryBalanceOrderByWithRelationInput = {
   branchId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  averageCost?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   branch?: Prisma.BranchOrderByWithRelationInput
   product?: Prisma.ProductOrderByWithRelationInput
@@ -239,6 +252,7 @@ export type InventoryBalanceWhereUniqueInput = Prisma.AtLeast<{
   branchId?: Prisma.StringFilter<"InventoryBalance"> | string
   productId?: Prisma.StringFilter<"InventoryBalance"> | string
   quantity?: Prisma.IntFilter<"InventoryBalance"> | number
+  averageCost?: Prisma.DecimalFilter<"InventoryBalance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFilter<"InventoryBalance"> | Date | string
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   product?: Prisma.XOR<Prisma.ProductScalarRelationFilter, Prisma.ProductWhereInput>
@@ -249,6 +263,7 @@ export type InventoryBalanceOrderByWithAggregationInput = {
   branchId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  averageCost?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.InventoryBalanceCountOrderByAggregateInput
   _avg?: Prisma.InventoryBalanceAvgOrderByAggregateInput
@@ -265,12 +280,14 @@ export type InventoryBalanceScalarWhereWithAggregatesInput = {
   branchId?: Prisma.StringWithAggregatesFilter<"InventoryBalance"> | string
   productId?: Prisma.StringWithAggregatesFilter<"InventoryBalance"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"InventoryBalance"> | number
+  averageCost?: Prisma.DecimalWithAggregatesFilter<"InventoryBalance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"InventoryBalance"> | Date | string
 }
 
 export type InventoryBalanceCreateInput = {
   id?: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutInventoryBalancesInput
   product: Prisma.ProductCreateNestedOneWithoutInventoryBalancesInput
@@ -281,12 +298,14 @@ export type InventoryBalanceUncheckedCreateInput = {
   branchId: string
   productId: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
 }
 
 export type InventoryBalanceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutInventoryBalancesNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutInventoryBalancesNestedInput
@@ -297,6 +316,7 @@ export type InventoryBalanceUncheckedUpdateInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -305,12 +325,14 @@ export type InventoryBalanceCreateManyInput = {
   branchId: string
   productId: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
 }
 
 export type InventoryBalanceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -319,6 +341,7 @@ export type InventoryBalanceUncheckedUpdateManyInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -342,11 +365,13 @@ export type InventoryBalanceCountOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  averageCost?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type InventoryBalanceAvgOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
+  averageCost?: Prisma.SortOrder
 }
 
 export type InventoryBalanceMaxOrderByAggregateInput = {
@@ -354,6 +379,7 @@ export type InventoryBalanceMaxOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  averageCost?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -362,11 +388,13 @@ export type InventoryBalanceMinOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  averageCost?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type InventoryBalanceSumOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
+  averageCost?: Prisma.SortOrder
 }
 
 export type InventoryBalanceCreateNestedManyWithoutBranchInput = {
@@ -461,9 +489,18 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type InventoryBalanceCreateWithoutBranchInput = {
   id?: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutInventoryBalancesInput
 }
@@ -472,6 +509,7 @@ export type InventoryBalanceUncheckedCreateWithoutBranchInput = {
   id?: string
   productId: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
 }
 
@@ -509,12 +547,14 @@ export type InventoryBalanceScalarWhereInput = {
   branchId?: Prisma.StringFilter<"InventoryBalance"> | string
   productId?: Prisma.StringFilter<"InventoryBalance"> | string
   quantity?: Prisma.IntFilter<"InventoryBalance"> | number
+  averageCost?: Prisma.DecimalFilter<"InventoryBalance"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFilter<"InventoryBalance"> | Date | string
 }
 
 export type InventoryBalanceCreateWithoutProductInput = {
   id?: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutInventoryBalancesInput
 }
@@ -523,6 +563,7 @@ export type InventoryBalanceUncheckedCreateWithoutProductInput = {
   id?: string
   branchId: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
 }
 
@@ -556,12 +597,14 @@ export type InventoryBalanceCreateManyBranchInput = {
   id?: string
   productId: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
 }
 
 export type InventoryBalanceUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutInventoryBalancesNestedInput
 }
@@ -570,6 +613,7 @@ export type InventoryBalanceUncheckedUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -577,6 +621,7 @@ export type InventoryBalanceUncheckedUpdateManyWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -584,12 +629,14 @@ export type InventoryBalanceCreateManyProductInput = {
   id?: string
   branchId: string
   quantity?: number
+  averageCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Date | string
 }
 
 export type InventoryBalanceUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutInventoryBalancesNestedInput
 }
@@ -598,6 +645,7 @@ export type InventoryBalanceUncheckedUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -605,6 +653,7 @@ export type InventoryBalanceUncheckedUpdateManyWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -615,6 +664,7 @@ export type InventoryBalanceSelect<ExtArgs extends runtime.Types.Extensions.Inte
   branchId?: boolean
   productId?: boolean
   quantity?: boolean
+  averageCost?: boolean
   updatedAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -625,6 +675,7 @@ export type InventoryBalanceSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   branchId?: boolean
   productId?: boolean
   quantity?: boolean
+  averageCost?: boolean
   updatedAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -635,6 +686,7 @@ export type InventoryBalanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   branchId?: boolean
   productId?: boolean
   quantity?: boolean
+  averageCost?: boolean
   updatedAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -645,10 +697,11 @@ export type InventoryBalanceSelectScalar = {
   branchId?: boolean
   productId?: boolean
   quantity?: boolean
+  averageCost?: boolean
   updatedAt?: boolean
 }
 
-export type InventoryBalanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "branchId" | "productId" | "quantity" | "updatedAt", ExtArgs["result"]["inventoryBalance"]>
+export type InventoryBalanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "branchId" | "productId" | "quantity" | "averageCost" | "updatedAt", ExtArgs["result"]["inventoryBalance"]>
 export type InventoryBalanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -673,6 +726,7 @@ export type $InventoryBalancePayload<ExtArgs extends runtime.Types.Extensions.In
     branchId: string
     productId: string
     quantity: number
+    averageCost: runtime.Decimal
     updatedAt: Date
   }, ExtArgs["result"]["inventoryBalance"]>
   composites: {}
@@ -1103,6 +1157,7 @@ export interface InventoryBalanceFieldRefs {
   readonly branchId: Prisma.FieldRef<"InventoryBalance", 'String'>
   readonly productId: Prisma.FieldRef<"InventoryBalance", 'String'>
   readonly quantity: Prisma.FieldRef<"InventoryBalance", 'Int'>
+  readonly averageCost: Prisma.FieldRef<"InventoryBalance", 'Decimal'>
   readonly updatedAt: Prisma.FieldRef<"InventoryBalance", 'DateTime'>
 }
     

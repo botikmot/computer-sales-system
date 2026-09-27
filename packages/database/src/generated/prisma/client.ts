@@ -151,3 +151,28 @@ export type PurchaseInvoice = Prisma.PurchaseInvoiceModel
  * 
  */
 export type PurchaseInvoiceItem = Prisma.PurchaseInvoiceItemModel
+/**
+ * Model AccountsPayable
+ * 
+ */
+export type AccountsPayable = Prisma.AccountsPayableModel
+/**
+ * Model SupplierPayment
+ * 
+ */
+export type SupplierPayment = Prisma.SupplierPaymentModel
+/**
+ * Model CashBankTransaction
+ * 
+ */
+export type CashBankTransaction = Prisma.CashBankTransactionModel
+/**
+ * Model CashBankAccount
+ * 
+ */
+export type CashBankAccount = Prisma.CashBankAccountModel
+/**
+ * Model PaymentVoucher
+ * 
+ */
+export type PaymentVoucher = Prisma.PaymentVoucherModel

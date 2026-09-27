@@ -226,7 +226,12 @@ export type UserWhereInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationListRelationFilter
   purchaseOrdersCreated?: Prisma.PurchaseOrderListRelationFilter
   receivingsCreated?: Prisma.ReceivingListRelationFilter
+  receivingsChecked?: Prisma.ReceivingListRelationFilter
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceListRelationFilter
+  accountsPayablesCreated?: Prisma.AccountsPayableListRelationFilter
+  supplierPaymentsCreated?: Prisma.SupplierPaymentListRelationFilter
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionListRelationFilter
+  paymentVouchersCreated?: Prisma.PaymentVoucherListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }
@@ -246,7 +251,12 @@ export type UserOrderByWithRelationInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationOrderByRelationAggregateInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderOrderByRelationAggregateInput
   receivingsCreated?: Prisma.ReceivingOrderByRelationAggregateInput
+  receivingsChecked?: Prisma.ReceivingOrderByRelationAggregateInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceOrderByRelationAggregateInput
+  accountsPayablesCreated?: Prisma.AccountsPayableOrderByRelationAggregateInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentOrderByRelationAggregateInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionOrderByRelationAggregateInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherOrderByRelationAggregateInput
   branch?: Prisma.BranchOrderByWithRelationInput
   inventoryMovements?: Prisma.InventoryMovementOrderByRelationAggregateInput
 }
@@ -269,7 +279,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   supplierQuotationsCreated?: Prisma.SupplierQuotationListRelationFilter
   purchaseOrdersCreated?: Prisma.PurchaseOrderListRelationFilter
   receivingsCreated?: Prisma.ReceivingListRelationFilter
+  receivingsChecked?: Prisma.ReceivingListRelationFilter
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceListRelationFilter
+  accountsPayablesCreated?: Prisma.AccountsPayableListRelationFilter
+  supplierPaymentsCreated?: Prisma.SupplierPaymentListRelationFilter
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionListRelationFilter
+  paymentVouchersCreated?: Prisma.PaymentVoucherListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }, "id" | "username" | "email">
@@ -320,7 +335,12 @@ export type UserCreateInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -340,7 +360,12 @@ export type UserUncheckedCreateInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -358,7 +383,12 @@ export type UserUpdateInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -378,7 +408,12 @@ export type UserUncheckedUpdateInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -594,6 +629,12 @@ export type UserCreateNestedOneWithoutReceivingsCreatedInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutReceivingsCheckedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCheckedInput, Prisma.UserUncheckedCreateWithoutReceivingsCheckedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivingsCheckedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneWithoutReceivingsCreatedNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCreatedInput, Prisma.UserUncheckedCreateWithoutReceivingsCreatedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivingsCreatedInput
@@ -602,6 +643,16 @@ export type UserUpdateOneWithoutReceivingsCreatedNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivingsCreatedInput, Prisma.UserUpdateWithoutReceivingsCreatedInput>, Prisma.UserUncheckedUpdateWithoutReceivingsCreatedInput>
+}
+
+export type UserUpdateOneWithoutReceivingsCheckedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCheckedInput, Prisma.UserUncheckedCreateWithoutReceivingsCheckedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivingsCheckedInput
+  upsert?: Prisma.UserUpsertWithoutReceivingsCheckedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivingsCheckedInput, Prisma.UserUpdateWithoutReceivingsCheckedInput>, Prisma.UserUncheckedUpdateWithoutReceivingsCheckedInput>
 }
 
 export type UserCreateNestedOneWithoutPurchaseInvoicesCreatedInput = {
@@ -620,6 +671,70 @@ export type UserUpdateOneWithoutPurchaseInvoicesCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPurchaseInvoicesCreatedInput, Prisma.UserUpdateWithoutPurchaseInvoicesCreatedInput>, Prisma.UserUncheckedUpdateWithoutPurchaseInvoicesCreatedInput>
 }
 
+export type UserCreateNestedOneWithoutAccountsPayablesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAccountsPayablesCreatedInput, Prisma.UserUncheckedCreateWithoutAccountsPayablesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAccountsPayablesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAccountsPayablesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAccountsPayablesCreatedInput, Prisma.UserUncheckedCreateWithoutAccountsPayablesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAccountsPayablesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutAccountsPayablesCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsPayablesCreatedInput, Prisma.UserUpdateWithoutAccountsPayablesCreatedInput>, Prisma.UserUncheckedUpdateWithoutAccountsPayablesCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutSupplierPaymentsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupplierPaymentsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierPaymentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupplierPaymentsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSupplierPaymentsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupplierPaymentsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierPaymentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupplierPaymentsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutSupplierPaymentsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupplierPaymentsCreatedInput, Prisma.UserUpdateWithoutSupplierPaymentsCreatedInput>, Prisma.UserUncheckedUpdateWithoutSupplierPaymentsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutCashBankTransactionsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCashBankTransactionsCreatedInput, Prisma.UserUncheckedCreateWithoutCashBankTransactionsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCashBankTransactionsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCashBankTransactionsCreatedInput, Prisma.UserUncheckedCreateWithoutCashBankTransactionsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCashBankTransactionsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutCashBankTransactionsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCashBankTransactionsCreatedInput, Prisma.UserUpdateWithoutCashBankTransactionsCreatedInput>, Prisma.UserUncheckedUpdateWithoutCashBankTransactionsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutPaymentVouchersCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPaymentVouchersCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentVouchersCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPaymentVouchersCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPaymentVouchersCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentVouchersCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPaymentVouchersCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPaymentVouchersCreatedInput, Prisma.UserUpdateWithoutPaymentVouchersCreatedInput>, Prisma.UserUncheckedUpdateWithoutPaymentVouchersCreatedInput>
+}
+
 export type UserCreateWithoutBranchInput = {
   id?: string
   username: string
@@ -634,7 +749,12 @@ export type UserCreateWithoutBranchInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
 
@@ -652,7 +772,12 @@ export type UserUncheckedCreateWithoutBranchInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -712,7 +837,12 @@ export type UserCreateWithoutInventoryMovementsInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
 }
 
@@ -731,7 +861,12 @@ export type UserUncheckedCreateWithoutInventoryMovementsInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutInventoryMovementsInput = {
@@ -764,7 +899,12 @@ export type UserUpdateWithoutInventoryMovementsInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
 }
 
@@ -783,7 +923,12 @@ export type UserUncheckedUpdateWithoutInventoryMovementsInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutPurchaseRequestsCreatedInput = {
@@ -799,7 +944,12 @@ export type UserCreateWithoutPurchaseRequestsCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -818,7 +968,12 @@ export type UserUncheckedCreateWithoutPurchaseRequestsCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -851,7 +1006,12 @@ export type UserUpdateWithoutPurchaseRequestsCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -870,7 +1030,12 @@ export type UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -887,7 +1052,12 @@ export type UserCreateWithoutSupplierQuotationsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -906,7 +1076,12 @@ export type UserUncheckedCreateWithoutSupplierQuotationsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -939,7 +1114,12 @@ export type UserUpdateWithoutSupplierQuotationsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -958,7 +1138,12 @@ export type UserUncheckedUpdateWithoutSupplierQuotationsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -975,7 +1160,12 @@ export type UserCreateWithoutPurchaseOrdersCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -994,7 +1184,12 @@ export type UserUncheckedCreateWithoutPurchaseOrdersCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1027,7 +1222,12 @@ export type UserUpdateWithoutPurchaseOrdersCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1046,7 +1246,12 @@ export type UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1063,7 +1268,12 @@ export type UserCreateWithoutReceivingsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1082,13 +1292,69 @@ export type UserUncheckedCreateWithoutReceivingsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutReceivingsCreatedInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCreatedInput, Prisma.UserUncheckedCreateWithoutReceivingsCreatedInput>
+}
+
+export type UserCreateWithoutReceivingsCheckedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutReceivingsCheckedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutReceivingsCheckedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCheckedInput, Prisma.UserUncheckedCreateWithoutReceivingsCheckedInput>
 }
 
 export type UserUpsertWithoutReceivingsCreatedInput = {
@@ -1115,7 +1381,12 @@ export type UserUpdateWithoutReceivingsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1134,7 +1405,69 @@ export type UserUncheckedUpdateWithoutReceivingsCreatedInput = {
   purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUpsertWithoutReceivingsCheckedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivingsCheckedInput, Prisma.UserUncheckedUpdateWithoutReceivingsCheckedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivingsCheckedInput, Prisma.UserUncheckedCreateWithoutReceivingsCheckedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReceivingsCheckedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivingsCheckedInput, Prisma.UserUncheckedUpdateWithoutReceivingsCheckedInput>
+}
+
+export type UserUpdateWithoutReceivingsCheckedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReceivingsCheckedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1152,6 +1485,11 @@ export type UserCreateWithoutPurchaseInvoicesCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1171,6 +1509,11 @@ export type UserUncheckedCreateWithoutPurchaseInvoicesCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
   receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1204,6 +1547,11 @@ export type UserUpdateWithoutPurchaseInvoicesCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1223,6 +1571,443 @@ export type UserUncheckedUpdateWithoutPurchaseInvoicesCreatedInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutAccountsPayablesCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutAccountsPayablesCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutAccountsPayablesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAccountsPayablesCreatedInput, Prisma.UserUncheckedCreateWithoutAccountsPayablesCreatedInput>
+}
+
+export type UserUpsertWithoutAccountsPayablesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAccountsPayablesCreatedInput, Prisma.UserUncheckedUpdateWithoutAccountsPayablesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAccountsPayablesCreatedInput, Prisma.UserUncheckedCreateWithoutAccountsPayablesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAccountsPayablesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAccountsPayablesCreatedInput, Prisma.UserUncheckedUpdateWithoutAccountsPayablesCreatedInput>
+}
+
+export type UserUpdateWithoutAccountsPayablesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAccountsPayablesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutSupplierPaymentsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutSupplierPaymentsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutSupplierPaymentsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupplierPaymentsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierPaymentsCreatedInput>
+}
+
+export type UserUpsertWithoutSupplierPaymentsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupplierPaymentsCreatedInput, Prisma.UserUncheckedUpdateWithoutSupplierPaymentsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupplierPaymentsCreatedInput, Prisma.UserUncheckedCreateWithoutSupplierPaymentsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupplierPaymentsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupplierPaymentsCreatedInput, Prisma.UserUncheckedUpdateWithoutSupplierPaymentsCreatedInput>
+}
+
+export type UserUpdateWithoutSupplierPaymentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupplierPaymentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutCashBankTransactionsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutCashBankTransactionsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutCashBankTransactionsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCashBankTransactionsCreatedInput, Prisma.UserUncheckedCreateWithoutCashBankTransactionsCreatedInput>
+}
+
+export type UserUpsertWithoutCashBankTransactionsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCashBankTransactionsCreatedInput, Prisma.UserUncheckedUpdateWithoutCashBankTransactionsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCashBankTransactionsCreatedInput, Prisma.UserUncheckedCreateWithoutCashBankTransactionsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCashBankTransactionsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCashBankTransactionsCreatedInput, Prisma.UserUncheckedUpdateWithoutCashBankTransactionsCreatedInput>
+}
+
+export type UserUpdateWithoutCashBankTransactionsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCashBankTransactionsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutPaymentVouchersCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPaymentVouchersCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPaymentVouchersCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPaymentVouchersCreatedInput>
+}
+
+export type UserUpsertWithoutPaymentVouchersCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPaymentVouchersCreatedInput, Prisma.UserUncheckedUpdateWithoutPaymentVouchersCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPaymentVouchersCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPaymentVouchersCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPaymentVouchersCreatedInput, Prisma.UserUncheckedUpdateWithoutPaymentVouchersCreatedInput>
+}
+
+export type UserUpdateWithoutPaymentVouchersCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPaymentVouchersCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1252,7 +2037,12 @@ export type UserUpdateWithoutBranchInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1270,7 +2060,12 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
   purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
   purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1296,7 +2091,12 @@ export type UserCountOutputType = {
   supplierQuotationsCreated: number
   purchaseOrdersCreated: number
   receivingsCreated: number
+  receivingsChecked: number
   purchaseInvoicesCreated: number
+  accountsPayablesCreated: number
+  supplierPaymentsCreated: number
+  cashBankTransactionsCreated: number
+  paymentVouchersCreated: number
   inventoryMovements: number
 }
 
@@ -1305,7 +2105,12 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   supplierQuotationsCreated?: boolean | UserCountOutputTypeCountSupplierQuotationsCreatedArgs
   purchaseOrdersCreated?: boolean | UserCountOutputTypeCountPurchaseOrdersCreatedArgs
   receivingsCreated?: boolean | UserCountOutputTypeCountReceivingsCreatedArgs
+  receivingsChecked?: boolean | UserCountOutputTypeCountReceivingsCheckedArgs
   purchaseInvoicesCreated?: boolean | UserCountOutputTypeCountPurchaseInvoicesCreatedArgs
+  accountsPayablesCreated?: boolean | UserCountOutputTypeCountAccountsPayablesCreatedArgs
+  supplierPaymentsCreated?: boolean | UserCountOutputTypeCountSupplierPaymentsCreatedArgs
+  cashBankTransactionsCreated?: boolean | UserCountOutputTypeCountCashBankTransactionsCreatedArgs
+  paymentVouchersCreated?: boolean | UserCountOutputTypeCountPaymentVouchersCreatedArgs
   inventoryMovements?: boolean | UserCountOutputTypeCountInventoryMovementsArgs
 }
 
@@ -1350,8 +2155,43 @@ export type UserCountOutputTypeCountReceivingsCreatedArgs<ExtArgs extends runtim
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountReceivingsCheckedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceivingWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPurchaseInvoicesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PurchaseInvoiceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAccountsPayablesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccountsPayableWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupplierPaymentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupplierPaymentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCashBankTransactionsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CashBankTransactionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPaymentVouchersCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentVoucherWhereInput
 }
 
 /**
@@ -1377,7 +2217,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   supplierQuotationsCreated?: boolean | Prisma.User$supplierQuotationsCreatedArgs<ExtArgs>
   purchaseOrdersCreated?: boolean | Prisma.User$purchaseOrdersCreatedArgs<ExtArgs>
   receivingsCreated?: boolean | Prisma.User$receivingsCreatedArgs<ExtArgs>
+  receivingsChecked?: boolean | Prisma.User$receivingsCheckedArgs<ExtArgs>
   purchaseInvoicesCreated?: boolean | Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs>
+  accountsPayablesCreated?: boolean | Prisma.User$accountsPayablesCreatedArgs<ExtArgs>
+  supplierPaymentsCreated?: boolean | Prisma.User$supplierPaymentsCreatedArgs<ExtArgs>
+  cashBankTransactionsCreated?: boolean | Prisma.User$cashBankTransactionsCreatedArgs<ExtArgs>
+  paymentVouchersCreated?: boolean | Prisma.User$paymentVouchersCreatedArgs<ExtArgs>
   branch?: boolean | Prisma.User$branchArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1430,7 +2275,12 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   supplierQuotationsCreated?: boolean | Prisma.User$supplierQuotationsCreatedArgs<ExtArgs>
   purchaseOrdersCreated?: boolean | Prisma.User$purchaseOrdersCreatedArgs<ExtArgs>
   receivingsCreated?: boolean | Prisma.User$receivingsCreatedArgs<ExtArgs>
+  receivingsChecked?: boolean | Prisma.User$receivingsCheckedArgs<ExtArgs>
   purchaseInvoicesCreated?: boolean | Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs>
+  accountsPayablesCreated?: boolean | Prisma.User$accountsPayablesCreatedArgs<ExtArgs>
+  supplierPaymentsCreated?: boolean | Prisma.User$supplierPaymentsCreatedArgs<ExtArgs>
+  cashBankTransactionsCreated?: boolean | Prisma.User$cashBankTransactionsCreatedArgs<ExtArgs>
+  paymentVouchersCreated?: boolean | Prisma.User$paymentVouchersCreatedArgs<ExtArgs>
   branch?: boolean | Prisma.User$branchArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1449,7 +2299,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     supplierQuotationsCreated: Prisma.$SupplierQuotationPayload<ExtArgs>[]
     purchaseOrdersCreated: Prisma.$PurchaseOrderPayload<ExtArgs>[]
     receivingsCreated: Prisma.$ReceivingPayload<ExtArgs>[]
+    receivingsChecked: Prisma.$ReceivingPayload<ExtArgs>[]
     purchaseInvoicesCreated: Prisma.$PurchaseInvoicePayload<ExtArgs>[]
+    accountsPayablesCreated: Prisma.$AccountsPayablePayload<ExtArgs>[]
+    supplierPaymentsCreated: Prisma.$SupplierPaymentPayload<ExtArgs>[]
+    cashBankTransactionsCreated: Prisma.$CashBankTransactionPayload<ExtArgs>[]
+    paymentVouchersCreated: Prisma.$PaymentVoucherPayload<ExtArgs>[]
     branch: Prisma.$BranchPayload<ExtArgs> | null
     inventoryMovements: Prisma.$InventoryMovementPayload<ExtArgs>[]
   }
@@ -1862,7 +2717,12 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   supplierQuotationsCreated<T extends Prisma.User$supplierQuotationsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supplierQuotationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierQuotationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchaseOrdersCreated<T extends Prisma.User$purchaseOrdersCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$purchaseOrdersCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receivingsCreated<T extends Prisma.User$receivingsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivingsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivingsChecked<T extends Prisma.User$receivingsCheckedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivingsCheckedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchaseInvoicesCreated<T extends Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$purchaseInvoicesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  accountsPayablesCreated<T extends Prisma.User$accountsPayablesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsPayablesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountsPayablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supplierPaymentsCreated<T extends Prisma.User$supplierPaymentsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supplierPaymentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cashBankTransactionsCreated<T extends Prisma.User$cashBankTransactionsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cashBankTransactionsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CashBankTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paymentVouchersCreated<T extends Prisma.User$paymentVouchersCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentVouchersCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentVoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   branch<T extends Prisma.User$branchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$branchArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inventoryMovements<T extends Prisma.User$inventoryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inventoryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2401,6 +3261,30 @@ export type User$receivingsCreatedArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * User.receivingsChecked
+ */
+export type User$receivingsCheckedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receiving
+   */
+  select?: Prisma.ReceivingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receiving
+   */
+  omit?: Prisma.ReceivingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceivingInclude<ExtArgs> | null
+  where?: Prisma.ReceivingWhereInput
+  orderBy?: Prisma.ReceivingOrderByWithRelationInput | Prisma.ReceivingOrderByWithRelationInput[]
+  cursor?: Prisma.ReceivingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReceivingScalarFieldEnum | Prisma.ReceivingScalarFieldEnum[]
+}
+
+/**
  * User.purchaseInvoicesCreated
  */
 export type User$purchaseInvoicesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2422,6 +3306,102 @@ export type User$purchaseInvoicesCreatedArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.PurchaseInvoiceScalarFieldEnum | Prisma.PurchaseInvoiceScalarFieldEnum[]
+}
+
+/**
+ * User.accountsPayablesCreated
+ */
+export type User$accountsPayablesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccountsPayable
+   */
+  select?: Prisma.AccountsPayableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AccountsPayable
+   */
+  omit?: Prisma.AccountsPayableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccountsPayableInclude<ExtArgs> | null
+  where?: Prisma.AccountsPayableWhereInput
+  orderBy?: Prisma.AccountsPayableOrderByWithRelationInput | Prisma.AccountsPayableOrderByWithRelationInput[]
+  cursor?: Prisma.AccountsPayableWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccountsPayableScalarFieldEnum | Prisma.AccountsPayableScalarFieldEnum[]
+}
+
+/**
+ * User.supplierPaymentsCreated
+ */
+export type User$supplierPaymentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupplierPayment
+   */
+  select?: Prisma.SupplierPaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupplierPayment
+   */
+  omit?: Prisma.SupplierPaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupplierPaymentInclude<ExtArgs> | null
+  where?: Prisma.SupplierPaymentWhereInput
+  orderBy?: Prisma.SupplierPaymentOrderByWithRelationInput | Prisma.SupplierPaymentOrderByWithRelationInput[]
+  cursor?: Prisma.SupplierPaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupplierPaymentScalarFieldEnum | Prisma.SupplierPaymentScalarFieldEnum[]
+}
+
+/**
+ * User.cashBankTransactionsCreated
+ */
+export type User$cashBankTransactionsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CashBankTransaction
+   */
+  select?: Prisma.CashBankTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CashBankTransaction
+   */
+  omit?: Prisma.CashBankTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CashBankTransactionInclude<ExtArgs> | null
+  where?: Prisma.CashBankTransactionWhereInput
+  orderBy?: Prisma.CashBankTransactionOrderByWithRelationInput | Prisma.CashBankTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.CashBankTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CashBankTransactionScalarFieldEnum | Prisma.CashBankTransactionScalarFieldEnum[]
+}
+
+/**
+ * User.paymentVouchersCreated
+ */
+export type User$paymentVouchersCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentVoucher
+   */
+  select?: Prisma.PaymentVoucherSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentVoucher
+   */
+  omit?: Prisma.PaymentVoucherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentVoucherInclude<ExtArgs> | null
+  where?: Prisma.PaymentVoucherWhereInput
+  orderBy?: Prisma.PaymentVoucherOrderByWithRelationInput | Prisma.PaymentVoucherOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentVoucherWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentVoucherScalarFieldEnum | Prisma.PaymentVoucherScalarFieldEnum[]
 }
 
 /**

@@ -76,21 +76,64 @@ enum PurchaseInvoiceStatus {
   CANCELLED
 }
 
+enum ReceivingCheckStatus {
+  PENDING
+  VERIFIED
+  FAILED
+}
+
+enum PaymentMode {
+  COD
+  TERMS
+  CASH
+}
+
+enum AccountsPayableStatus {
+  OPEN
+  PARTIALLY_PAID
+  PAID
+  CANCELLED
+}
+
+enum SupplierPaymentStatus {
+  POSTED
+  CANCELLED
+}
+
+enum CashBankAccountType {
+  CASH
+  BANK
+}
+
+enum CashBankTransactionType {
+  SUPPLIER_PAYMENT
+}
+
+enum CashBankTransactionDirection {
+  IN
+  OUT
+}
+
 model Branch {
-  id        String   @id @default(uuid())
-  code      String   @unique
-  name      String
-  address   String?
-  phone     String?
-  email     String?
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  purchaseRequests   PurchaseRequest[]
-  supplierQuotations SupplierQuotation[]
-  purchaseOrders     PurchaseOrder[]
-  receivings         Receiving[]
-  purchaseInvoices   PurchaseInvoice[]
+  id                   String                @id @default(uuid())
+  code                 String                @unique
+  name                 String
+  address              String?
+  phone                String?
+  email                String?
+  isActive             Boolean               @default(true)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  purchaseRequests     PurchaseRequest[]
+  supplierQuotations   SupplierQuotation[]
+  purchaseOrders       PurchaseOrder[]
+  receivings           Receiving[]
+  purchaseInvoices     PurchaseInvoice[]
+  accountsPayables     AccountsPayable[]
+  supplierPayments     SupplierPayment[]
+  cashBankTransactions CashBankTransaction[]
+  cashBankAccounts     CashBankAccount[]
+  paymentVouchers      PaymentVoucher[]
 
   users              User[]
   inventoryBalances  InventoryBalance[]
@@ -101,18 +144,23 @@ model Branch {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  username     String     @unique
-  email        String?    @unique
-  fullName     String
-  passwordHash String
-  role         UserRole   @default(SALES)
-  status       UserStatus @default(ACTIVE)
-  purchaseRequestsCreated   PurchaseRequest[]   @relation("PurchaseRequestCreatedBy")
-  supplierQuotationsCreated SupplierQuotation[] @relation("SupplierQuotationCreatedBy")
-  purchaseOrdersCreated     PurchaseOrder[]     @relation("PurchaseOrderCreatedBy")
-  receivingsCreated          Receiving[]         @relation("ReceivingCreatedBy")
-  purchaseInvoicesCreated   PurchaseInvoice[]   @relation("PurchaseInvoiceCreatedBy")
+  id                          String                @id @default(uuid())
+  username                    String                @unique
+  email                       String?               @unique
+  fullName                    String
+  passwordHash                String
+  role                        UserRole              @default(SALES)
+  status                      UserStatus            @default(ACTIVE)
+  purchaseRequestsCreated     PurchaseRequest[]     @relation("PurchaseRequestCreatedBy")
+  supplierQuotationsCreated   SupplierQuotation[]   @relation("SupplierQuotationCreatedBy")
+  purchaseOrdersCreated       PurchaseOrder[]       @relation("PurchaseOrderCreatedBy")
+  receivingsCreated           Receiving[]           @relation("ReceivingCreatedBy")
+  receivingsChecked           Receiving[]           @relation("ReceivingCheckedBy")
+  purchaseInvoicesCreated     PurchaseInvoice[]     @relation("PurchaseInvoiceCreatedBy")
+  accountsPayablesCreated     AccountsPayable[]     @relation("AccountsPayableCreatedBy")
+  supplierPaymentsCreated     SupplierPayment[]     @relation("SupplierPaymentsCreated")
+  cashBankTransactionsCreated CashBankTransaction[] @relation("CashBankTransactionsCreated")
+  paymentVouchersCreated      PaymentVoucher[]      @relation("PaymentVouchersCreated")
 
   branchId String?
   branch   Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
@@ -143,20 +191,22 @@ model Customer {
 }
 
 model Supplier {
-  id            String   @id @default(uuid())
-  code          String   @unique
-  name          String
-  contactPerson String?
-  contactNumber String?
-  email         String?
-  address       String?
-  taxId         String?
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                 String              @id @default(uuid())
+  code               String              @unique
+  name               String
+  contactPerson      String?
+  contactNumber      String?
+  email              String?
+  address            String?
+  taxId              String?
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
   supplierQuotations SupplierQuotation[]
   purchaseOrders     PurchaseOrder[]
   purchaseInvoices   PurchaseInvoice[]
+  accountsPayables   AccountsPayable[]
+  supplierPayments   SupplierPayment[]
 
   @@index([name])
   @@index([isActive])
@@ -173,35 +223,35 @@ model ProductCategory {
 }
 
 model Product {
-  id                  String   @id @default(uuid())
-  sku                 String   @unique
-  name                String
-  description         String?
-  brand               String?
-  model               String?
-  unit                String   @default("pcs")
+  id          String  @id @default(uuid())
+  sku         String  @unique
+  name        String
+  description String?
+  brand       String?
+  model       String?
+  unit        String  @default("pcs")
 
   defaultSellingPrice Decimal? @db.Decimal(12, 2)
   defaultCostPrice    Decimal? @db.Decimal(12, 2)
 
-  isActive       Boolean @default(true)
-  trackInventory Boolean @default(true)
-  purchaseRequestItems  PurchaseRequestItem[]
+  isActive               Boolean                 @default(true)
+  trackInventory         Boolean                 @default(true)
+  purchaseRequestItems   PurchaseRequestItem[]
   supplierQuotationItems SupplierQuotationItem[]
-  purchaseOrderItems    PurchaseOrderItem[]
-  receivingItems        ReceivingItem[]
-  purchaseInvoiceItems  PurchaseInvoiceItem[]
+  purchaseOrderItems     PurchaseOrderItem[]
+  receivingItems         ReceivingItem[]
+  purchaseInvoiceItems   PurchaseInvoiceItem[]
 
   categoryId String?
   category   ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
-  inventoryBalances InventoryBalance[]
+  inventoryBalances  InventoryBalance[]
   inventoryMovements InventoryMovement[]
 
-  finishedBom      BillOfMaterial? @relation("BOMFinishedProduct")
-  bomComponents    BillOfMaterialItem[] @relation("BOMComponent")
+  finishedBom   BillOfMaterial?      @relation("BOMFinishedProduct")
+  bomComponents BillOfMaterialItem[] @relation("BOMComponent")
 
-  assemblyOutputs  Assembly[]          @relation("AssemblyFinishedProduct")
+  assemblyOutputs    Assembly[]          @relation("AssemblyFinishedProduct")
   assemblyComponents AssemblyComponent[] @relation("AssemblyComponentProduct")
 
   createdAt DateTime @default(now())
@@ -214,10 +264,11 @@ model Product {
 }
 
 model InventoryBalance {
-  id        String   @id @default(uuid())
-  branchId  String
-  productId String
-  quantity  Int      @default(0)
+  id          String  @id @default(uuid())
+  branchId    String
+  productId   String
+  quantity    Int     @default(0)
+  averageCost Decimal @default(0) @db.Decimal(12, 2)
 
   branch  Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -229,21 +280,26 @@ model InventoryBalance {
 }
 
 model InventoryMovement {
-  id              String                  @id @default(uuid())
-  branchId        String
-  productId       String
-  type            InventoryMovementType
-  quantityChange  Int
-  balanceAfter    Int
-  referenceType   String?
-  referenceId     String?
-  notes           String?
+  id        String                @id @default(uuid())
+  branchId  String
+  productId String
+  type      InventoryMovementType
+
+  unitCost         Decimal? @db.Decimal(12, 2)
+  totalCost        Decimal? @db.Decimal(12, 2)
+  averageCostAfter Decimal? @db.Decimal(12, 2)
+
+  quantityChange Int
+  balanceAfter   Int
+  referenceType  String?
+  referenceId    String?
+  notes          String?
 
   branch  Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdById String?
-  createdBy   User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   assemblyId String?
   assembly   Assembly? @relation("AssemblyInventoryMovement", fields: [assemblyId], references: [id], onDelete: SetNull)
@@ -258,14 +314,14 @@ model InventoryMovement {
 }
 
 model BillOfMaterial {
-  id        String   @id @default(uuid())
-  productId String   @unique
+  id        String  @id @default(uuid())
+  productId String  @unique
   name      String?
-  isActive  Boolean  @default(true)
+  isActive  Boolean @default(true)
 
   product Product @relation("BOMFinishedProduct", fields: [productId], references: [id], onDelete: Cascade)
 
-  items     BillOfMaterialItem[]
+  items      BillOfMaterialItem[]
   assemblies Assembly[]
 
   createdAt DateTime @default(now())
@@ -273,10 +329,10 @@ model BillOfMaterial {
 }
 
 model BillOfMaterialItem {
-  id              String @id @default(uuid())
-  billOfMaterialId String
+  id                 String @id @default(uuid())
+  billOfMaterialId   String
   componentProductId String
-  quantity         Int
+  quantity           Int
 
   billOfMaterial BillOfMaterial @relation(fields: [billOfMaterialId], references: [id], onDelete: Cascade)
 
@@ -287,9 +343,9 @@ model BillOfMaterialItem {
 }
 
 model Assembly {
-  id               String         @id @default(uuid())
-  branchId         String
-  billOfMaterialId String
+  id                String @id @default(uuid())
+  branchId          String
+  billOfMaterialId  String
   finishedProductId String
 
   quantityProduced Int
@@ -297,7 +353,7 @@ model Assembly {
 
   notes String?
 
-  branch         Branch        @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  branch         Branch         @relation(fields: [branchId], references: [id], onDelete: Restrict)
   billOfMaterial BillOfMaterial @relation(fields: [billOfMaterialId], references: [id], onDelete: Restrict)
 
   finishedProduct Product @relation("AssemblyFinishedProduct", fields: [finishedProductId], references: [id], onDelete: Restrict)
@@ -315,8 +371,8 @@ model Assembly {
 }
 
 model AssemblyComponent {
-  id                String @id @default(uuid())
-  assemblyId        String
+  id                 String @id @default(uuid())
+  assemblyId         String
   componentProductId String
   quantityConsumed   Int
 
@@ -329,10 +385,10 @@ model AssemblyComponent {
 }
 
 model PurchaseRequest {
-  id       String               @id @default(uuid())
-  requestNo String              @unique
-  branchId String
-  status   PurchaseRequestStatus @default(DRAFT)
+  id        String                @id @default(uuid())
+  requestNo String                @unique
+  branchId  String
+  status    PurchaseRequestStatus @default(DRAFT)
 
   purpose String?
   notes   String?
@@ -340,7 +396,7 @@ model PurchaseRequest {
   branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
 
   createdById String?
-  createdBy   User? @relation("PurchaseRequestCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("PurchaseRequestCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
 
   items PurchaseRequestItem[]
 
@@ -356,11 +412,11 @@ model PurchaseRequest {
 }
 
 model PurchaseRequestItem {
-  id              String @id @default(uuid())
+  id                String  @id @default(uuid())
   purchaseRequestId String
-  productId       String
-  quantity        Int
-  notes           String?
+  productId         String
+  quantity          Int
+  notes             String?
 
   purchaseRequest PurchaseRequest @relation(fields: [purchaseRequestId], references: [id], onDelete: Cascade)
   product         Product         @relation(fields: [productId], references: [id], onDelete: Restrict)
@@ -370,29 +426,29 @@ model PurchaseRequestItem {
 }
 
 model SupplierQuotation {
-  id            String                   @id @default(uuid())
-  quotationNo   String                   @unique
-  branchId      String
-  supplierId    String
+  id                String  @id @default(uuid())
+  quotationNo       String  @unique
+  branchId          String
+  supplierId        String
   purchaseRequestId String?
 
-  status        SupplierQuotationStatus  @default(DRAFT)
+  status SupplierQuotationStatus @default(DRAFT)
 
-  quotationDate DateTime @default(now())
+  quotationDate DateTime  @default(now())
   validUntil    DateTime?
   notes         String?
 
-  subtotal      Decimal @db.Decimal(12, 2) @default(0)
-  discount      Decimal @db.Decimal(12, 2) @default(0)
-  tax           Decimal @db.Decimal(12, 2) @default(0)
-  total         Decimal @db.Decimal(12, 2) @default(0)
+  subtotal Decimal @default(0) @db.Decimal(12, 2)
+  discount Decimal @default(0) @db.Decimal(12, 2)
+  tax      Decimal @default(0) @db.Decimal(12, 2)
+  total    Decimal @default(0) @db.Decimal(12, 2)
 
-  branch         Branch          @relation(fields: [branchId], references: [id], onDelete: Restrict)
-  supplier       Supplier        @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  branch          Branch           @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  supplier        Supplier         @relation(fields: [supplierId], references: [id], onDelete: Restrict)
   purchaseRequest PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id], onDelete: SetNull)
 
   createdById String?
-  createdBy   User? @relation("SupplierQuotationCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("SupplierQuotationCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
 
   items SupplierQuotationItem[]
 
@@ -425,8 +481,8 @@ model SupplierQuotationItem {
 }
 
 model PurchaseOrder {
-  id                  String               @id @default(uuid())
-  poNumber            String               @unique
+  id                  String  @id @default(uuid())
+  poNumber            String  @unique
   branchId            String
   supplierId          String
   purchaseRequestId   String?
@@ -434,16 +490,16 @@ model PurchaseOrder {
 
   status PurchaseOrderStatus @default(DRAFT)
 
-  orderDate DateTime @default(now())
+  orderDate    DateTime  @default(now())
   expectedDate DateTime?
-  notes String?
+  notes        String?
 
-  subtotal Decimal @db.Decimal(12, 2) @default(0)
-  discount Decimal @db.Decimal(12, 2) @default(0)
-  tax      Decimal @db.Decimal(12, 2) @default(0)
-  total    Decimal @db.Decimal(12, 2) @default(0)
+  subtotal Decimal @default(0) @db.Decimal(12, 2)
+  discount Decimal @default(0) @db.Decimal(12, 2)
+  tax      Decimal @default(0) @db.Decimal(12, 2)
+  total    Decimal @default(0) @db.Decimal(12, 2)
 
-  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  branch   Branch   @relation(fields: [branchId], references: [id], onDelete: Restrict)
   supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Restrict)
 
   purchaseRequest PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id], onDelete: SetNull)
@@ -451,11 +507,11 @@ model PurchaseOrder {
   supplierQuotation SupplierQuotation? @relation(fields: [supplierQuotationId], references: [id], onDelete: SetNull)
 
   createdById String?
-  createdBy   User? @relation("PurchaseOrderCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("PurchaseOrderCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
 
   items PurchaseOrderItem[]
 
-  receivings Receiving[]
+  receivings       Receiving[]
   purchaseInvoices PurchaseInvoice[]
 
   createdAt DateTime @default(now())
@@ -470,13 +526,13 @@ model PurchaseOrder {
 }
 
 model PurchaseOrderItem {
-  id             String @id @default(uuid())
+  id              String @id @default(uuid())
   purchaseOrderId String
-  productId      String
+  productId       String
 
-  quantity  Int
-  unitCost  Decimal @db.Decimal(12, 2)
-  subtotal  Decimal @db.Decimal(12, 2)
+  quantity Int
+  unitCost Decimal @db.Decimal(12, 2)
+  subtotal Decimal @db.Decimal(12, 2)
 
   receivedQuantity Int @default(0)
 
@@ -490,22 +546,28 @@ model PurchaseOrderItem {
 }
 
 model Receiving {
-  id            String          @id @default(uuid())
-  receivingNo   String          @unique
-  branchId      String
+  id              String @id @default(uuid())
+  receivingNo     String @unique
+  branchId        String
   purchaseOrderId String
 
   status ReceivingStatus @default(DRAFT)
 
-  receivedDate DateTime @default(now())
-  referenceNo String?
-  notes String?
+  receivedDate DateTime             @default(now())
+  referenceNo  String?
+  notes        String?
+  checkStatus  ReceivingCheckStatus @default(PENDING)
+
+  checkedAt   DateTime?
+  checkedById String?
+  checkNotes  String?
 
   branch        Branch        @relation(fields: [branchId], references: [id], onDelete: Restrict)
   purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Restrict)
 
   createdById String?
-  createdBy   User? @relation("ReceivingCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("ReceivingCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  checkedBy   User?   @relation("ReceivingCheckedBy", fields: [checkedById], references: [id], onDelete: SetNull)
 
   items ReceivingItem[]
 
@@ -520,12 +582,17 @@ model Receiving {
 }
 
 model ReceivingItem {
-  id                String @id @default(uuid())
-  receivingId       String
+  id                  String @id @default(uuid())
+  receivingId         String
   purchaseOrderItemId String
-  productId         String
+  productId           String
 
   quantityReceived Int
+  quantityAccepted Int @default(0)
+  quantityRejected Int @default(0)
+
+  qualityStatus String?
+  qualityNotes  String?
 
   notes String?
 
@@ -541,36 +608,40 @@ model ReceivingItem {
 }
 
 model PurchaseInvoice {
-  id             String                @id @default(uuid())
-  invoiceNo      String                @unique
-  branchId       String
-  supplierId     String
+  id                String  @id @default(uuid())
+  invoiceNo         String  @unique
+  supplierInvoiceNo String?
+
+  branchId        String
+  supplierId      String
   purchaseOrderId String?
-  receivingId    String?
+  receivingId     String?
 
-  status PurchaseInvoiceStatus @default(DRAFT)
+  status      PurchaseInvoiceStatus @default(DRAFT)
+  paymentMode PaymentMode           @default(TERMS)
 
-  invoiceDate DateTime @default(now())
-  dueDate     DateTime?
+  invoiceDate     DateTime         @default(now())
+  dueDate         DateTime?
+  accountsPayable AccountsPayable?
 
-  subtotal   Decimal @db.Decimal(12, 2) @default(0)
-  discount   Decimal @db.Decimal(12, 2) @default(0)
-  tax        Decimal @db.Decimal(12, 2) @default(0)
-  total      Decimal @db.Decimal(12, 2) @default(0)
+  subtotal Decimal @default(0) @db.Decimal(12, 2)
+  discount Decimal @default(0) @db.Decimal(12, 2)
+  tax      Decimal @default(0) @db.Decimal(12, 2)
+  total    Decimal @default(0) @db.Decimal(12, 2)
 
-  amountPaid Decimal @db.Decimal(12, 2) @default(0)
-  balanceDue Decimal @db.Decimal(12, 2) @default(0)
+  amountPaid Decimal @default(0) @db.Decimal(12, 2)
+  balanceDue Decimal @default(0) @db.Decimal(12, 2)
 
   notes String?
 
-  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  branch   Branch   @relation(fields: [branchId], references: [id], onDelete: Restrict)
   supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Restrict)
 
   purchaseOrder PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id], onDelete: SetNull)
   receiving     Receiving?     @relation(fields: [receivingId], references: [id], onDelete: SetNull)
 
   createdById String?
-  createdBy   User? @relation("PurchaseInvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("PurchaseInvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
 
   items PurchaseInvoiceItem[]
 
@@ -596,8 +667,178 @@ model PurchaseInvoiceItem {
   subtotal Decimal @db.Decimal(12, 2)
 
   purchaseInvoice PurchaseInvoice @relation(fields: [purchaseInvoiceId], references: [id], onDelete: Cascade)
-  product         Product          @relation(fields: [productId], references: [id], onDelete: Restrict)
+  product         Product         @relation(fields: [productId], references: [id], onDelete: Restrict)
 
   @@index([purchaseInvoiceId])
   @@index([productId])
+}
+
+model AccountsPayable {
+  id                String @id @default(uuid())
+  branchId          String
+  supplierId        String
+  purchaseInvoiceId String @unique
+
+  paymentMode PaymentMode
+  status      AccountsPayableStatus @default(OPEN)
+
+  originalAmount Decimal           @db.Decimal(12, 2)
+  amountPaid     Decimal           @default(0) @db.Decimal(12, 2)
+  balanceDue     Decimal           @db.Decimal(12, 2)
+  payments       SupplierPayment[]
+
+  dueDate DateTime?
+  notes   String?
+
+  branch          Branch          @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  supplier        Supplier        @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  purchaseInvoice PurchaseInvoice @relation(fields: [purchaseInvoiceId], references: [id], onDelete: Restrict)
+
+  createdById String?
+  createdBy   User?   @relation("AccountsPayableCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([paymentMode])
+  @@index([dueDate])
+  @@index([createdAt])
+}
+
+model SupplierPayment {
+  id        String @id @default(uuid())
+  paymentNo String @unique
+
+  branchId          String
+  supplierId        String
+  accountsPayableId String
+
+  accountId String
+
+  accountType CashBankAccountType
+
+  amount         Decimal         @db.Decimal(12, 2)
+  paymentDate    DateTime        @default(now())
+  referenceNo    String?
+  notes          String?
+  paymentVoucher PaymentVoucher?
+
+  status SupplierPaymentStatus @default(POSTED)
+
+  branch          Branch          @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  supplier        Supplier        @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  accountsPayable AccountsPayable @relation(fields: [accountsPayableId], references: [id], onDelete: Restrict)
+
+  account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  createdById String?
+  createdBy   User?   @relation("SupplierPaymentsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  cashBankTransaction CashBankTransaction?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([supplierId])
+  @@index([accountsPayableId])
+  @@index([paymentDate])
+  @@index([status])
+}
+
+model CashBankTransaction {
+  id String @id @default(uuid())
+
+  branchId          String
+  supplierPaymentId String @unique
+
+  accountId String
+
+  accountType CashBankAccountType
+  accountName String
+
+  transactionType CashBankTransactionType
+  direction       CashBankTransactionDirection
+
+  amount Decimal @db.Decimal(12, 2)
+
+  transactionDate DateTime @default(now())
+  referenceNo     String?
+  notes           String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  supplierPayment SupplierPayment @relation(fields: [supplierPaymentId], references: [id], onDelete: Restrict)
+
+  createdById String?
+  createdBy   User?   @relation("CashBankTransactionsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([accountId])
+  @@index([accountType])
+  @@index([transactionType])
+  @@index([direction])
+  @@index([transactionDate])
+}
+
+model CashBankAccount {
+  id       String @id @default(uuid())
+  branchId String
+
+  accountType   CashBankAccountType
+  name          String
+  accountNumber String?
+
+  openingBalance Decimal @default(0) @db.Decimal(12, 2)
+
+  isActive Boolean @default(true)
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  supplierPayments SupplierPayment[]
+  transactions     CashBankTransaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([branchId, name])
+  @@index([branchId])
+  @@index([accountType])
+  @@index([isActive])
+}
+
+model PaymentVoucher {
+  id        String @id @default(uuid())
+  voucherNo String @unique
+
+  branchId          String
+  supplierPaymentId String @unique
+
+  voucherDate DateTime @default(now())
+  payeeName   String
+  amount      Decimal  @db.Decimal(12, 2)
+  purpose     String?
+  notes       String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  supplierPayment SupplierPayment @relation(fields: [supplierPaymentId], references: [id], onDelete: Restrict)
+
+  createdById String?
+  createdBy   User?   @relation("PaymentVouchersCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([voucherDate])
+  @@index([payeeName])
 }

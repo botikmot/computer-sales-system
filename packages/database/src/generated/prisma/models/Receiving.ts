@@ -33,6 +33,10 @@ export type ReceivingMinAggregateOutputType = {
   receivedDate: Date | null
   referenceNo: string | null
   notes: string | null
+  checkStatus: $Enums.ReceivingCheckStatus | null
+  checkedAt: Date | null
+  checkedById: string | null
+  checkNotes: string | null
   createdById: string | null
   createdAt: Date | null
 }
@@ -46,6 +50,10 @@ export type ReceivingMaxAggregateOutputType = {
   receivedDate: Date | null
   referenceNo: string | null
   notes: string | null
+  checkStatus: $Enums.ReceivingCheckStatus | null
+  checkedAt: Date | null
+  checkedById: string | null
+  checkNotes: string | null
   createdById: string | null
   createdAt: Date | null
 }
@@ -59,6 +67,10 @@ export type ReceivingCountAggregateOutputType = {
   receivedDate: number
   referenceNo: number
   notes: number
+  checkStatus: number
+  checkedAt: number
+  checkedById: number
+  checkNotes: number
   createdById: number
   createdAt: number
   _all: number
@@ -74,6 +86,10 @@ export type ReceivingMinAggregateInputType = {
   receivedDate?: true
   referenceNo?: true
   notes?: true
+  checkStatus?: true
+  checkedAt?: true
+  checkedById?: true
+  checkNotes?: true
   createdById?: true
   createdAt?: true
 }
@@ -87,6 +103,10 @@ export type ReceivingMaxAggregateInputType = {
   receivedDate?: true
   referenceNo?: true
   notes?: true
+  checkStatus?: true
+  checkedAt?: true
+  checkedById?: true
+  checkNotes?: true
   createdById?: true
   createdAt?: true
 }
@@ -100,6 +120,10 @@ export type ReceivingCountAggregateInputType = {
   receivedDate?: true
   referenceNo?: true
   notes?: true
+  checkStatus?: true
+  checkedAt?: true
+  checkedById?: true
+  checkNotes?: true
   createdById?: true
   createdAt?: true
   _all?: true
@@ -186,6 +210,10 @@ export type ReceivingGroupByOutputType = {
   receivedDate: Date
   referenceNo: string | null
   notes: string | null
+  checkStatus: $Enums.ReceivingCheckStatus
+  checkedAt: Date | null
+  checkedById: string | null
+  checkNotes: string | null
   createdById: string | null
   createdAt: Date
   _count: ReceivingCountAggregateOutputType | null
@@ -220,11 +248,16 @@ export type ReceivingWhereInput = {
   receivedDate?: Prisma.DateTimeFilter<"Receiving"> | Date | string
   referenceNo?: Prisma.StringNullableFilter<"Receiving"> | string | null
   notes?: Prisma.StringNullableFilter<"Receiving"> | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFilter<"Receiving"> | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.DateTimeNullableFilter<"Receiving"> | Date | string | null
+  checkedById?: Prisma.StringNullableFilter<"Receiving"> | string | null
+  checkNotes?: Prisma.StringNullableFilter<"Receiving"> | string | null
   createdById?: Prisma.StringNullableFilter<"Receiving"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Receiving"> | Date | string
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   purchaseOrder?: Prisma.XOR<Prisma.PurchaseOrderScalarRelationFilter, Prisma.PurchaseOrderWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  checkedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   items?: Prisma.ReceivingItemListRelationFilter
   purchaseInvoices?: Prisma.PurchaseInvoiceListRelationFilter
 }
@@ -238,11 +271,16 @@ export type ReceivingOrderByWithRelationInput = {
   receivedDate?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkStatus?: Prisma.SortOrder
+  checkedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   branch?: Prisma.BranchOrderByWithRelationInput
   purchaseOrder?: Prisma.PurchaseOrderOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  checkedBy?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.ReceivingItemOrderByRelationAggregateInput
   purchaseInvoices?: Prisma.PurchaseInvoiceOrderByRelationAggregateInput
 }
@@ -259,11 +297,16 @@ export type ReceivingWhereUniqueInput = Prisma.AtLeast<{
   receivedDate?: Prisma.DateTimeFilter<"Receiving"> | Date | string
   referenceNo?: Prisma.StringNullableFilter<"Receiving"> | string | null
   notes?: Prisma.StringNullableFilter<"Receiving"> | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFilter<"Receiving"> | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.DateTimeNullableFilter<"Receiving"> | Date | string | null
+  checkedById?: Prisma.StringNullableFilter<"Receiving"> | string | null
+  checkNotes?: Prisma.StringNullableFilter<"Receiving"> | string | null
   createdById?: Prisma.StringNullableFilter<"Receiving"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Receiving"> | Date | string
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   purchaseOrder?: Prisma.XOR<Prisma.PurchaseOrderScalarRelationFilter, Prisma.PurchaseOrderWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  checkedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   items?: Prisma.ReceivingItemListRelationFilter
   purchaseInvoices?: Prisma.PurchaseInvoiceListRelationFilter
 }, "id" | "receivingNo">
@@ -277,6 +320,10 @@ export type ReceivingOrderByWithAggregationInput = {
   receivedDate?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkStatus?: Prisma.SortOrder
+  checkedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ReceivingCountOrderByAggregateInput
@@ -296,6 +343,10 @@ export type ReceivingScalarWhereWithAggregatesInput = {
   receivedDate?: Prisma.DateTimeWithAggregatesFilter<"Receiving"> | Date | string
   referenceNo?: Prisma.StringNullableWithAggregatesFilter<"Receiving"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Receiving"> | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusWithAggregatesFilter<"Receiving"> | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Receiving"> | Date | string | null
+  checkedById?: Prisma.StringNullableWithAggregatesFilter<"Receiving"> | string | null
+  checkNotes?: Prisma.StringNullableWithAggregatesFilter<"Receiving"> | string | null
   createdById?: Prisma.StringNullableWithAggregatesFilter<"Receiving"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Receiving"> | Date | string
 }
@@ -307,10 +358,14 @@ export type ReceivingCreateInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
   createdAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutReceivingsInput
   purchaseOrder: Prisma.PurchaseOrderCreateNestedOneWithoutReceivingsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutReceivingsCreatedInput
+  checkedBy?: Prisma.UserCreateNestedOneWithoutReceivingsCheckedInput
   items?: Prisma.ReceivingItemCreateNestedManyWithoutReceivingInput
   purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutReceivingInput
 }
@@ -324,6 +379,10 @@ export type ReceivingUncheckedCreateInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
   items?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutReceivingInput
@@ -337,10 +396,14 @@ export type ReceivingUpdateInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutReceivingsNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneRequiredWithoutReceivingsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutReceivingsCreatedNestedInput
+  checkedBy?: Prisma.UserUpdateOneWithoutReceivingsCheckedNestedInput
   items?: Prisma.ReceivingItemUpdateManyWithoutReceivingNestedInput
   purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutReceivingNestedInput
 }
@@ -354,6 +417,10 @@ export type ReceivingUncheckedUpdateInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ReceivingItemUncheckedUpdateManyWithoutReceivingNestedInput
@@ -369,6 +436,10 @@ export type ReceivingCreateManyInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
 }
@@ -380,6 +451,9 @@ export type ReceivingUpdateManyMutationInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -392,6 +466,10 @@ export type ReceivingUncheckedUpdateManyInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -415,6 +493,10 @@ export type ReceivingCountOrderByAggregateInput = {
   receivedDate?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  checkStatus?: Prisma.SortOrder
+  checkedAt?: Prisma.SortOrder
+  checkedById?: Prisma.SortOrder
+  checkNotes?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -428,6 +510,10 @@ export type ReceivingMaxOrderByAggregateInput = {
   receivedDate?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  checkStatus?: Prisma.SortOrder
+  checkedAt?: Prisma.SortOrder
+  checkedById?: Prisma.SortOrder
+  checkNotes?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -441,6 +527,10 @@ export type ReceivingMinOrderByAggregateInput = {
   receivedDate?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  checkStatus?: Prisma.SortOrder
+  checkedAt?: Prisma.SortOrder
+  checkedById?: Prisma.SortOrder
+  checkNotes?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -504,10 +594,24 @@ export type ReceivingCreateNestedManyWithoutCreatedByInput = {
   connect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
 }
 
+export type ReceivingCreateNestedManyWithoutCheckedByInput = {
+  create?: Prisma.XOR<Prisma.ReceivingCreateWithoutCheckedByInput, Prisma.ReceivingUncheckedCreateWithoutCheckedByInput> | Prisma.ReceivingCreateWithoutCheckedByInput[] | Prisma.ReceivingUncheckedCreateWithoutCheckedByInput[]
+  connectOrCreate?: Prisma.ReceivingCreateOrConnectWithoutCheckedByInput | Prisma.ReceivingCreateOrConnectWithoutCheckedByInput[]
+  createMany?: Prisma.ReceivingCreateManyCheckedByInputEnvelope
+  connect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+}
+
 export type ReceivingUncheckedCreateNestedManyWithoutCreatedByInput = {
   create?: Prisma.XOR<Prisma.ReceivingCreateWithoutCreatedByInput, Prisma.ReceivingUncheckedCreateWithoutCreatedByInput> | Prisma.ReceivingCreateWithoutCreatedByInput[] | Prisma.ReceivingUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.ReceivingCreateOrConnectWithoutCreatedByInput | Prisma.ReceivingCreateOrConnectWithoutCreatedByInput[]
   createMany?: Prisma.ReceivingCreateManyCreatedByInputEnvelope
+  connect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+}
+
+export type ReceivingUncheckedCreateNestedManyWithoutCheckedByInput = {
+  create?: Prisma.XOR<Prisma.ReceivingCreateWithoutCheckedByInput, Prisma.ReceivingUncheckedCreateWithoutCheckedByInput> | Prisma.ReceivingCreateWithoutCheckedByInput[] | Prisma.ReceivingUncheckedCreateWithoutCheckedByInput[]
+  connectOrCreate?: Prisma.ReceivingCreateOrConnectWithoutCheckedByInput | Prisma.ReceivingCreateOrConnectWithoutCheckedByInput[]
+  createMany?: Prisma.ReceivingCreateManyCheckedByInputEnvelope
   connect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
 }
 
@@ -525,6 +629,20 @@ export type ReceivingUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.ReceivingScalarWhereInput | Prisma.ReceivingScalarWhereInput[]
 }
 
+export type ReceivingUpdateManyWithoutCheckedByNestedInput = {
+  create?: Prisma.XOR<Prisma.ReceivingCreateWithoutCheckedByInput, Prisma.ReceivingUncheckedCreateWithoutCheckedByInput> | Prisma.ReceivingCreateWithoutCheckedByInput[] | Prisma.ReceivingUncheckedCreateWithoutCheckedByInput[]
+  connectOrCreate?: Prisma.ReceivingCreateOrConnectWithoutCheckedByInput | Prisma.ReceivingCreateOrConnectWithoutCheckedByInput[]
+  upsert?: Prisma.ReceivingUpsertWithWhereUniqueWithoutCheckedByInput | Prisma.ReceivingUpsertWithWhereUniqueWithoutCheckedByInput[]
+  createMany?: Prisma.ReceivingCreateManyCheckedByInputEnvelope
+  set?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  disconnect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  delete?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  connect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  update?: Prisma.ReceivingUpdateWithWhereUniqueWithoutCheckedByInput | Prisma.ReceivingUpdateWithWhereUniqueWithoutCheckedByInput[]
+  updateMany?: Prisma.ReceivingUpdateManyWithWhereWithoutCheckedByInput | Prisma.ReceivingUpdateManyWithWhereWithoutCheckedByInput[]
+  deleteMany?: Prisma.ReceivingScalarWhereInput | Prisma.ReceivingScalarWhereInput[]
+}
+
 export type ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput = {
   create?: Prisma.XOR<Prisma.ReceivingCreateWithoutCreatedByInput, Prisma.ReceivingUncheckedCreateWithoutCreatedByInput> | Prisma.ReceivingCreateWithoutCreatedByInput[] | Prisma.ReceivingUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.ReceivingCreateOrConnectWithoutCreatedByInput | Prisma.ReceivingCreateOrConnectWithoutCreatedByInput[]
@@ -536,6 +654,20 @@ export type ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput = {
   connect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
   update?: Prisma.ReceivingUpdateWithWhereUniqueWithoutCreatedByInput | Prisma.ReceivingUpdateWithWhereUniqueWithoutCreatedByInput[]
   updateMany?: Prisma.ReceivingUpdateManyWithWhereWithoutCreatedByInput | Prisma.ReceivingUpdateManyWithWhereWithoutCreatedByInput[]
+  deleteMany?: Prisma.ReceivingScalarWhereInput | Prisma.ReceivingScalarWhereInput[]
+}
+
+export type ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput = {
+  create?: Prisma.XOR<Prisma.ReceivingCreateWithoutCheckedByInput, Prisma.ReceivingUncheckedCreateWithoutCheckedByInput> | Prisma.ReceivingCreateWithoutCheckedByInput[] | Prisma.ReceivingUncheckedCreateWithoutCheckedByInput[]
+  connectOrCreate?: Prisma.ReceivingCreateOrConnectWithoutCheckedByInput | Prisma.ReceivingCreateOrConnectWithoutCheckedByInput[]
+  upsert?: Prisma.ReceivingUpsertWithWhereUniqueWithoutCheckedByInput | Prisma.ReceivingUpsertWithWhereUniqueWithoutCheckedByInput[]
+  createMany?: Prisma.ReceivingCreateManyCheckedByInputEnvelope
+  set?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  disconnect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  delete?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  connect?: Prisma.ReceivingWhereUniqueInput | Prisma.ReceivingWhereUniqueInput[]
+  update?: Prisma.ReceivingUpdateWithWhereUniqueWithoutCheckedByInput | Prisma.ReceivingUpdateWithWhereUniqueWithoutCheckedByInput[]
+  updateMany?: Prisma.ReceivingUpdateManyWithWhereWithoutCheckedByInput | Prisma.ReceivingUpdateManyWithWhereWithoutCheckedByInput[]
   deleteMany?: Prisma.ReceivingScalarWhereInput | Prisma.ReceivingScalarWhereInput[]
 }
 
@@ -585,6 +717,10 @@ export type EnumReceivingStatusFieldUpdateOperationsInput = {
   set?: $Enums.ReceivingStatus
 }
 
+export type EnumReceivingCheckStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ReceivingCheckStatus
+}
+
 export type ReceivingCreateNestedOneWithoutItemsInput = {
   create?: Prisma.XOR<Prisma.ReceivingCreateWithoutItemsInput, Prisma.ReceivingUncheckedCreateWithoutItemsInput>
   connectOrCreate?: Prisma.ReceivingCreateOrConnectWithoutItemsInput
@@ -622,9 +758,13 @@ export type ReceivingCreateWithoutBranchInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
   createdAt?: Date | string
   purchaseOrder: Prisma.PurchaseOrderCreateNestedOneWithoutReceivingsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutReceivingsCreatedInput
+  checkedBy?: Prisma.UserCreateNestedOneWithoutReceivingsCheckedInput
   items?: Prisma.ReceivingItemCreateNestedManyWithoutReceivingInput
   purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutReceivingInput
 }
@@ -637,6 +777,10 @@ export type ReceivingUncheckedCreateWithoutBranchInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
   items?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutReceivingInput
@@ -681,6 +825,10 @@ export type ReceivingScalarWhereInput = {
   receivedDate?: Prisma.DateTimeFilter<"Receiving"> | Date | string
   referenceNo?: Prisma.StringNullableFilter<"Receiving"> | string | null
   notes?: Prisma.StringNullableFilter<"Receiving"> | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFilter<"Receiving"> | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.DateTimeNullableFilter<"Receiving"> | Date | string | null
+  checkedById?: Prisma.StringNullableFilter<"Receiving"> | string | null
+  checkNotes?: Prisma.StringNullableFilter<"Receiving"> | string | null
   createdById?: Prisma.StringNullableFilter<"Receiving"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Receiving"> | Date | string
 }
@@ -692,9 +840,13 @@ export type ReceivingCreateWithoutCreatedByInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
   createdAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutReceivingsInput
   purchaseOrder: Prisma.PurchaseOrderCreateNestedOneWithoutReceivingsInput
+  checkedBy?: Prisma.UserCreateNestedOneWithoutReceivingsCheckedInput
   items?: Prisma.ReceivingItemCreateNestedManyWithoutReceivingInput
   purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutReceivingInput
 }
@@ -708,6 +860,10 @@ export type ReceivingUncheckedCreateWithoutCreatedByInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdAt?: Date | string
   items?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutReceivingInput
   purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutReceivingInput
@@ -720,6 +876,52 @@ export type ReceivingCreateOrConnectWithoutCreatedByInput = {
 
 export type ReceivingCreateManyCreatedByInputEnvelope = {
   data: Prisma.ReceivingCreateManyCreatedByInput | Prisma.ReceivingCreateManyCreatedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReceivingCreateWithoutCheckedByInput = {
+  id?: string
+  receivingNo: string
+  status?: $Enums.ReceivingStatus
+  receivedDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
+  createdAt?: Date | string
+  branch: Prisma.BranchCreateNestedOneWithoutReceivingsInput
+  purchaseOrder: Prisma.PurchaseOrderCreateNestedOneWithoutReceivingsInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutReceivingsCreatedInput
+  items?: Prisma.ReceivingItemCreateNestedManyWithoutReceivingInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutReceivingInput
+}
+
+export type ReceivingUncheckedCreateWithoutCheckedByInput = {
+  id?: string
+  receivingNo: string
+  branchId: string
+  purchaseOrderId: string
+  status?: $Enums.ReceivingStatus
+  receivedDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
+  createdById?: string | null
+  createdAt?: Date | string
+  items?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutReceivingInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutReceivingInput
+}
+
+export type ReceivingCreateOrConnectWithoutCheckedByInput = {
+  where: Prisma.ReceivingWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReceivingCreateWithoutCheckedByInput, Prisma.ReceivingUncheckedCreateWithoutCheckedByInput>
+}
+
+export type ReceivingCreateManyCheckedByInputEnvelope = {
+  data: Prisma.ReceivingCreateManyCheckedByInput | Prisma.ReceivingCreateManyCheckedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -739,6 +941,22 @@ export type ReceivingUpdateManyWithWhereWithoutCreatedByInput = {
   data: Prisma.XOR<Prisma.ReceivingUpdateManyMutationInput, Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByInput>
 }
 
+export type ReceivingUpsertWithWhereUniqueWithoutCheckedByInput = {
+  where: Prisma.ReceivingWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReceivingUpdateWithoutCheckedByInput, Prisma.ReceivingUncheckedUpdateWithoutCheckedByInput>
+  create: Prisma.XOR<Prisma.ReceivingCreateWithoutCheckedByInput, Prisma.ReceivingUncheckedCreateWithoutCheckedByInput>
+}
+
+export type ReceivingUpdateWithWhereUniqueWithoutCheckedByInput = {
+  where: Prisma.ReceivingWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReceivingUpdateWithoutCheckedByInput, Prisma.ReceivingUncheckedUpdateWithoutCheckedByInput>
+}
+
+export type ReceivingUpdateManyWithWhereWithoutCheckedByInput = {
+  where: Prisma.ReceivingScalarWhereInput
+  data: Prisma.XOR<Prisma.ReceivingUpdateManyMutationInput, Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByInput>
+}
+
 export type ReceivingCreateWithoutPurchaseOrderInput = {
   id?: string
   receivingNo: string
@@ -746,9 +964,13 @@ export type ReceivingCreateWithoutPurchaseOrderInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
   createdAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutReceivingsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutReceivingsCreatedInput
+  checkedBy?: Prisma.UserCreateNestedOneWithoutReceivingsCheckedInput
   items?: Prisma.ReceivingItemCreateNestedManyWithoutReceivingInput
   purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutReceivingInput
 }
@@ -761,6 +983,10 @@ export type ReceivingUncheckedCreateWithoutPurchaseOrderInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
   items?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutReceivingInput
@@ -800,10 +1026,14 @@ export type ReceivingCreateWithoutItemsInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
   createdAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutReceivingsInput
   purchaseOrder: Prisma.PurchaseOrderCreateNestedOneWithoutReceivingsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutReceivingsCreatedInput
+  checkedBy?: Prisma.UserCreateNestedOneWithoutReceivingsCheckedInput
   purchaseInvoices?: Prisma.PurchaseInvoiceCreateNestedManyWithoutReceivingInput
 }
 
@@ -816,6 +1046,10 @@ export type ReceivingUncheckedCreateWithoutItemsInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
   purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutReceivingInput
@@ -844,10 +1078,14 @@ export type ReceivingUpdateWithoutItemsInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutReceivingsNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneRequiredWithoutReceivingsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutReceivingsCreatedNestedInput
+  checkedBy?: Prisma.UserUpdateOneWithoutReceivingsCheckedNestedInput
   purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutReceivingNestedInput
 }
 
@@ -860,6 +1098,10 @@ export type ReceivingUncheckedUpdateWithoutItemsInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutReceivingNestedInput
@@ -872,10 +1114,14 @@ export type ReceivingCreateWithoutPurchaseInvoicesInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
   createdAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutReceivingsInput
   purchaseOrder: Prisma.PurchaseOrderCreateNestedOneWithoutReceivingsInput
   createdBy?: Prisma.UserCreateNestedOneWithoutReceivingsCreatedInput
+  checkedBy?: Prisma.UserCreateNestedOneWithoutReceivingsCheckedInput
   items?: Prisma.ReceivingItemCreateNestedManyWithoutReceivingInput
 }
 
@@ -888,6 +1134,10 @@ export type ReceivingUncheckedCreateWithoutPurchaseInvoicesInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
   items?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutReceivingInput
@@ -916,10 +1166,14 @@ export type ReceivingUpdateWithoutPurchaseInvoicesInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutReceivingsNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneRequiredWithoutReceivingsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutReceivingsCreatedNestedInput
+  checkedBy?: Prisma.UserUpdateOneWithoutReceivingsCheckedNestedInput
   items?: Prisma.ReceivingItemUpdateManyWithoutReceivingNestedInput
 }
 
@@ -932,6 +1186,10 @@ export type ReceivingUncheckedUpdateWithoutPurchaseInvoicesInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ReceivingItemUncheckedUpdateManyWithoutReceivingNestedInput
@@ -945,6 +1203,10 @@ export type ReceivingCreateManyBranchInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
 }
@@ -956,9 +1218,13 @@ export type ReceivingUpdateWithoutBranchInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneRequiredWithoutReceivingsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutReceivingsCreatedNestedInput
+  checkedBy?: Prisma.UserUpdateOneWithoutReceivingsCheckedNestedInput
   items?: Prisma.ReceivingItemUpdateManyWithoutReceivingNestedInput
   purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutReceivingNestedInput
 }
@@ -971,6 +1237,10 @@ export type ReceivingUncheckedUpdateWithoutBranchInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ReceivingItemUncheckedUpdateManyWithoutReceivingNestedInput
@@ -985,6 +1255,10 @@ export type ReceivingUncheckedUpdateManyWithoutBranchInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -998,6 +1272,26 @@ export type ReceivingCreateManyCreatedByInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
+  createdAt?: Date | string
+}
+
+export type ReceivingCreateManyCheckedByInput = {
+  id?: string
+  receivingNo: string
+  branchId: string
+  purchaseOrderId: string
+  status?: $Enums.ReceivingStatus
+  receivedDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkNotes?: string | null
+  createdById?: string | null
   createdAt?: Date | string
 }
 
@@ -1008,9 +1302,13 @@ export type ReceivingUpdateWithoutCreatedByInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutReceivingsNestedInput
   purchaseOrder?: Prisma.PurchaseOrderUpdateOneRequiredWithoutReceivingsNestedInput
+  checkedBy?: Prisma.UserUpdateOneWithoutReceivingsCheckedNestedInput
   items?: Prisma.ReceivingItemUpdateManyWithoutReceivingNestedInput
   purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutReceivingNestedInput
 }
@@ -1024,6 +1322,10 @@ export type ReceivingUncheckedUpdateWithoutCreatedByInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ReceivingItemUncheckedUpdateManyWithoutReceivingNestedInput
   purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutReceivingNestedInput
@@ -1038,6 +1340,62 @@ export type ReceivingUncheckedUpdateManyWithoutCreatedByInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReceivingUpdateWithoutCheckedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  receivingNo?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumReceivingStatusFieldUpdateOperationsInput | $Enums.ReceivingStatus
+  receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branch?: Prisma.BranchUpdateOneRequiredWithoutReceivingsNestedInput
+  purchaseOrder?: Prisma.PurchaseOrderUpdateOneRequiredWithoutReceivingsNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutReceivingsCreatedNestedInput
+  items?: Prisma.ReceivingItemUpdateManyWithoutReceivingNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutReceivingNestedInput
+}
+
+export type ReceivingUncheckedUpdateWithoutCheckedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  receivingNo?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseOrderId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumReceivingStatusFieldUpdateOperationsInput | $Enums.ReceivingStatus
+  receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ReceivingItemUncheckedUpdateManyWithoutReceivingNestedInput
+  purchaseInvoices?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutReceivingNestedInput
+}
+
+export type ReceivingUncheckedUpdateManyWithoutCheckedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  receivingNo?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseOrderId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumReceivingStatusFieldUpdateOperationsInput | $Enums.ReceivingStatus
+  receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1049,6 +1407,10 @@ export type ReceivingCreateManyPurchaseOrderInput = {
   receivedDate?: Date | string
   referenceNo?: string | null
   notes?: string | null
+  checkStatus?: $Enums.ReceivingCheckStatus
+  checkedAt?: Date | string | null
+  checkedById?: string | null
+  checkNotes?: string | null
   createdById?: string | null
   createdAt?: Date | string
 }
@@ -1060,9 +1422,13 @@ export type ReceivingUpdateWithoutPurchaseOrderInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutReceivingsNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutReceivingsCreatedNestedInput
+  checkedBy?: Prisma.UserUpdateOneWithoutReceivingsCheckedNestedInput
   items?: Prisma.ReceivingItemUpdateManyWithoutReceivingNestedInput
   purchaseInvoices?: Prisma.PurchaseInvoiceUpdateManyWithoutReceivingNestedInput
 }
@@ -1075,6 +1441,10 @@ export type ReceivingUncheckedUpdateWithoutPurchaseOrderInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ReceivingItemUncheckedUpdateManyWithoutReceivingNestedInput
@@ -1089,6 +1459,10 @@ export type ReceivingUncheckedUpdateManyWithoutPurchaseOrderInput = {
   receivedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkStatus?: Prisma.EnumReceivingCheckStatusFieldUpdateOperationsInput | $Enums.ReceivingCheckStatus
+  checkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1142,11 +1516,16 @@ export type ReceivingSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   receivedDate?: boolean
   referenceNo?: boolean
   notes?: boolean
+  checkStatus?: boolean
+  checkedAt?: boolean
+  checkedById?: boolean
+  checkNotes?: boolean
   createdById?: boolean
   createdAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.PurchaseOrderDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Receiving$createdByArgs<ExtArgs>
+  checkedBy?: boolean | Prisma.Receiving$checkedByArgs<ExtArgs>
   items?: boolean | Prisma.Receiving$itemsArgs<ExtArgs>
   purchaseInvoices?: boolean | Prisma.Receiving$purchaseInvoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ReceivingCountOutputTypeDefaultArgs<ExtArgs>
@@ -1161,11 +1540,16 @@ export type ReceivingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   receivedDate?: boolean
   referenceNo?: boolean
   notes?: boolean
+  checkStatus?: boolean
+  checkedAt?: boolean
+  checkedById?: boolean
+  checkNotes?: boolean
   createdById?: boolean
   createdAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.PurchaseOrderDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Receiving$createdByArgs<ExtArgs>
+  checkedBy?: boolean | Prisma.Receiving$checkedByArgs<ExtArgs>
 }, ExtArgs["result"]["receiving"]>
 
 export type ReceivingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1177,11 +1561,16 @@ export type ReceivingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   receivedDate?: boolean
   referenceNo?: boolean
   notes?: boolean
+  checkStatus?: boolean
+  checkedAt?: boolean
+  checkedById?: boolean
+  checkNotes?: boolean
   createdById?: boolean
   createdAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.PurchaseOrderDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Receiving$createdByArgs<ExtArgs>
+  checkedBy?: boolean | Prisma.Receiving$checkedByArgs<ExtArgs>
 }, ExtArgs["result"]["receiving"]>
 
 export type ReceivingSelectScalar = {
@@ -1193,15 +1582,20 @@ export type ReceivingSelectScalar = {
   receivedDate?: boolean
   referenceNo?: boolean
   notes?: boolean
+  checkStatus?: boolean
+  checkedAt?: boolean
+  checkedById?: boolean
+  checkNotes?: boolean
   createdById?: boolean
   createdAt?: boolean
 }
 
-export type ReceivingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "receivingNo" | "branchId" | "purchaseOrderId" | "status" | "receivedDate" | "referenceNo" | "notes" | "createdById" | "createdAt", ExtArgs["result"]["receiving"]>
+export type ReceivingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "receivingNo" | "branchId" | "purchaseOrderId" | "status" | "receivedDate" | "referenceNo" | "notes" | "checkStatus" | "checkedAt" | "checkedById" | "checkNotes" | "createdById" | "createdAt", ExtArgs["result"]["receiving"]>
 export type ReceivingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.PurchaseOrderDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Receiving$createdByArgs<ExtArgs>
+  checkedBy?: boolean | Prisma.Receiving$checkedByArgs<ExtArgs>
   items?: boolean | Prisma.Receiving$itemsArgs<ExtArgs>
   purchaseInvoices?: boolean | Prisma.Receiving$purchaseInvoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ReceivingCountOutputTypeDefaultArgs<ExtArgs>
@@ -1210,11 +1604,13 @@ export type ReceivingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.PurchaseOrderDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Receiving$createdByArgs<ExtArgs>
+  checkedBy?: boolean | Prisma.Receiving$checkedByArgs<ExtArgs>
 }
 export type ReceivingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   purchaseOrder?: boolean | Prisma.PurchaseOrderDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.Receiving$createdByArgs<ExtArgs>
+  checkedBy?: boolean | Prisma.Receiving$checkedByArgs<ExtArgs>
 }
 
 export type $ReceivingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1223,6 +1619,7 @@ export type $ReceivingPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     branch: Prisma.$BranchPayload<ExtArgs>
     purchaseOrder: Prisma.$PurchaseOrderPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs> | null
+    checkedBy: Prisma.$UserPayload<ExtArgs> | null
     items: Prisma.$ReceivingItemPayload<ExtArgs>[]
     purchaseInvoices: Prisma.$PurchaseInvoicePayload<ExtArgs>[]
   }
@@ -1235,6 +1632,10 @@ export type $ReceivingPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     receivedDate: Date
     referenceNo: string | null
     notes: string | null
+    checkStatus: $Enums.ReceivingCheckStatus
+    checkedAt: Date | null
+    checkedById: string | null
+    checkNotes: string | null
     createdById: string | null
     createdAt: Date
   }, ExtArgs["result"]["receiving"]>
@@ -1634,6 +2035,7 @@ export interface Prisma__ReceivingClient<T, Null = never, ExtArgs extends runtim
   branch<T extends Prisma.BranchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BranchDefaultArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   purchaseOrder<T extends Prisma.PurchaseOrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PurchaseOrderDefaultArgs<ExtArgs>>): Prisma.Prisma__PurchaseOrderClient<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.Receiving$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receiving$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  checkedBy<T extends Prisma.Receiving$checkedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receiving$checkedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Receiving$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receiving$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivingItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchaseInvoices<T extends Prisma.Receiving$purchaseInvoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receiving$purchaseInvoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1673,6 +2075,10 @@ export interface ReceivingFieldRefs {
   readonly receivedDate: Prisma.FieldRef<"Receiving", 'DateTime'>
   readonly referenceNo: Prisma.FieldRef<"Receiving", 'String'>
   readonly notes: Prisma.FieldRef<"Receiving", 'String'>
+  readonly checkStatus: Prisma.FieldRef<"Receiving", 'ReceivingCheckStatus'>
+  readonly checkedAt: Prisma.FieldRef<"Receiving", 'DateTime'>
+  readonly checkedById: Prisma.FieldRef<"Receiving", 'String'>
+  readonly checkNotes: Prisma.FieldRef<"Receiving", 'String'>
   readonly createdById: Prisma.FieldRef<"Receiving", 'String'>
   readonly createdAt: Prisma.FieldRef<"Receiving", 'DateTime'>
 }
@@ -2079,6 +2485,25 @@ export type ReceivingDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
  * Receiving.createdBy
  */
 export type Receiving$createdByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * Receiving.checkedBy
+ */
+export type Receiving$checkedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */

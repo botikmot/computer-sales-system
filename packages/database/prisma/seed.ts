@@ -36,6 +36,22 @@ async function main() {
     },
   });
 
+  const supplier = await prisma.supplier.upsert({
+    where: {
+      code: "SUP-001",
+    },
+    update: {},
+    create: {
+      code: "SUP-001",
+      name: "Demo Computer Supplier",
+      contactPerson: "Juan Supplier",
+      contactNumber: "09170000000",
+      email: "supplier@example.com",
+      address: "Demo Supplier Address",
+      isActive: true,
+    },
+  });
+
   const processors = await prisma.productCategory.upsert({
     where: {
       name: "Processors",
@@ -165,6 +181,7 @@ async function main() {
   console.log(`✅ Branch ready: ${mainBranch.code}`);
   console.log(`✅ Products seeded: ${products.length}`);
   console.log("🌱 Database seed completed.");
+  console.log(`✅ Supplier ready: ${supplier.code}`);
 }
 
 main()

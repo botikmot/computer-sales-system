@@ -28,10 +28,14 @@ export type AggregateReceivingItem = {
 
 export type ReceivingItemAvgAggregateOutputType = {
   quantityReceived: number | null
+  quantityAccepted: number | null
+  quantityRejected: number | null
 }
 
 export type ReceivingItemSumAggregateOutputType = {
   quantityReceived: number | null
+  quantityAccepted: number | null
+  quantityRejected: number | null
 }
 
 export type ReceivingItemMinAggregateOutputType = {
@@ -40,6 +44,10 @@ export type ReceivingItemMinAggregateOutputType = {
   purchaseOrderItemId: string | null
   productId: string | null
   quantityReceived: number | null
+  quantityAccepted: number | null
+  quantityRejected: number | null
+  qualityStatus: string | null
+  qualityNotes: string | null
   notes: string | null
 }
 
@@ -49,6 +57,10 @@ export type ReceivingItemMaxAggregateOutputType = {
   purchaseOrderItemId: string | null
   productId: string | null
   quantityReceived: number | null
+  quantityAccepted: number | null
+  quantityRejected: number | null
+  qualityStatus: string | null
+  qualityNotes: string | null
   notes: string | null
 }
 
@@ -58,6 +70,10 @@ export type ReceivingItemCountAggregateOutputType = {
   purchaseOrderItemId: number
   productId: number
   quantityReceived: number
+  quantityAccepted: number
+  quantityRejected: number
+  qualityStatus: number
+  qualityNotes: number
   notes: number
   _all: number
 }
@@ -65,10 +81,14 @@ export type ReceivingItemCountAggregateOutputType = {
 
 export type ReceivingItemAvgAggregateInputType = {
   quantityReceived?: true
+  quantityAccepted?: true
+  quantityRejected?: true
 }
 
 export type ReceivingItemSumAggregateInputType = {
   quantityReceived?: true
+  quantityAccepted?: true
+  quantityRejected?: true
 }
 
 export type ReceivingItemMinAggregateInputType = {
@@ -77,6 +97,10 @@ export type ReceivingItemMinAggregateInputType = {
   purchaseOrderItemId?: true
   productId?: true
   quantityReceived?: true
+  quantityAccepted?: true
+  quantityRejected?: true
+  qualityStatus?: true
+  qualityNotes?: true
   notes?: true
 }
 
@@ -86,6 +110,10 @@ export type ReceivingItemMaxAggregateInputType = {
   purchaseOrderItemId?: true
   productId?: true
   quantityReceived?: true
+  quantityAccepted?: true
+  quantityRejected?: true
+  qualityStatus?: true
+  qualityNotes?: true
   notes?: true
 }
 
@@ -95,6 +123,10 @@ export type ReceivingItemCountAggregateInputType = {
   purchaseOrderItemId?: true
   productId?: true
   quantityReceived?: true
+  quantityAccepted?: true
+  quantityRejected?: true
+  qualityStatus?: true
+  qualityNotes?: true
   notes?: true
   _all?: true
 }
@@ -191,6 +223,10 @@ export type ReceivingItemGroupByOutputType = {
   purchaseOrderItemId: string
   productId: string
   quantityReceived: number
+  quantityAccepted: number
+  quantityRejected: number
+  qualityStatus: string | null
+  qualityNotes: string | null
   notes: string | null
   _count: ReceivingItemCountAggregateOutputType | null
   _avg: ReceivingItemAvgAggregateOutputType | null
@@ -223,6 +259,10 @@ export type ReceivingItemWhereInput = {
   purchaseOrderItemId?: Prisma.StringFilter<"ReceivingItem"> | string
   productId?: Prisma.StringFilter<"ReceivingItem"> | string
   quantityReceived?: Prisma.IntFilter<"ReceivingItem"> | number
+  quantityAccepted?: Prisma.IntFilter<"ReceivingItem"> | number
+  quantityRejected?: Prisma.IntFilter<"ReceivingItem"> | number
+  qualityStatus?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
+  qualityNotes?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
   notes?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
   receiving?: Prisma.XOR<Prisma.ReceivingScalarRelationFilter, Prisma.ReceivingWhereInput>
   purchaseOrderItem?: Prisma.XOR<Prisma.PurchaseOrderItemScalarRelationFilter, Prisma.PurchaseOrderItemWhereInput>
@@ -235,6 +275,10 @@ export type ReceivingItemOrderByWithRelationInput = {
   purchaseOrderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantityReceived?: Prisma.SortOrder
+  quantityAccepted?: Prisma.SortOrder
+  quantityRejected?: Prisma.SortOrder
+  qualityStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualityNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   receiving?: Prisma.ReceivingOrderByWithRelationInput
   purchaseOrderItem?: Prisma.PurchaseOrderItemOrderByWithRelationInput
@@ -250,6 +294,10 @@ export type ReceivingItemWhereUniqueInput = Prisma.AtLeast<{
   purchaseOrderItemId?: Prisma.StringFilter<"ReceivingItem"> | string
   productId?: Prisma.StringFilter<"ReceivingItem"> | string
   quantityReceived?: Prisma.IntFilter<"ReceivingItem"> | number
+  quantityAccepted?: Prisma.IntFilter<"ReceivingItem"> | number
+  quantityRejected?: Prisma.IntFilter<"ReceivingItem"> | number
+  qualityStatus?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
+  qualityNotes?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
   notes?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
   receiving?: Prisma.XOR<Prisma.ReceivingScalarRelationFilter, Prisma.ReceivingWhereInput>
   purchaseOrderItem?: Prisma.XOR<Prisma.PurchaseOrderItemScalarRelationFilter, Prisma.PurchaseOrderItemWhereInput>
@@ -262,6 +310,10 @@ export type ReceivingItemOrderByWithAggregationInput = {
   purchaseOrderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantityReceived?: Prisma.SortOrder
+  quantityAccepted?: Prisma.SortOrder
+  quantityRejected?: Prisma.SortOrder
+  qualityStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualityNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ReceivingItemCountOrderByAggregateInput
   _avg?: Prisma.ReceivingItemAvgOrderByAggregateInput
@@ -279,12 +331,20 @@ export type ReceivingItemScalarWhereWithAggregatesInput = {
   purchaseOrderItemId?: Prisma.StringWithAggregatesFilter<"ReceivingItem"> | string
   productId?: Prisma.StringWithAggregatesFilter<"ReceivingItem"> | string
   quantityReceived?: Prisma.IntWithAggregatesFilter<"ReceivingItem"> | number
+  quantityAccepted?: Prisma.IntWithAggregatesFilter<"ReceivingItem"> | number
+  quantityRejected?: Prisma.IntWithAggregatesFilter<"ReceivingItem"> | number
+  qualityStatus?: Prisma.StringNullableWithAggregatesFilter<"ReceivingItem"> | string | null
+  qualityNotes?: Prisma.StringNullableWithAggregatesFilter<"ReceivingItem"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"ReceivingItem"> | string | null
 }
 
 export type ReceivingItemCreateInput = {
   id?: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
   receiving: Prisma.ReceivingCreateNestedOneWithoutItemsInput
   purchaseOrderItem: Prisma.PurchaseOrderItemCreateNestedOneWithoutReceivingItemsInput
@@ -297,12 +357,20 @@ export type ReceivingItemUncheckedCreateInput = {
   purchaseOrderItemId: string
   productId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
 export type ReceivingItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiving?: Prisma.ReceivingUpdateOneRequiredWithoutItemsNestedInput
   purchaseOrderItem?: Prisma.PurchaseOrderItemUpdateOneRequiredWithoutReceivingItemsNestedInput
@@ -315,6 +383,10 @@ export type ReceivingItemUncheckedUpdateInput = {
   purchaseOrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -324,12 +396,20 @@ export type ReceivingItemCreateManyInput = {
   purchaseOrderItemId: string
   productId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
 export type ReceivingItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -339,6 +419,10 @@ export type ReceivingItemUncheckedUpdateManyInput = {
   purchaseOrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -358,11 +442,17 @@ export type ReceivingItemCountOrderByAggregateInput = {
   purchaseOrderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantityReceived?: Prisma.SortOrder
+  quantityAccepted?: Prisma.SortOrder
+  quantityRejected?: Prisma.SortOrder
+  qualityStatus?: Prisma.SortOrder
+  qualityNotes?: Prisma.SortOrder
   notes?: Prisma.SortOrder
 }
 
 export type ReceivingItemAvgOrderByAggregateInput = {
   quantityReceived?: Prisma.SortOrder
+  quantityAccepted?: Prisma.SortOrder
+  quantityRejected?: Prisma.SortOrder
 }
 
 export type ReceivingItemMaxOrderByAggregateInput = {
@@ -371,6 +461,10 @@ export type ReceivingItemMaxOrderByAggregateInput = {
   purchaseOrderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantityReceived?: Prisma.SortOrder
+  quantityAccepted?: Prisma.SortOrder
+  quantityRejected?: Prisma.SortOrder
+  qualityStatus?: Prisma.SortOrder
+  qualityNotes?: Prisma.SortOrder
   notes?: Prisma.SortOrder
 }
 
@@ -380,11 +474,17 @@ export type ReceivingItemMinOrderByAggregateInput = {
   purchaseOrderItemId?: Prisma.SortOrder
   productId?: Prisma.SortOrder
   quantityReceived?: Prisma.SortOrder
+  quantityAccepted?: Prisma.SortOrder
+  quantityRejected?: Prisma.SortOrder
+  qualityStatus?: Prisma.SortOrder
+  qualityNotes?: Prisma.SortOrder
   notes?: Prisma.SortOrder
 }
 
 export type ReceivingItemSumOrderByAggregateInput = {
   quantityReceived?: Prisma.SortOrder
+  quantityAccepted?: Prisma.SortOrder
+  quantityRejected?: Prisma.SortOrder
 }
 
 export type ReceivingItemCreateNestedManyWithoutProductInput = {
@@ -516,6 +616,10 @@ export type ReceivingItemUncheckedUpdateManyWithoutReceivingNestedInput = {
 export type ReceivingItemCreateWithoutProductInput = {
   id?: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
   receiving: Prisma.ReceivingCreateNestedOneWithoutItemsInput
   purchaseOrderItem: Prisma.PurchaseOrderItemCreateNestedOneWithoutReceivingItemsInput
@@ -526,6 +630,10 @@ export type ReceivingItemUncheckedCreateWithoutProductInput = {
   receivingId: string
   purchaseOrderItemId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
@@ -564,12 +672,20 @@ export type ReceivingItemScalarWhereInput = {
   purchaseOrderItemId?: Prisma.StringFilter<"ReceivingItem"> | string
   productId?: Prisma.StringFilter<"ReceivingItem"> | string
   quantityReceived?: Prisma.IntFilter<"ReceivingItem"> | number
+  quantityAccepted?: Prisma.IntFilter<"ReceivingItem"> | number
+  quantityRejected?: Prisma.IntFilter<"ReceivingItem"> | number
+  qualityStatus?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
+  qualityNotes?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
   notes?: Prisma.StringNullableFilter<"ReceivingItem"> | string | null
 }
 
 export type ReceivingItemCreateWithoutPurchaseOrderItemInput = {
   id?: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
   receiving: Prisma.ReceivingCreateNestedOneWithoutItemsInput
   product: Prisma.ProductCreateNestedOneWithoutReceivingItemsInput
@@ -580,6 +696,10 @@ export type ReceivingItemUncheckedCreateWithoutPurchaseOrderItemInput = {
   receivingId: string
   productId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
@@ -612,6 +732,10 @@ export type ReceivingItemUpdateManyWithWhereWithoutPurchaseOrderItemInput = {
 export type ReceivingItemCreateWithoutReceivingInput = {
   id?: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
   purchaseOrderItem: Prisma.PurchaseOrderItemCreateNestedOneWithoutReceivingItemsInput
   product: Prisma.ProductCreateNestedOneWithoutReceivingItemsInput
@@ -622,6 +746,10 @@ export type ReceivingItemUncheckedCreateWithoutReceivingInput = {
   purchaseOrderItemId: string
   productId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
@@ -656,12 +784,20 @@ export type ReceivingItemCreateManyProductInput = {
   receivingId: string
   purchaseOrderItemId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
 export type ReceivingItemUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiving?: Prisma.ReceivingUpdateOneRequiredWithoutItemsNestedInput
   purchaseOrderItem?: Prisma.PurchaseOrderItemUpdateOneRequiredWithoutReceivingItemsNestedInput
@@ -672,6 +808,10 @@ export type ReceivingItemUncheckedUpdateWithoutProductInput = {
   receivingId?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseOrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -680,6 +820,10 @@ export type ReceivingItemUncheckedUpdateManyWithoutProductInput = {
   receivingId?: Prisma.StringFieldUpdateOperationsInput | string
   purchaseOrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -688,12 +832,20 @@ export type ReceivingItemCreateManyPurchaseOrderItemInput = {
   receivingId: string
   productId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
 export type ReceivingItemUpdateWithoutPurchaseOrderItemInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiving?: Prisma.ReceivingUpdateOneRequiredWithoutItemsNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutReceivingItemsNestedInput
@@ -704,6 +856,10 @@ export type ReceivingItemUncheckedUpdateWithoutPurchaseOrderItemInput = {
   receivingId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -712,6 +868,10 @@ export type ReceivingItemUncheckedUpdateManyWithoutPurchaseOrderItemInput = {
   receivingId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -720,12 +880,20 @@ export type ReceivingItemCreateManyReceivingInput = {
   purchaseOrderItemId: string
   productId: string
   quantityReceived: number
+  quantityAccepted?: number
+  quantityRejected?: number
+  qualityStatus?: string | null
+  qualityNotes?: string | null
   notes?: string | null
 }
 
 export type ReceivingItemUpdateWithoutReceivingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchaseOrderItem?: Prisma.PurchaseOrderItemUpdateOneRequiredWithoutReceivingItemsNestedInput
   product?: Prisma.ProductUpdateOneRequiredWithoutReceivingItemsNestedInput
@@ -736,6 +904,10 @@ export type ReceivingItemUncheckedUpdateWithoutReceivingInput = {
   purchaseOrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -744,6 +916,10 @@ export type ReceivingItemUncheckedUpdateManyWithoutReceivingInput = {
   purchaseOrderItemId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   quantityReceived?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityAccepted?: Prisma.IntFieldUpdateOperationsInput | number
+  quantityRejected?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualityNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -755,6 +931,10 @@ export type ReceivingItemSelect<ExtArgs extends runtime.Types.Extensions.Interna
   purchaseOrderItemId?: boolean
   productId?: boolean
   quantityReceived?: boolean
+  quantityAccepted?: boolean
+  quantityRejected?: boolean
+  qualityStatus?: boolean
+  qualityNotes?: boolean
   notes?: boolean
   receiving?: boolean | Prisma.ReceivingDefaultArgs<ExtArgs>
   purchaseOrderItem?: boolean | Prisma.PurchaseOrderItemDefaultArgs<ExtArgs>
@@ -767,6 +947,10 @@ export type ReceivingItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   purchaseOrderItemId?: boolean
   productId?: boolean
   quantityReceived?: boolean
+  quantityAccepted?: boolean
+  quantityRejected?: boolean
+  qualityStatus?: boolean
+  qualityNotes?: boolean
   notes?: boolean
   receiving?: boolean | Prisma.ReceivingDefaultArgs<ExtArgs>
   purchaseOrderItem?: boolean | Prisma.PurchaseOrderItemDefaultArgs<ExtArgs>
@@ -779,6 +963,10 @@ export type ReceivingItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   purchaseOrderItemId?: boolean
   productId?: boolean
   quantityReceived?: boolean
+  quantityAccepted?: boolean
+  quantityRejected?: boolean
+  qualityStatus?: boolean
+  qualityNotes?: boolean
   notes?: boolean
   receiving?: boolean | Prisma.ReceivingDefaultArgs<ExtArgs>
   purchaseOrderItem?: boolean | Prisma.PurchaseOrderItemDefaultArgs<ExtArgs>
@@ -791,10 +979,14 @@ export type ReceivingItemSelectScalar = {
   purchaseOrderItemId?: boolean
   productId?: boolean
   quantityReceived?: boolean
+  quantityAccepted?: boolean
+  quantityRejected?: boolean
+  qualityStatus?: boolean
+  qualityNotes?: boolean
   notes?: boolean
 }
 
-export type ReceivingItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "receivingId" | "purchaseOrderItemId" | "productId" | "quantityReceived" | "notes", ExtArgs["result"]["receivingItem"]>
+export type ReceivingItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "receivingId" | "purchaseOrderItemId" | "productId" | "quantityReceived" | "quantityAccepted" | "quantityRejected" | "qualityStatus" | "qualityNotes" | "notes", ExtArgs["result"]["receivingItem"]>
 export type ReceivingItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   receiving?: boolean | Prisma.ReceivingDefaultArgs<ExtArgs>
   purchaseOrderItem?: boolean | Prisma.PurchaseOrderItemDefaultArgs<ExtArgs>
@@ -824,6 +1016,10 @@ export type $ReceivingItemPayload<ExtArgs extends runtime.Types.Extensions.Inter
     purchaseOrderItemId: string
     productId: string
     quantityReceived: number
+    quantityAccepted: number
+    quantityRejected: number
+    qualityStatus: string | null
+    qualityNotes: string | null
     notes: string | null
   }, ExtArgs["result"]["receivingItem"]>
   composites: {}
@@ -1256,6 +1452,10 @@ export interface ReceivingItemFieldRefs {
   readonly purchaseOrderItemId: Prisma.FieldRef<"ReceivingItem", 'String'>
   readonly productId: Prisma.FieldRef<"ReceivingItem", 'String'>
   readonly quantityReceived: Prisma.FieldRef<"ReceivingItem", 'Int'>
+  readonly quantityAccepted: Prisma.FieldRef<"ReceivingItem", 'Int'>
+  readonly quantityRejected: Prisma.FieldRef<"ReceivingItem", 'Int'>
+  readonly qualityStatus: Prisma.FieldRef<"ReceivingItem", 'String'>
+  readonly qualityNotes: Prisma.FieldRef<"ReceivingItem", 'String'>
   readonly notes: Prisma.FieldRef<"ReceivingItem", 'String'>
 }
     

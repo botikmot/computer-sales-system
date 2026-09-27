@@ -72,7 +72,12 @@ export const ModelName = {
   Receiving: 'Receiving',
   ReceivingItem: 'ReceivingItem',
   PurchaseInvoice: 'PurchaseInvoice',
-  PurchaseInvoiceItem: 'PurchaseInvoiceItem'
+  PurchaseInvoiceItem: 'PurchaseInvoiceItem',
+  AccountsPayable: 'AccountsPayable',
+  SupplierPayment: 'SupplierPayment',
+  CashBankTransaction: 'CashBankTransaction',
+  CashBankAccount: 'CashBankAccount',
+  PaymentVoucher: 'PaymentVoucher'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -191,6 +196,7 @@ export const InventoryBalanceScalarFieldEnum = {
   branchId: 'branchId',
   productId: 'productId',
   quantity: 'quantity',
+  averageCost: 'averageCost',
   updatedAt: 'updatedAt'
 } as const
 
@@ -202,6 +208,9 @@ export const InventoryMovementScalarFieldEnum = {
   branchId: 'branchId',
   productId: 'productId',
   type: 'type',
+  unitCost: 'unitCost',
+  totalCost: 'totalCost',
+  averageCostAfter: 'averageCostAfter',
   quantityChange: 'quantityChange',
   balanceAfter: 'balanceAfter',
   referenceType: 'referenceType',
@@ -366,6 +375,10 @@ export const ReceivingScalarFieldEnum = {
   receivedDate: 'receivedDate',
   referenceNo: 'referenceNo',
   notes: 'notes',
+  checkStatus: 'checkStatus',
+  checkedAt: 'checkedAt',
+  checkedById: 'checkedById',
+  checkNotes: 'checkNotes',
   createdById: 'createdById',
   createdAt: 'createdAt'
 } as const
@@ -379,6 +392,10 @@ export const ReceivingItemScalarFieldEnum = {
   purchaseOrderItemId: 'purchaseOrderItemId',
   productId: 'productId',
   quantityReceived: 'quantityReceived',
+  quantityAccepted: 'quantityAccepted',
+  quantityRejected: 'quantityRejected',
+  qualityStatus: 'qualityStatus',
+  qualityNotes: 'qualityNotes',
   notes: 'notes'
 } as const
 
@@ -388,11 +405,13 @@ export type ReceivingItemScalarFieldEnum = (typeof ReceivingItemScalarFieldEnum)
 export const PurchaseInvoiceScalarFieldEnum = {
   id: 'id',
   invoiceNo: 'invoiceNo',
+  supplierInvoiceNo: 'supplierInvoiceNo',
   branchId: 'branchId',
   supplierId: 'supplierId',
   purchaseOrderId: 'purchaseOrderId',
   receivingId: 'receivingId',
   status: 'status',
+  paymentMode: 'paymentMode',
   invoiceDate: 'invoiceDate',
   dueDate: 'dueDate',
   subtotal: 'subtotal',
@@ -420,6 +439,101 @@ export const PurchaseInvoiceItemScalarFieldEnum = {
 } as const
 
 export type PurchaseInvoiceItemScalarFieldEnum = (typeof PurchaseInvoiceItemScalarFieldEnum)[keyof typeof PurchaseInvoiceItemScalarFieldEnum]
+
+
+export const AccountsPayableScalarFieldEnum = {
+  id: 'id',
+  branchId: 'branchId',
+  supplierId: 'supplierId',
+  purchaseInvoiceId: 'purchaseInvoiceId',
+  paymentMode: 'paymentMode',
+  status: 'status',
+  originalAmount: 'originalAmount',
+  amountPaid: 'amountPaid',
+  balanceDue: 'balanceDue',
+  dueDate: 'dueDate',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountsPayableScalarFieldEnum = (typeof AccountsPayableScalarFieldEnum)[keyof typeof AccountsPayableScalarFieldEnum]
+
+
+export const SupplierPaymentScalarFieldEnum = {
+  id: 'id',
+  paymentNo: 'paymentNo',
+  branchId: 'branchId',
+  supplierId: 'supplierId',
+  accountsPayableId: 'accountsPayableId',
+  accountId: 'accountId',
+  accountType: 'accountType',
+  amount: 'amount',
+  paymentDate: 'paymentDate',
+  referenceNo: 'referenceNo',
+  notes: 'notes',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupplierPaymentScalarFieldEnum = (typeof SupplierPaymentScalarFieldEnum)[keyof typeof SupplierPaymentScalarFieldEnum]
+
+
+export const CashBankTransactionScalarFieldEnum = {
+  id: 'id',
+  branchId: 'branchId',
+  supplierPaymentId: 'supplierPaymentId',
+  accountId: 'accountId',
+  accountType: 'accountType',
+  accountName: 'accountName',
+  transactionType: 'transactionType',
+  direction: 'direction',
+  amount: 'amount',
+  transactionDate: 'transactionDate',
+  referenceNo: 'referenceNo',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CashBankTransactionScalarFieldEnum = (typeof CashBankTransactionScalarFieldEnum)[keyof typeof CashBankTransactionScalarFieldEnum]
+
+
+export const CashBankAccountScalarFieldEnum = {
+  id: 'id',
+  branchId: 'branchId',
+  accountType: 'accountType',
+  name: 'name',
+  accountNumber: 'accountNumber',
+  openingBalance: 'openingBalance',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CashBankAccountScalarFieldEnum = (typeof CashBankAccountScalarFieldEnum)[keyof typeof CashBankAccountScalarFieldEnum]
+
+
+export const PaymentVoucherScalarFieldEnum = {
+  id: 'id',
+  voucherNo: 'voucherNo',
+  branchId: 'branchId',
+  supplierPaymentId: 'supplierPaymentId',
+  voucherDate: 'voucherDate',
+  payeeName: 'payeeName',
+  amount: 'amount',
+  purpose: 'purpose',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentVoucherScalarFieldEnum = (typeof PaymentVoucherScalarFieldEnum)[keyof typeof PaymentVoucherScalarFieldEnum]
 
 
 export const SortOrder = {

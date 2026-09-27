@@ -103,3 +103,62 @@ export const PurchaseInvoiceStatus = {
 } as const
 
 export type PurchaseInvoiceStatus = (typeof PurchaseInvoiceStatus)[keyof typeof PurchaseInvoiceStatus]
+
+
+export const ReceivingCheckStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  FAILED: 'FAILED'
+} as const
+
+export type ReceivingCheckStatus = (typeof ReceivingCheckStatus)[keyof typeof ReceivingCheckStatus]
+
+
+export const PaymentMode = {
+  COD: 'COD',
+  TERMS: 'TERMS',
+  CASH: 'CASH'
+} as const
+
+export type PaymentMode = (typeof PaymentMode)[keyof typeof PaymentMode]
+
+
+export const AccountsPayableStatus = {
+  OPEN: 'OPEN',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type AccountsPayableStatus = (typeof AccountsPayableStatus)[keyof typeof AccountsPayableStatus]
+
+
+export const SupplierPaymentStatus = {
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SupplierPaymentStatus = (typeof SupplierPaymentStatus)[keyof typeof SupplierPaymentStatus]
+
+
+export const CashBankAccountType = {
+  CASH: 'CASH',
+  BANK: 'BANK'
+} as const
+
+export type CashBankAccountType = (typeof CashBankAccountType)[keyof typeof CashBankAccountType]
+
+
+export const CashBankTransactionType = {
+  SUPPLIER_PAYMENT: 'SUPPLIER_PAYMENT'
+} as const
+
+export type CashBankTransactionType = (typeof CashBankTransactionType)[keyof typeof CashBankTransactionType]
+
+
+export const CashBankTransactionDirection = {
+  IN: 'IN',
+  OUT: 'OUT'
+} as const
+
+export type CashBankTransactionDirection = (typeof CashBankTransactionDirection)[keyof typeof CashBankTransactionDirection]
