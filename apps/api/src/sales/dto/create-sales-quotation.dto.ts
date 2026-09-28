@@ -35,6 +35,9 @@ export class CreateSalesQuotationDto {
   @IsUUID()
   inquiryId!: string;
 
+  @IsUUID()
+  salespersonId!: string;
+
   @IsOptional()
   @IsDateString()
   validUntil?: string;

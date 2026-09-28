@@ -85,6 +85,35 @@ export class SalesQuotationService {
 
     const quotationNo = `SQ-${this.formatDate()}-${this.randomCode()}`;
 
+    const salesperson = await this.prisma.user.findUnique({
+      where: {
+        id: dto.salespersonId,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        fullName: true,
+        role: true,
+        status: true,
+        branchId: true,
+      },
+    });
+
+    if (!salesperson) {
+      throw new NotFoundException('Salesperson not found.');
+    }
+
+    if (salesperson.status !== 'ACTIVE') {
+      throw new BadRequestException('Salesperson is not active.');
+    }
+
+    if (salesperson.branchId !== dto.branchId) {
+      throw new BadRequestException(
+        'Salesperson branch does not match the quotation branch.',
+      );
+    }
+
     return this.prisma.$transaction(async (tx) => {
       const quotation = await tx.salesQuotation.create({
         data: {
@@ -92,6 +121,7 @@ export class SalesQuotationService {
           branchId: dto.branchId,
           customerId: dto.customerId,
           inquiryId: dto.inquiryId,
+          createdById: salesperson.id,
           status: 'DRAFT',
           validUntil: dto.validUntil ? new Date(dto.validUntil) : null,
           subtotal,

@@ -39,6 +39,8 @@ export type CashBankTransactionMinAggregateOutputType = {
   branchId: string | null
   supplierPaymentId: string | null
   customerPaymentId: string | null
+  pettyCashReplenishmentId: string | null
+  salesReturnId: string | null
   accountId: string | null
   accountType: $Enums.CashBankAccountType | null
   accountName: string | null
@@ -58,6 +60,8 @@ export type CashBankTransactionMaxAggregateOutputType = {
   branchId: string | null
   supplierPaymentId: string | null
   customerPaymentId: string | null
+  pettyCashReplenishmentId: string | null
+  salesReturnId: string | null
   accountId: string | null
   accountType: $Enums.CashBankAccountType | null
   accountName: string | null
@@ -77,6 +81,8 @@ export type CashBankTransactionCountAggregateOutputType = {
   branchId: number
   supplierPaymentId: number
   customerPaymentId: number
+  pettyCashReplenishmentId: number
+  salesReturnId: number
   accountId: number
   accountType: number
   accountName: number
@@ -106,6 +112,8 @@ export type CashBankTransactionMinAggregateInputType = {
   branchId?: true
   supplierPaymentId?: true
   customerPaymentId?: true
+  pettyCashReplenishmentId?: true
+  salesReturnId?: true
   accountId?: true
   accountType?: true
   accountName?: true
@@ -125,6 +133,8 @@ export type CashBankTransactionMaxAggregateInputType = {
   branchId?: true
   supplierPaymentId?: true
   customerPaymentId?: true
+  pettyCashReplenishmentId?: true
+  salesReturnId?: true
   accountId?: true
   accountType?: true
   accountName?: true
@@ -144,6 +154,8 @@ export type CashBankTransactionCountAggregateInputType = {
   branchId?: true
   supplierPaymentId?: true
   customerPaymentId?: true
+  pettyCashReplenishmentId?: true
+  salesReturnId?: true
   accountId?: true
   accountType?: true
   accountName?: true
@@ -250,6 +262,8 @@ export type CashBankTransactionGroupByOutputType = {
   branchId: string
   supplierPaymentId: string | null
   customerPaymentId: string | null
+  pettyCashReplenishmentId: string | null
+  salesReturnId: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -292,6 +306,8 @@ export type CashBankTransactionWhereInput = {
   branchId?: Prisma.StringFilter<"CashBankTransaction"> | string
   supplierPaymentId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
   customerPaymentId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
+  pettyCashReplenishmentId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
+  salesReturnId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
   accountId?: Prisma.StringFilter<"CashBankTransaction"> | string
   accountType?: Prisma.EnumCashBankAccountTypeFilter<"CashBankTransaction"> | $Enums.CashBankAccountType
   accountName?: Prisma.StringFilter<"CashBankTransaction"> | string
@@ -304,10 +320,13 @@ export type CashBankTransactionWhereInput = {
   createdById?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CashBankTransaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CashBankTransaction"> | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   account?: Prisma.XOR<Prisma.CashBankAccountScalarRelationFilter, Prisma.CashBankAccountWhereInput>
   supplierPayment?: Prisma.XOR<Prisma.SupplierPaymentNullableScalarRelationFilter, Prisma.SupplierPaymentWhereInput> | null
   customerPayment?: Prisma.XOR<Prisma.CustomerPaymentNullableScalarRelationFilter, Prisma.CustomerPaymentWhereInput> | null
+  pettyCashReplenishment?: Prisma.XOR<Prisma.PettyCashReplenishmentNullableScalarRelationFilter, Prisma.PettyCashReplenishmentWhereInput> | null
+  salesReturn?: Prisma.XOR<Prisma.SalesReturnNullableScalarRelationFilter, Prisma.SalesReturnWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -316,6 +335,8 @@ export type CashBankTransactionOrderByWithRelationInput = {
   branchId?: Prisma.SortOrder
   supplierPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pettyCashReplenishmentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  salesReturnId?: Prisma.SortOrderInput | Prisma.SortOrder
   accountId?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   accountName?: Prisma.SortOrder
@@ -328,10 +349,13 @@ export type CashBankTransactionOrderByWithRelationInput = {
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  bankReconciliationItems?: Prisma.BankReconciliationItemOrderByRelationAggregateInput
   branch?: Prisma.BranchOrderByWithRelationInput
   account?: Prisma.CashBankAccountOrderByWithRelationInput
   supplierPayment?: Prisma.SupplierPaymentOrderByWithRelationInput
   customerPayment?: Prisma.CustomerPaymentOrderByWithRelationInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentOrderByWithRelationInput
+  salesReturn?: Prisma.SalesReturnOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -339,6 +363,8 @@ export type CashBankTransactionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   supplierPaymentId?: string
   customerPaymentId?: string
+  pettyCashReplenishmentId?: string
+  salesReturnId?: string
   AND?: Prisma.CashBankTransactionWhereInput | Prisma.CashBankTransactionWhereInput[]
   OR?: Prisma.CashBankTransactionWhereInput[]
   NOT?: Prisma.CashBankTransactionWhereInput | Prisma.CashBankTransactionWhereInput[]
@@ -355,18 +381,23 @@ export type CashBankTransactionWhereUniqueInput = Prisma.AtLeast<{
   createdById?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CashBankTransaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CashBankTransaction"> | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   account?: Prisma.XOR<Prisma.CashBankAccountScalarRelationFilter, Prisma.CashBankAccountWhereInput>
   supplierPayment?: Prisma.XOR<Prisma.SupplierPaymentNullableScalarRelationFilter, Prisma.SupplierPaymentWhereInput> | null
   customerPayment?: Prisma.XOR<Prisma.CustomerPaymentNullableScalarRelationFilter, Prisma.CustomerPaymentWhereInput> | null
+  pettyCashReplenishment?: Prisma.XOR<Prisma.PettyCashReplenishmentNullableScalarRelationFilter, Prisma.PettyCashReplenishmentWhereInput> | null
+  salesReturn?: Prisma.XOR<Prisma.SalesReturnNullableScalarRelationFilter, Prisma.SalesReturnWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "supplierPaymentId" | "customerPaymentId">
+}, "id" | "supplierPaymentId" | "customerPaymentId" | "pettyCashReplenishmentId" | "salesReturnId">
 
 export type CashBankTransactionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   supplierPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pettyCashReplenishmentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  salesReturnId?: Prisma.SortOrderInput | Prisma.SortOrder
   accountId?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   accountName?: Prisma.SortOrder
@@ -394,6 +425,8 @@ export type CashBankTransactionScalarWhereWithAggregatesInput = {
   branchId?: Prisma.StringWithAggregatesFilter<"CashBankTransaction"> | string
   supplierPaymentId?: Prisma.StringNullableWithAggregatesFilter<"CashBankTransaction"> | string | null
   customerPaymentId?: Prisma.StringNullableWithAggregatesFilter<"CashBankTransaction"> | string | null
+  pettyCashReplenishmentId?: Prisma.StringNullableWithAggregatesFilter<"CashBankTransaction"> | string | null
+  salesReturnId?: Prisma.StringNullableWithAggregatesFilter<"CashBankTransaction"> | string | null
   accountId?: Prisma.StringWithAggregatesFilter<"CashBankTransaction"> | string
   accountType?: Prisma.EnumCashBankAccountTypeWithAggregatesFilter<"CashBankTransaction"> | $Enums.CashBankAccountType
   accountName?: Prisma.StringWithAggregatesFilter<"CashBankTransaction"> | string
@@ -420,10 +453,13 @@ export type CashBankTransactionCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
   branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
   account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
   supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
   customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
 }
 
@@ -432,6 +468,8 @@ export type CashBankTransactionUncheckedCreateInput = {
   branchId: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -444,6 +482,7 @@ export type CashBankTransactionUncheckedCreateInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
 }
 
 export type CashBankTransactionUpdateInput = {
@@ -458,10 +497,13 @@ export type CashBankTransactionUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
   account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
   supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
   customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
 }
 
@@ -470,6 +512,8 @@ export type CashBankTransactionUncheckedUpdateInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -482,6 +526,7 @@ export type CashBankTransactionUncheckedUpdateInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
 }
 
 export type CashBankTransactionCreateManyInput = {
@@ -489,6 +534,8 @@ export type CashBankTransactionCreateManyInput = {
   branchId: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -522,6 +569,8 @@ export type CashBankTransactionUncheckedUpdateManyInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -556,6 +605,8 @@ export type CashBankTransactionCountOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   supplierPaymentId?: Prisma.SortOrder
   customerPaymentId?: Prisma.SortOrder
+  pettyCashReplenishmentId?: Prisma.SortOrder
+  salesReturnId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   accountName?: Prisma.SortOrder
@@ -579,6 +630,8 @@ export type CashBankTransactionMaxOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   supplierPaymentId?: Prisma.SortOrder
   customerPaymentId?: Prisma.SortOrder
+  pettyCashReplenishmentId?: Prisma.SortOrder
+  salesReturnId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   accountName?: Prisma.SortOrder
@@ -598,6 +651,8 @@ export type CashBankTransactionMinOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   supplierPaymentId?: Prisma.SortOrder
   customerPaymentId?: Prisma.SortOrder
+  pettyCashReplenishmentId?: Prisma.SortOrder
+  salesReturnId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   accountName?: Prisma.SortOrder
@@ -814,6 +869,86 @@ export type CashBankTransactionUncheckedUpdateOneWithoutCustomerPaymentNestedInp
   update?: Prisma.XOR<Prisma.XOR<Prisma.CashBankTransactionUpdateToOneWithWhereWithoutCustomerPaymentInput, Prisma.CashBankTransactionUpdateWithoutCustomerPaymentInput>, Prisma.CashBankTransactionUncheckedUpdateWithoutCustomerPaymentInput>
 }
 
+export type CashBankTransactionCreateNestedOneWithoutBankReconciliationItemsInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutBankReconciliationItemsInput, Prisma.CashBankTransactionUncheckedCreateWithoutBankReconciliationItemsInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutBankReconciliationItemsInput
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+}
+
+export type CashBankTransactionUpdateOneWithoutBankReconciliationItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutBankReconciliationItemsInput, Prisma.CashBankTransactionUncheckedCreateWithoutBankReconciliationItemsInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutBankReconciliationItemsInput
+  upsert?: Prisma.CashBankTransactionUpsertWithoutBankReconciliationItemsInput
+  disconnect?: Prisma.CashBankTransactionWhereInput | boolean
+  delete?: Prisma.CashBankTransactionWhereInput | boolean
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CashBankTransactionUpdateToOneWithWhereWithoutBankReconciliationItemsInput, Prisma.CashBankTransactionUpdateWithoutBankReconciliationItemsInput>, Prisma.CashBankTransactionUncheckedUpdateWithoutBankReconciliationItemsInput>
+}
+
+export type CashBankTransactionCreateNestedOneWithoutPettyCashReplenishmentInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedCreateWithoutPettyCashReplenishmentInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutPettyCashReplenishmentInput
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+}
+
+export type CashBankTransactionUncheckedCreateNestedOneWithoutPettyCashReplenishmentInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedCreateWithoutPettyCashReplenishmentInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutPettyCashReplenishmentInput
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+}
+
+export type CashBankTransactionUpdateOneWithoutPettyCashReplenishmentNestedInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedCreateWithoutPettyCashReplenishmentInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutPettyCashReplenishmentInput
+  upsert?: Prisma.CashBankTransactionUpsertWithoutPettyCashReplenishmentInput
+  disconnect?: Prisma.CashBankTransactionWhereInput | boolean
+  delete?: Prisma.CashBankTransactionWhereInput | boolean
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CashBankTransactionUpdateToOneWithWhereWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUpdateWithoutPettyCashReplenishmentInput>, Prisma.CashBankTransactionUncheckedUpdateWithoutPettyCashReplenishmentInput>
+}
+
+export type CashBankTransactionUncheckedUpdateOneWithoutPettyCashReplenishmentNestedInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedCreateWithoutPettyCashReplenishmentInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutPettyCashReplenishmentInput
+  upsert?: Prisma.CashBankTransactionUpsertWithoutPettyCashReplenishmentInput
+  disconnect?: Prisma.CashBankTransactionWhereInput | boolean
+  delete?: Prisma.CashBankTransactionWhereInput | boolean
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CashBankTransactionUpdateToOneWithWhereWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUpdateWithoutPettyCashReplenishmentInput>, Prisma.CashBankTransactionUncheckedUpdateWithoutPettyCashReplenishmentInput>
+}
+
+export type CashBankTransactionCreateNestedOneWithoutSalesReturnInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedCreateWithoutSalesReturnInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutSalesReturnInput
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+}
+
+export type CashBankTransactionUncheckedCreateNestedOneWithoutSalesReturnInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedCreateWithoutSalesReturnInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutSalesReturnInput
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+}
+
+export type CashBankTransactionUpdateOneWithoutSalesReturnNestedInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedCreateWithoutSalesReturnInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutSalesReturnInput
+  upsert?: Prisma.CashBankTransactionUpsertWithoutSalesReturnInput
+  disconnect?: Prisma.CashBankTransactionWhereInput | boolean
+  delete?: Prisma.CashBankTransactionWhereInput | boolean
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CashBankTransactionUpdateToOneWithWhereWithoutSalesReturnInput, Prisma.CashBankTransactionUpdateWithoutSalesReturnInput>, Prisma.CashBankTransactionUncheckedUpdateWithoutSalesReturnInput>
+}
+
+export type CashBankTransactionUncheckedUpdateOneWithoutSalesReturnNestedInput = {
+  create?: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedCreateWithoutSalesReturnInput>
+  connectOrCreate?: Prisma.CashBankTransactionCreateOrConnectWithoutSalesReturnInput
+  upsert?: Prisma.CashBankTransactionUpsertWithoutSalesReturnInput
+  disconnect?: Prisma.CashBankTransactionWhereInput | boolean
+  delete?: Prisma.CashBankTransactionWhereInput | boolean
+  connect?: Prisma.CashBankTransactionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CashBankTransactionUpdateToOneWithWhereWithoutSalesReturnInput, Prisma.CashBankTransactionUpdateWithoutSalesReturnInput>, Prisma.CashBankTransactionUncheckedUpdateWithoutSalesReturnInput>
+}
+
 export type CashBankTransactionCreateWithoutBranchInput = {
   id?: string
   accountType: $Enums.CashBankAccountType
@@ -826,9 +961,12 @@ export type CashBankTransactionCreateWithoutBranchInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
   account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
   supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
   customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
 }
 
@@ -836,6 +974,8 @@ export type CashBankTransactionUncheckedCreateWithoutBranchInput = {
   id?: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -848,6 +988,7 @@ export type CashBankTransactionUncheckedCreateWithoutBranchInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
 }
 
 export type CashBankTransactionCreateOrConnectWithoutBranchInput = {
@@ -884,6 +1025,8 @@ export type CashBankTransactionScalarWhereInput = {
   branchId?: Prisma.StringFilter<"CashBankTransaction"> | string
   supplierPaymentId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
   customerPaymentId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
+  pettyCashReplenishmentId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
+  salesReturnId?: Prisma.StringNullableFilter<"CashBankTransaction"> | string | null
   accountId?: Prisma.StringFilter<"CashBankTransaction"> | string
   accountType?: Prisma.EnumCashBankAccountTypeFilter<"CashBankTransaction"> | $Enums.CashBankAccountType
   accountName?: Prisma.StringFilter<"CashBankTransaction"> | string
@@ -910,10 +1053,13 @@ export type CashBankTransactionCreateWithoutCreatedByInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
   branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
   account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
   supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
   customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
 }
 
 export type CashBankTransactionUncheckedCreateWithoutCreatedByInput = {
@@ -921,6 +1067,8 @@ export type CashBankTransactionUncheckedCreateWithoutCreatedByInput = {
   branchId: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -932,6 +1080,7 @@ export type CashBankTransactionUncheckedCreateWithoutCreatedByInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
 }
 
 export type CashBankTransactionCreateOrConnectWithoutCreatedByInput = {
@@ -972,9 +1121,12 @@ export type CashBankTransactionCreateWithoutSupplierPaymentInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
   branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
   account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
   customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
 }
 
@@ -982,6 +1134,8 @@ export type CashBankTransactionUncheckedCreateWithoutSupplierPaymentInput = {
   id?: string
   branchId: string
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -994,6 +1148,7 @@ export type CashBankTransactionUncheckedCreateWithoutSupplierPaymentInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
 }
 
 export type CashBankTransactionCreateOrConnectWithoutSupplierPaymentInput = {
@@ -1024,9 +1179,12 @@ export type CashBankTransactionUpdateWithoutSupplierPaymentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
   account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
   customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
 }
 
@@ -1034,6 +1192,8 @@ export type CashBankTransactionUncheckedUpdateWithoutSupplierPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1046,6 +1206,7 @@ export type CashBankTransactionUncheckedUpdateWithoutSupplierPaymentInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
 }
 
 export type CashBankTransactionCreateWithoutAccountInput = {
@@ -1060,9 +1221,12 @@ export type CashBankTransactionCreateWithoutAccountInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
   branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
   supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
   customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
 }
 
@@ -1071,6 +1235,8 @@ export type CashBankTransactionUncheckedCreateWithoutAccountInput = {
   branchId: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountType: $Enums.CashBankAccountType
   accountName: string
   transactionType: $Enums.CashBankTransactionType
@@ -1082,6 +1248,7 @@ export type CashBankTransactionUncheckedCreateWithoutAccountInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
 }
 
 export type CashBankTransactionCreateOrConnectWithoutAccountInput = {
@@ -1122,9 +1289,12 @@ export type CashBankTransactionCreateWithoutCustomerPaymentInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
   branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
   account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
   supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
 }
 
@@ -1132,6 +1302,8 @@ export type CashBankTransactionUncheckedCreateWithoutCustomerPaymentInput = {
   id?: string
   branchId: string
   supplierPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -1144,6 +1316,7 @@ export type CashBankTransactionUncheckedCreateWithoutCustomerPaymentInput = {
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
 }
 
 export type CashBankTransactionCreateOrConnectWithoutCustomerPaymentInput = {
@@ -1174,9 +1347,12 @@ export type CashBankTransactionUpdateWithoutCustomerPaymentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
   account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
   supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
 }
 
@@ -1184,6 +1360,109 @@ export type CashBankTransactionUncheckedUpdateWithoutCustomerPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
+  accountName?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
+  direction?: Prisma.EnumCashBankTransactionDirectionFieldUpdateOperationsInput | $Enums.CashBankTransactionDirection
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
+}
+
+export type CashBankTransactionCreateWithoutBankReconciliationItemsInput = {
+  id?: string
+  accountType: $Enums.CashBankAccountType
+  accountName: string
+  transactionType: $Enums.CashBankTransactionType
+  direction: $Enums.CashBankTransactionDirection
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
+  account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
+  supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
+  customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
+}
+
+export type CashBankTransactionUncheckedCreateWithoutBankReconciliationItemsInput = {
+  id?: string
+  branchId: string
+  supplierPaymentId?: string | null
+  customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
+  accountId: string
+  accountType: $Enums.CashBankAccountType
+  accountName: string
+  transactionType: $Enums.CashBankTransactionType
+  direction: $Enums.CashBankTransactionDirection
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CashBankTransactionCreateOrConnectWithoutBankReconciliationItemsInput = {
+  where: Prisma.CashBankTransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutBankReconciliationItemsInput, Prisma.CashBankTransactionUncheckedCreateWithoutBankReconciliationItemsInput>
+}
+
+export type CashBankTransactionUpsertWithoutBankReconciliationItemsInput = {
+  update: Prisma.XOR<Prisma.CashBankTransactionUpdateWithoutBankReconciliationItemsInput, Prisma.CashBankTransactionUncheckedUpdateWithoutBankReconciliationItemsInput>
+  create: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutBankReconciliationItemsInput, Prisma.CashBankTransactionUncheckedCreateWithoutBankReconciliationItemsInput>
+  where?: Prisma.CashBankTransactionWhereInput
+}
+
+export type CashBankTransactionUpdateToOneWithWhereWithoutBankReconciliationItemsInput = {
+  where?: Prisma.CashBankTransactionWhereInput
+  data: Prisma.XOR<Prisma.CashBankTransactionUpdateWithoutBankReconciliationItemsInput, Prisma.CashBankTransactionUncheckedUpdateWithoutBankReconciliationItemsInput>
+}
+
+export type CashBankTransactionUpdateWithoutBankReconciliationItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
+  accountName?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
+  direction?: Prisma.EnumCashBankTransactionDirectionFieldUpdateOperationsInput | $Enums.CashBankTransactionDirection
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
+  account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
+  supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
+}
+
+export type CashBankTransactionUncheckedUpdateWithoutBankReconciliationItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1198,10 +1477,212 @@ export type CashBankTransactionUncheckedUpdateWithoutCustomerPaymentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type CashBankTransactionCreateWithoutPettyCashReplenishmentInput = {
+  id?: string
+  accountType: $Enums.CashBankAccountType
+  accountName: string
+  transactionType: $Enums.CashBankTransactionType
+  direction: $Enums.CashBankTransactionDirection
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
+  branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
+  account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
+  supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
+  customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  salesReturn?: Prisma.SalesReturnCreateNestedOneWithoutCashBankTransactionInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
+}
+
+export type CashBankTransactionUncheckedCreateWithoutPettyCashReplenishmentInput = {
+  id?: string
+  branchId: string
+  supplierPaymentId?: string | null
+  customerPaymentId?: string | null
+  salesReturnId?: string | null
+  accountId: string
+  accountType: $Enums.CashBankAccountType
+  accountName: string
+  transactionType: $Enums.CashBankTransactionType
+  direction: $Enums.CashBankTransactionDirection
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
+}
+
+export type CashBankTransactionCreateOrConnectWithoutPettyCashReplenishmentInput = {
+  where: Prisma.CashBankTransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedCreateWithoutPettyCashReplenishmentInput>
+}
+
+export type CashBankTransactionUpsertWithoutPettyCashReplenishmentInput = {
+  update: Prisma.XOR<Prisma.CashBankTransactionUpdateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedUpdateWithoutPettyCashReplenishmentInput>
+  create: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedCreateWithoutPettyCashReplenishmentInput>
+  where?: Prisma.CashBankTransactionWhereInput
+}
+
+export type CashBankTransactionUpdateToOneWithWhereWithoutPettyCashReplenishmentInput = {
+  where?: Prisma.CashBankTransactionWhereInput
+  data: Prisma.XOR<Prisma.CashBankTransactionUpdateWithoutPettyCashReplenishmentInput, Prisma.CashBankTransactionUncheckedUpdateWithoutPettyCashReplenishmentInput>
+}
+
+export type CashBankTransactionUpdateWithoutPettyCashReplenishmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
+  accountName?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
+  direction?: Prisma.EnumCashBankTransactionDirectionFieldUpdateOperationsInput | $Enums.CashBankTransactionDirection
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
+  account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
+  supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
+}
+
+export type CashBankTransactionUncheckedUpdateWithoutPettyCashReplenishmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
+  accountName?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
+  direction?: Prisma.EnumCashBankTransactionDirectionFieldUpdateOperationsInput | $Enums.CashBankTransactionDirection
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
+}
+
+export type CashBankTransactionCreateWithoutSalesReturnInput = {
+  id?: string
+  accountType: $Enums.CashBankAccountType
+  accountName: string
+  transactionType: $Enums.CashBankTransactionType
+  direction: $Enums.CashBankTransactionDirection
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemCreateNestedManyWithoutCashBankTransactionInput
+  branch: Prisma.BranchCreateNestedOneWithoutCashBankTransactionsInput
+  account: Prisma.CashBankAccountCreateNestedOneWithoutTransactionsInput
+  supplierPayment?: Prisma.SupplierPaymentCreateNestedOneWithoutCashBankTransactionInput
+  customerPayment?: Prisma.CustomerPaymentCreateNestedOneWithoutCashBankTransactionInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentCreateNestedOneWithoutCashBankTransactionInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutCashBankTransactionsCreatedInput
+}
+
+export type CashBankTransactionUncheckedCreateWithoutSalesReturnInput = {
+  id?: string
+  branchId: string
+  supplierPaymentId?: string | null
+  customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  accountId: string
+  accountType: $Enums.CashBankAccountType
+  accountName: string
+  transactionType: $Enums.CashBankTransactionType
+  direction: $Enums.CashBankTransactionDirection
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Date | string
+  referenceNo?: string | null
+  notes?: string | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedCreateNestedManyWithoutCashBankTransactionInput
+}
+
+export type CashBankTransactionCreateOrConnectWithoutSalesReturnInput = {
+  where: Prisma.CashBankTransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedCreateWithoutSalesReturnInput>
+}
+
+export type CashBankTransactionUpsertWithoutSalesReturnInput = {
+  update: Prisma.XOR<Prisma.CashBankTransactionUpdateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedUpdateWithoutSalesReturnInput>
+  create: Prisma.XOR<Prisma.CashBankTransactionCreateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedCreateWithoutSalesReturnInput>
+  where?: Prisma.CashBankTransactionWhereInput
+}
+
+export type CashBankTransactionUpdateToOneWithWhereWithoutSalesReturnInput = {
+  where?: Prisma.CashBankTransactionWhereInput
+  data: Prisma.XOR<Prisma.CashBankTransactionUpdateWithoutSalesReturnInput, Prisma.CashBankTransactionUncheckedUpdateWithoutSalesReturnInput>
+}
+
+export type CashBankTransactionUpdateWithoutSalesReturnInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
+  accountName?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
+  direction?: Prisma.EnumCashBankTransactionDirectionFieldUpdateOperationsInput | $Enums.CashBankTransactionDirection
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
+  account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
+  supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
+}
+
+export type CashBankTransactionUncheckedUpdateWithoutSalesReturnInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
+  accountName?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
+  direction?: Prisma.EnumCashBankTransactionDirectionFieldUpdateOperationsInput | $Enums.CashBankTransactionDirection
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
+}
+
 export type CashBankTransactionCreateManyBranchInput = {
   id?: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -1228,9 +1709,12 @@ export type CashBankTransactionUpdateWithoutBranchInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
   account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
   supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
   customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
 }
 
@@ -1238,6 +1722,8 @@ export type CashBankTransactionUncheckedUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1250,12 +1736,15 @@ export type CashBankTransactionUncheckedUpdateWithoutBranchInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
 }
 
 export type CashBankTransactionUncheckedUpdateManyWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1275,6 +1764,8 @@ export type CashBankTransactionCreateManyCreatedByInput = {
   branchId: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountId: string
   accountType: $Enums.CashBankAccountType
   accountName: string
@@ -1300,10 +1791,13 @@ export type CashBankTransactionUpdateWithoutCreatedByInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
   account?: Prisma.CashBankAccountUpdateOneRequiredWithoutTransactionsNestedInput
   supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
   customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
 }
 
 export type CashBankTransactionUncheckedUpdateWithoutCreatedByInput = {
@@ -1311,6 +1805,8 @@ export type CashBankTransactionUncheckedUpdateWithoutCreatedByInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1322,6 +1818,7 @@ export type CashBankTransactionUncheckedUpdateWithoutCreatedByInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
 }
 
 export type CashBankTransactionUncheckedUpdateManyWithoutCreatedByInput = {
@@ -1329,6 +1826,8 @@ export type CashBankTransactionUncheckedUpdateManyWithoutCreatedByInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1347,6 +1846,8 @@ export type CashBankTransactionCreateManyAccountInput = {
   branchId: string
   supplierPaymentId?: string | null
   customerPaymentId?: string | null
+  pettyCashReplenishmentId?: string | null
+  salesReturnId?: string | null
   accountType: $Enums.CashBankAccountType
   accountName: string
   transactionType: $Enums.CashBankTransactionType
@@ -1372,9 +1873,12 @@ export type CashBankTransactionUpdateWithoutAccountInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUpdateManyWithoutCashBankTransactionNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutCashBankTransactionsNestedInput
   supplierPayment?: Prisma.SupplierPaymentUpdateOneWithoutCashBankTransactionNestedInput
   customerPayment?: Prisma.CustomerPaymentUpdateOneWithoutCashBankTransactionNestedInput
+  pettyCashReplenishment?: Prisma.PettyCashReplenishmentUpdateOneWithoutCashBankTransactionNestedInput
+  salesReturn?: Prisma.SalesReturnUpdateOneWithoutCashBankTransactionNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCashBankTransactionsCreatedNestedInput
 }
 
@@ -1383,6 +1887,8 @@ export type CashBankTransactionUncheckedUpdateWithoutAccountInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
@@ -1394,6 +1900,7 @@ export type CashBankTransactionUncheckedUpdateWithoutAccountInput = {
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankReconciliationItems?: Prisma.BankReconciliationItemUncheckedUpdateManyWithoutCashBankTransactionNestedInput
 }
 
 export type CashBankTransactionUncheckedUpdateManyWithoutAccountInput = {
@@ -1401,6 +1908,8 @@ export type CashBankTransactionUncheckedUpdateManyWithoutAccountInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pettyCashReplenishmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salesReturnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.EnumCashBankAccountTypeFieldUpdateOperationsInput | $Enums.CashBankAccountType
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   transactionType?: Prisma.EnumCashBankTransactionTypeFieldUpdateOperationsInput | $Enums.CashBankTransactionType
@@ -1415,12 +1924,43 @@ export type CashBankTransactionUncheckedUpdateManyWithoutAccountInput = {
 }
 
 
+/**
+ * Count Type CashBankTransactionCountOutputType
+ */
+
+export type CashBankTransactionCountOutputType = {
+  bankReconciliationItems: number
+}
+
+export type CashBankTransactionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bankReconciliationItems?: boolean | CashBankTransactionCountOutputTypeCountBankReconciliationItemsArgs
+}
+
+/**
+ * CashBankTransactionCountOutputType without action
+ */
+export type CashBankTransactionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CashBankTransactionCountOutputType
+   */
+  select?: Prisma.CashBankTransactionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CashBankTransactionCountOutputType without action
+ */
+export type CashBankTransactionCountOutputTypeCountBankReconciliationItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BankReconciliationItemWhereInput
+}
+
 
 export type CashBankTransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   branchId?: boolean
   supplierPaymentId?: boolean
   customerPaymentId?: boolean
+  pettyCashReplenishmentId?: boolean
+  salesReturnId?: boolean
   accountId?: boolean
   accountType?: boolean
   accountName?: boolean
@@ -1433,11 +1973,15 @@ export type CashBankTransactionSelect<ExtArgs extends runtime.Types.Extensions.I
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  bankReconciliationItems?: boolean | Prisma.CashBankTransaction$bankReconciliationItemsArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   account?: boolean | Prisma.CashBankAccountDefaultArgs<ExtArgs>
   supplierPayment?: boolean | Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs>
   customerPayment?: boolean | Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs>
+  pettyCashReplenishment?: boolean | Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs>
+  salesReturn?: boolean | Prisma.CashBankTransaction$salesReturnArgs<ExtArgs>
   createdBy?: boolean | Prisma.CashBankTransaction$createdByArgs<ExtArgs>
+  _count?: boolean | Prisma.CashBankTransactionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cashBankTransaction"]>
 
 export type CashBankTransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1445,6 +1989,8 @@ export type CashBankTransactionSelectCreateManyAndReturn<ExtArgs extends runtime
   branchId?: boolean
   supplierPaymentId?: boolean
   customerPaymentId?: boolean
+  pettyCashReplenishmentId?: boolean
+  salesReturnId?: boolean
   accountId?: boolean
   accountType?: boolean
   accountName?: boolean
@@ -1461,6 +2007,8 @@ export type CashBankTransactionSelectCreateManyAndReturn<ExtArgs extends runtime
   account?: boolean | Prisma.CashBankAccountDefaultArgs<ExtArgs>
   supplierPayment?: boolean | Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs>
   customerPayment?: boolean | Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs>
+  pettyCashReplenishment?: boolean | Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs>
+  salesReturn?: boolean | Prisma.CashBankTransaction$salesReturnArgs<ExtArgs>
   createdBy?: boolean | Prisma.CashBankTransaction$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["cashBankTransaction"]>
 
@@ -1469,6 +2017,8 @@ export type CashBankTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime
   branchId?: boolean
   supplierPaymentId?: boolean
   customerPaymentId?: boolean
+  pettyCashReplenishmentId?: boolean
+  salesReturnId?: boolean
   accountId?: boolean
   accountType?: boolean
   accountName?: boolean
@@ -1485,6 +2035,8 @@ export type CashBankTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime
   account?: boolean | Prisma.CashBankAccountDefaultArgs<ExtArgs>
   supplierPayment?: boolean | Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs>
   customerPayment?: boolean | Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs>
+  pettyCashReplenishment?: boolean | Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs>
+  salesReturn?: boolean | Prisma.CashBankTransaction$salesReturnArgs<ExtArgs>
   createdBy?: boolean | Prisma.CashBankTransaction$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["cashBankTransaction"]>
 
@@ -1493,6 +2045,8 @@ export type CashBankTransactionSelectScalar = {
   branchId?: boolean
   supplierPaymentId?: boolean
   customerPaymentId?: boolean
+  pettyCashReplenishmentId?: boolean
+  salesReturnId?: boolean
   accountId?: boolean
   accountType?: boolean
   accountName?: boolean
@@ -1507,19 +2061,25 @@ export type CashBankTransactionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CashBankTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "branchId" | "supplierPaymentId" | "customerPaymentId" | "accountId" | "accountType" | "accountName" | "transactionType" | "direction" | "amount" | "transactionDate" | "referenceNo" | "notes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["cashBankTransaction"]>
+export type CashBankTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "branchId" | "supplierPaymentId" | "customerPaymentId" | "pettyCashReplenishmentId" | "salesReturnId" | "accountId" | "accountType" | "accountName" | "transactionType" | "direction" | "amount" | "transactionDate" | "referenceNo" | "notes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["cashBankTransaction"]>
 export type CashBankTransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bankReconciliationItems?: boolean | Prisma.CashBankTransaction$bankReconciliationItemsArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   account?: boolean | Prisma.CashBankAccountDefaultArgs<ExtArgs>
   supplierPayment?: boolean | Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs>
   customerPayment?: boolean | Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs>
+  pettyCashReplenishment?: boolean | Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs>
+  salesReturn?: boolean | Prisma.CashBankTransaction$salesReturnArgs<ExtArgs>
   createdBy?: boolean | Prisma.CashBankTransaction$createdByArgs<ExtArgs>
+  _count?: boolean | Prisma.CashBankTransactionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CashBankTransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   account?: boolean | Prisma.CashBankAccountDefaultArgs<ExtArgs>
   supplierPayment?: boolean | Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs>
   customerPayment?: boolean | Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs>
+  pettyCashReplenishment?: boolean | Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs>
+  salesReturn?: boolean | Prisma.CashBankTransaction$salesReturnArgs<ExtArgs>
   createdBy?: boolean | Prisma.CashBankTransaction$createdByArgs<ExtArgs>
 }
 export type CashBankTransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1527,16 +2087,21 @@ export type CashBankTransactionIncludeUpdateManyAndReturn<ExtArgs extends runtim
   account?: boolean | Prisma.CashBankAccountDefaultArgs<ExtArgs>
   supplierPayment?: boolean | Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs>
   customerPayment?: boolean | Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs>
+  pettyCashReplenishment?: boolean | Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs>
+  salesReturn?: boolean | Prisma.CashBankTransaction$salesReturnArgs<ExtArgs>
   createdBy?: boolean | Prisma.CashBankTransaction$createdByArgs<ExtArgs>
 }
 
 export type $CashBankTransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CashBankTransaction"
   objects: {
+    bankReconciliationItems: Prisma.$BankReconciliationItemPayload<ExtArgs>[]
     branch: Prisma.$BranchPayload<ExtArgs>
     account: Prisma.$CashBankAccountPayload<ExtArgs>
     supplierPayment: Prisma.$SupplierPaymentPayload<ExtArgs> | null
     customerPayment: Prisma.$CustomerPaymentPayload<ExtArgs> | null
+    pettyCashReplenishment: Prisma.$PettyCashReplenishmentPayload<ExtArgs> | null
+    salesReturn: Prisma.$SalesReturnPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1544,6 +2109,8 @@ export type $CashBankTransactionPayload<ExtArgs extends runtime.Types.Extensions
     branchId: string
     supplierPaymentId: string | null
     customerPaymentId: string | null
+    pettyCashReplenishmentId: string | null
+    salesReturnId: string | null
     accountId: string
     accountType: $Enums.CashBankAccountType
     accountName: string
@@ -1950,10 +2517,13 @@ readonly fields: CashBankTransactionFieldRefs;
  */
 export interface Prisma__CashBankTransactionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bankReconciliationItems<T extends Prisma.CashBankTransaction$bankReconciliationItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashBankTransaction$bankReconciliationItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BankReconciliationItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   branch<T extends Prisma.BranchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BranchDefaultArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   account<T extends Prisma.CashBankAccountDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashBankAccountDefaultArgs<ExtArgs>>): Prisma.Prisma__CashBankAccountClient<runtime.Types.Result.GetResult<Prisma.$CashBankAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   supplierPayment<T extends Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashBankTransaction$supplierPaymentArgs<ExtArgs>>): Prisma.Prisma__SupplierPaymentClient<runtime.Types.Result.GetResult<Prisma.$SupplierPaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   customerPayment<T extends Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashBankTransaction$customerPaymentArgs<ExtArgs>>): Prisma.Prisma__CustomerPaymentClient<runtime.Types.Result.GetResult<Prisma.$CustomerPaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  pettyCashReplenishment<T extends Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs>>): Prisma.Prisma__PettyCashReplenishmentClient<runtime.Types.Result.GetResult<Prisma.$PettyCashReplenishmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  salesReturn<T extends Prisma.CashBankTransaction$salesReturnArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashBankTransaction$salesReturnArgs<ExtArgs>>): Prisma.Prisma__SalesReturnClient<runtime.Types.Result.GetResult<Prisma.$SalesReturnPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.CashBankTransaction$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashBankTransaction$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1988,6 +2558,8 @@ export interface CashBankTransactionFieldRefs {
   readonly branchId: Prisma.FieldRef<"CashBankTransaction", 'String'>
   readonly supplierPaymentId: Prisma.FieldRef<"CashBankTransaction", 'String'>
   readonly customerPaymentId: Prisma.FieldRef<"CashBankTransaction", 'String'>
+  readonly pettyCashReplenishmentId: Prisma.FieldRef<"CashBankTransaction", 'String'>
+  readonly salesReturnId: Prisma.FieldRef<"CashBankTransaction", 'String'>
   readonly accountId: Prisma.FieldRef<"CashBankTransaction", 'String'>
   readonly accountType: Prisma.FieldRef<"CashBankTransaction", 'CashBankAccountType'>
   readonly accountName: Prisma.FieldRef<"CashBankTransaction", 'String'>
@@ -2401,6 +2973,30 @@ export type CashBankTransactionDeleteManyArgs<ExtArgs extends runtime.Types.Exte
 }
 
 /**
+ * CashBankTransaction.bankReconciliationItems
+ */
+export type CashBankTransaction$bankReconciliationItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BankReconciliationItem
+   */
+  select?: Prisma.BankReconciliationItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BankReconciliationItem
+   */
+  omit?: Prisma.BankReconciliationItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BankReconciliationItemInclude<ExtArgs> | null
+  where?: Prisma.BankReconciliationItemWhereInput
+  orderBy?: Prisma.BankReconciliationItemOrderByWithRelationInput | Prisma.BankReconciliationItemOrderByWithRelationInput[]
+  cursor?: Prisma.BankReconciliationItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BankReconciliationItemScalarFieldEnum | Prisma.BankReconciliationItemScalarFieldEnum[]
+}
+
+/**
  * CashBankTransaction.supplierPayment
  */
 export type CashBankTransaction$supplierPaymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2436,6 +3032,44 @@ export type CashBankTransaction$customerPaymentArgs<ExtArgs extends runtime.Type
    */
   include?: Prisma.CustomerPaymentInclude<ExtArgs> | null
   where?: Prisma.CustomerPaymentWhereInput
+}
+
+/**
+ * CashBankTransaction.pettyCashReplenishment
+ */
+export type CashBankTransaction$pettyCashReplenishmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PettyCashReplenishment
+   */
+  select?: Prisma.PettyCashReplenishmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PettyCashReplenishment
+   */
+  omit?: Prisma.PettyCashReplenishmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PettyCashReplenishmentInclude<ExtArgs> | null
+  where?: Prisma.PettyCashReplenishmentWhereInput
+}
+
+/**
+ * CashBankTransaction.salesReturn
+ */
+export type CashBankTransaction$salesReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SalesReturn
+   */
+  select?: Prisma.SalesReturnSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SalesReturn
+   */
+  omit?: Prisma.SalesReturnOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SalesReturnInclude<ExtArgs> | null
+  where?: Prisma.SalesReturnWhereInput
 }
 
 /**

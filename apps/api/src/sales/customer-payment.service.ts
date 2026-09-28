@@ -22,35 +22,68 @@ export class CustomerPaymentService {
       );
     }
 
+    const hasSalesInvoice = Boolean(dto.salesInvoiceId);
+    const hasServiceInvoice = Boolean(dto.serviceInvoiceId);
+
+    if (hasSalesInvoice === hasServiceInvoice) {
+      throw new BadRequestException(
+        'Payment must reference exactly one sales invoice or service invoice.',
+      );
+    }
+
     const paymentDate = dto.paymentDate
       ? new Date(dto.paymentDate)
       : new Date();
 
     return this.prisma.$transaction(async (tx) => {
-      const invoice = await tx.salesInvoice.findUnique({
-        where: {
-          id: dto.salesInvoiceId,
-        },
-        include: {
-          customer: true,
-          branch: true,
-          accountsReceivable: true,
-        },
-      });
+      let invoice: any;
+      let invoiceType: 'SALES' | 'SERVICE';
+
+      if (dto.salesInvoiceId) {
+        invoiceType = 'SALES';
+
+        invoice = await tx.salesInvoice.findUnique({
+          where: {
+            id: dto.salesInvoiceId,
+          },
+          include: {
+            customer: true,
+            branch: true,
+            accountsReceivable: true,
+          },
+        });
+      } else {
+        invoiceType = 'SERVICE';
+
+        invoice = await tx.serviceInvoice.findUnique({
+          where: {
+            id: dto.serviceInvoiceId,
+          },
+          include: {
+            customer: true,
+            branch: true,
+            accountsReceivable: true,
+          },
+        });
+      }
 
       if (!invoice) {
-        throw new NotFoundException('Sales invoice not found.');
+        throw new NotFoundException(
+          invoiceType === 'SALES'
+            ? 'Sales invoice not found.'
+            : 'Service invoice not found.',
+        );
       }
 
       if (invoice.status !== 'POSTED') {
         throw new BadRequestException(
-          'Only posted sales invoices can receive payment.',
+          'Only posted invoices can receive payment.',
         );
       }
 
       if (invoice.balanceDue.lte(0)) {
         throw new BadRequestException(
-          'This sales invoice has no outstanding balance.',
+          'This invoice has no outstanding balance.',
         );
       }
 
@@ -80,37 +113,38 @@ export class CustomerPaymentService {
         );
       }
 
-      // --------------------------------------------------
-      // SALES INVOICE BALANCE
-      // --------------------------------------------------
+      if (invoice.paymentMode === 'CREDIT' && !invoice.accountsReceivable) {
+        throw new BadRequestException(
+          'Accounts receivable record is missing for this credit invoice.',
+        );
+      }
+
+      if (invoice.paymentMode === 'CASH' && invoice.accountsReceivable) {
+        throw new BadRequestException(
+          'CASH invoice unexpectedly has an accounts receivable record.',
+        );
+      }
 
       const newAmountPaid = invoice.amountPaid.plus(amount);
 
       const newBalanceDue = invoice.balanceDue.minus(amount);
 
-      // --------------------------------------------------
-      // ACCOUNTS RECEIVABLE
-      // CREDIT invoices only
-      // --------------------------------------------------
+      // -----------------------------
+      // UPDATE ACCOUNTS RECEIVABLE
+      // -----------------------------
 
       if (invoice.paymentMode === 'CREDIT') {
-        if (!invoice.accountsReceivable) {
-          throw new BadRequestException(
-            'Accounts receivable record is missing for this credit sales invoice.',
-          );
-        }
+        const ar = invoice.accountsReceivable;
 
-        const newArAmountPaid =
-          invoice.accountsReceivable.amountPaid.plus(amount);
+        const newArAmountPaid = ar.amountPaid.plus(amount);
 
-        const newArBalanceDue =
-          invoice.accountsReceivable.balanceDue.minus(amount);
+        const newArBalanceDue = ar.balanceDue.minus(amount);
 
         const arStatus = newArBalanceDue.eq(0) ? 'PAID' : 'PARTIALLY_PAID';
 
         await tx.accountsReceivable.update({
           where: {
-            id: invoice.accountsReceivable.id,
+            id: ar.id,
           },
           data: {
             amountPaid: newArAmountPaid,
@@ -120,47 +154,64 @@ export class CustomerPaymentService {
         });
       }
 
-      // --------------------------------------------------
-      // CUSTOMER PAYMENT
-      // --------------------------------------------------
+      // -----------------------------
+      // CREATE CUSTOMER PAYMENT
+      // -----------------------------
 
       const paymentNo = `CP-${this.generateReference()}`;
 
       const payment = await tx.customerPayment.create({
         data: {
           paymentNo,
+
           branchId: invoice.branchId,
           customerId: invoice.customerId,
-          salesInvoiceId: invoice.id,
+
+          salesInvoiceId: invoiceType === 'SALES' ? invoice.id : null,
+
+          serviceInvoiceId: invoiceType === 'SERVICE' ? invoice.id : null,
+
           accountId: account.id,
 
           amount,
-
           paymentDate,
 
           referenceNo: dto.referenceNo,
           notes: dto.notes,
+
           status: 'POSTED',
         },
       });
 
-      // --------------------------------------------------
-      // UPDATE SALES INVOICE
-      // --------------------------------------------------
+      // -----------------------------
+      // UPDATE INVOICE
+      // -----------------------------
 
-      await tx.salesInvoice.update({
-        where: {
-          id: invoice.id,
-        },
-        data: {
-          amountPaid: newAmountPaid,
-          balanceDue: newBalanceDue,
-        },
-      });
+      if (invoiceType === 'SALES') {
+        await tx.salesInvoice.update({
+          where: {
+            id: invoice.id,
+          },
+          data: {
+            amountPaid: newAmountPaid,
+            balanceDue: newBalanceDue,
+          },
+        });
+      } else {
+        await tx.serviceInvoice.update({
+          where: {
+            id: invoice.id,
+          },
+          data: {
+            amountPaid: newAmountPaid,
+            balanceDue: newBalanceDue,
+          },
+        });
+      }
 
-      // --------------------------------------------------
-      // CASH / BANK TRANSACTION
-      // --------------------------------------------------
+      // -----------------------------
+      // CASH / BANK
+      // -----------------------------
 
       await tx.cashBankTransaction.create({
         data: {
@@ -184,9 +235,9 @@ export class CustomerPaymentService {
         },
       });
 
-      // --------------------------------------------------
-      // RETURN FULL PAYMENT
-      // --------------------------------------------------
+      // -----------------------------
+      // RETURN
+      // -----------------------------
 
       return tx.customerPayment.findUniqueOrThrow({
         where: {
@@ -195,12 +246,12 @@ export class CustomerPaymentService {
         include: {
           branch: true,
           customer: true,
-          salesInvoice: {
-            include: {
-              accountsReceivable: true,
-            },
-          },
+
+          salesInvoice: true,
+          serviceInvoice: true,
+
           account: true,
+
           cashBankTransaction: true,
         },
       });
@@ -216,6 +267,7 @@ export class CustomerPaymentService {
         branch: true,
         customer: true,
         salesInvoice: true,
+        serviceInvoice: true,
         account: true,
         cashBankTransaction: true,
       },
@@ -231,6 +283,7 @@ export class CustomerPaymentService {
         branch: true,
         customer: true,
         salesInvoice: true,
+        serviceInvoice: true,
         account: true,
         cashBankTransaction: true,
       },

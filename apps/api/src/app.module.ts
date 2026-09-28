@@ -7,6 +7,11 @@ import { DatabaseModule } from './database/database.module.js';
 import { PurchasingModule } from './purchasing/purchasing.module.js';
 import { SalesModule } from './sales/sales.module.js';
 import { CustomersModule } from './customers/customers.module.js';
+import { InventoryAdjustmentModule } from './inventory-adjustment/inventory-adjustment.module.js';
+import { ServiceRepairModule } from './service-repair/service-repair.module.js';
+import { CashBankModule } from './cash-bank/cash-bank.module.js';
+import { PettyCashModule } from './petty-cash/petty-cash.module.js';
+import { ReportsModule } from './reports/reports.module.js';
 
 @Module({
   imports: [
@@ -17,6 +22,11 @@ import { CustomersModule } from './customers/customers.module.js';
     PurchasingModule,
     SalesModule,
     CustomersModule,
+    InventoryAdjustmentModule,
+    ServiceRepairModule,
+    CashBankModule,
+    PettyCashModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

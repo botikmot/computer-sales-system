@@ -36,7 +36,8 @@ export const InventoryMovementType = {
   REPAIR_ISSUE: 'REPAIR_ISSUE',
   ASSEMBLY_CONSUMPTION: 'ASSEMBLY_CONSUMPTION',
   ASSEMBLY_OUTPUT: 'ASSEMBLY_OUTPUT',
-  ADJUSTMENT: 'ADJUSTMENT'
+  ADJUSTMENT: 'ADJUSTMENT',
+  SALES_RETURN: 'SALES_RETURN'
 } as const
 
 export type InventoryMovementType = (typeof InventoryMovementType)[keyof typeof InventoryMovementType]
@@ -151,7 +152,11 @@ export type CashBankAccountType = (typeof CashBankAccountType)[keyof typeof Cash
 
 export const CashBankTransactionType = {
   SUPPLIER_PAYMENT: 'SUPPLIER_PAYMENT',
-  CUSTOMER_PAYMENT: 'CUSTOMER_PAYMENT'
+  CUSTOMER_PAYMENT: 'CUSTOMER_PAYMENT',
+  PETTY_CASH_REPLENISHMENT: 'PETTY_CASH_REPLENISHMENT',
+  OTHER_RECEIPT: 'OTHER_RECEIPT',
+  EXPENSE: 'EXPENSE',
+  CUSTOMER_REFUND: 'CUSTOMER_REFUND'
 } as const
 
 export type CashBankTransactionType = (typeof CashBankTransactionType)[keyof typeof CashBankTransactionType]
@@ -250,3 +255,129 @@ export const AccountsReceivableStatus = {
 } as const
 
 export type AccountsReceivableStatus = (typeof AccountsReceivableStatus)[keyof typeof AccountsReceivableStatus]
+
+
+export const InventoryAdjustmentStatus = {
+  DRAFT: 'DRAFT',
+  COUNTED: 'COUNTED',
+  FOR_APPROVAL: 'FOR_APPROVAL',
+  CONFIRMED: 'CONFIRMED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type InventoryAdjustmentStatus = (typeof InventoryAdjustmentStatus)[keyof typeof InventoryAdjustmentStatus]
+
+
+export const ServiceInvoiceStatus = {
+  DRAFT: 'DRAFT',
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ServiceInvoiceStatus = (typeof ServiceInvoiceStatus)[keyof typeof ServiceInvoiceStatus]
+
+
+export const ServicePaymentMode = {
+  CASH: 'CASH',
+  CREDIT: 'CREDIT'
+} as const
+
+export type ServicePaymentMode = (typeof ServicePaymentMode)[keyof typeof ServicePaymentMode]
+
+
+export const ServiceJobStatus = {
+  DRAFT: 'DRAFT',
+  DIAGNOSING: 'DIAGNOSING',
+  AWAITING_APPROVAL: 'AWAITING_APPROVAL',
+  APPROVED: 'APPROVED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  READY_FOR_RELEASE: 'READY_FOR_RELEASE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ServiceJobStatus = (typeof ServiceJobStatus)[keyof typeof ServiceJobStatus]
+
+
+export const ServiceInvoiceItemType = {
+  LABOR: 'LABOR',
+  PART: 'PART',
+  OTHER: 'OTHER'
+} as const
+
+export type ServiceInvoiceItemType = (typeof ServiceInvoiceItemType)[keyof typeof ServiceInvoiceItemType]
+
+
+export const BankReconciliationStatus = {
+  DRAFT: 'DRAFT',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BankReconciliationStatus = (typeof BankReconciliationStatus)[keyof typeof BankReconciliationStatus]
+
+
+export const BankReconciliationItemType = {
+  OUTSTANDING_CHECK: 'OUTSTANDING_CHECK',
+  DEPOSIT_IN_TRANSIT: 'DEPOSIT_IN_TRANSIT',
+  BANK_CHARGE: 'BANK_CHARGE',
+  BANK_CREDIT: 'BANK_CREDIT',
+  OTHER: 'OTHER'
+} as const
+
+export type BankReconciliationItemType = (typeof BankReconciliationItemType)[keyof typeof BankReconciliationItemType]
+
+
+export const PettyCashFundStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type PettyCashFundStatus = (typeof PettyCashFundStatus)[keyof typeof PettyCashFundStatus]
+
+
+export const PettyCashVoucherStatus = {
+  DRAFT: 'DRAFT',
+  POSTED: 'POSTED',
+  VOIDED: 'VOIDED'
+} as const
+
+export type PettyCashVoucherStatus = (typeof PettyCashVoucherStatus)[keyof typeof PettyCashVoucherStatus]
+
+
+export const PettyCashReplenishmentStatus = {
+  DRAFT: 'DRAFT',
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PettyCashReplenishmentStatus = (typeof PettyCashReplenishmentStatus)[keyof typeof PettyCashReplenishmentStatus]
+
+
+export const PettyCashTransactionType = {
+  EXPENSE: 'EXPENSE',
+  REPLENISHMENT: 'REPLENISHMENT'
+} as const
+
+export type PettyCashTransactionType = (typeof PettyCashTransactionType)[keyof typeof PettyCashTransactionType]
+
+
+export const SalesReturnStatus = {
+  DRAFT: 'DRAFT',
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SalesReturnStatus = (typeof SalesReturnStatus)[keyof typeof SalesReturnStatus]
+
+
+export const SalesReturnSettlementMode = {
+  CASH_REFUND: 'CASH_REFUND',
+  AR_ADJUSTMENT: 'AR_ADJUSTMENT',
+  NO_REFUND: 'NO_REFUND'
+} as const
+
+export type SalesReturnSettlementMode = (typeof SalesReturnSettlementMode)[keyof typeof SalesReturnSettlementMode]

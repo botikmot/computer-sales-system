@@ -238,6 +238,16 @@ export type UserWhereInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceListRelationFilter
   customerPaymentsCreated?: Prisma.CustomerPaymentListRelationFilter
   accountsReceivablesCreated?: Prisma.AccountsReceivableListRelationFilter
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentListRelationFilter
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentListRelationFilter
+  bankReconciliationsCreated?: Prisma.BankReconciliationListRelationFilter
+  pettyCashFundsCustodied?: Prisma.PettyCashFundListRelationFilter
+  pettyCashFundsCreated?: Prisma.PettyCashFundListRelationFilter
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherListRelationFilter
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentListRelationFilter
+  salesReturnsCreated?: Prisma.SalesReturnListRelationFilter
+  serviceJobsAsTechnician?: Prisma.ServiceJobListRelationFilter
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }
@@ -269,6 +279,16 @@ export type UserOrderByWithRelationInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceOrderByRelationAggregateInput
   customerPaymentsCreated?: Prisma.CustomerPaymentOrderByRelationAggregateInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableOrderByRelationAggregateInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentOrderByRelationAggregateInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentOrderByRelationAggregateInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationOrderByRelationAggregateInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundOrderByRelationAggregateInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundOrderByRelationAggregateInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherOrderByRelationAggregateInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentOrderByRelationAggregateInput
+  salesReturnsCreated?: Prisma.SalesReturnOrderByRelationAggregateInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobOrderByRelationAggregateInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceOrderByRelationAggregateInput
   branch?: Prisma.BranchOrderByWithRelationInput
   inventoryMovements?: Prisma.InventoryMovementOrderByRelationAggregateInput
 }
@@ -303,6 +323,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   salesInvoicesCreated?: Prisma.SalesInvoiceListRelationFilter
   customerPaymentsCreated?: Prisma.CustomerPaymentListRelationFilter
   accountsReceivablesCreated?: Prisma.AccountsReceivableListRelationFilter
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentListRelationFilter
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentListRelationFilter
+  bankReconciliationsCreated?: Prisma.BankReconciliationListRelationFilter
+  pettyCashFundsCustodied?: Prisma.PettyCashFundListRelationFilter
+  pettyCashFundsCreated?: Prisma.PettyCashFundListRelationFilter
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherListRelationFilter
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentListRelationFilter
+  salesReturnsCreated?: Prisma.SalesReturnListRelationFilter
+  serviceJobsAsTechnician?: Prisma.ServiceJobListRelationFilter
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceListRelationFilter
   branch?: Prisma.XOR<Prisma.BranchNullableScalarRelationFilter, Prisma.BranchWhereInput> | null
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }, "id" | "username" | "email">
@@ -365,6 +395,16 @@ export type UserCreateInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -396,6 +436,16 @@ export type UserUncheckedCreateInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -425,6 +475,16 @@ export type UserUpdateInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -456,6 +516,16 @@ export type UserUncheckedUpdateInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -873,6 +943,166 @@ export type UserUpdateOneWithoutAccountsReceivablesCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsReceivablesCreatedInput, Prisma.UserUpdateWithoutAccountsReceivablesCreatedInput>, Prisma.UserUncheckedUpdateWithoutAccountsReceivablesCreatedInput>
 }
 
+export type UserCreateNestedOneWithoutInventoryAdjustmentsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsCreatedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInventoryAdjustmentsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutInventoryAdjustmentsApprovedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsApprovedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsApprovedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInventoryAdjustmentsApprovedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutInventoryAdjustmentsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsCreatedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInventoryAdjustmentsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutInventoryAdjustmentsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInventoryAdjustmentsCreatedInput, Prisma.UserUpdateWithoutInventoryAdjustmentsCreatedInput>, Prisma.UserUncheckedUpdateWithoutInventoryAdjustmentsCreatedInput>
+}
+
+export type UserUpdateOneWithoutInventoryAdjustmentsApprovedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsApprovedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsApprovedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInventoryAdjustmentsApprovedInput
+  upsert?: Prisma.UserUpsertWithoutInventoryAdjustmentsApprovedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInventoryAdjustmentsApprovedInput, Prisma.UserUpdateWithoutInventoryAdjustmentsApprovedInput>, Prisma.UserUncheckedUpdateWithoutInventoryAdjustmentsApprovedInput>
+}
+
+export type UserCreateNestedOneWithoutServiceInvoicesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutServiceInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutServiceInvoicesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutServiceInvoicesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutServiceInvoicesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutServiceInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutServiceInvoicesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutServiceInvoicesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutServiceInvoicesCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutServiceInvoicesCreatedInput, Prisma.UserUpdateWithoutServiceInvoicesCreatedInput>, Prisma.UserUncheckedUpdateWithoutServiceInvoicesCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutServiceJobsAsTechnicianInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutServiceJobsAsTechnicianInput, Prisma.UserUncheckedCreateWithoutServiceJobsAsTechnicianInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutServiceJobsAsTechnicianInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutServiceJobsAsTechnicianNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutServiceJobsAsTechnicianInput, Prisma.UserUncheckedCreateWithoutServiceJobsAsTechnicianInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutServiceJobsAsTechnicianInput
+  upsert?: Prisma.UserUpsertWithoutServiceJobsAsTechnicianInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutServiceJobsAsTechnicianInput, Prisma.UserUpdateWithoutServiceJobsAsTechnicianInput>, Prisma.UserUncheckedUpdateWithoutServiceJobsAsTechnicianInput>
+}
+
+export type UserCreateNestedOneWithoutBankReconciliationsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBankReconciliationsCreatedInput, Prisma.UserUncheckedCreateWithoutBankReconciliationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBankReconciliationsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutBankReconciliationsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBankReconciliationsCreatedInput, Prisma.UserUncheckedCreateWithoutBankReconciliationsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBankReconciliationsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutBankReconciliationsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBankReconciliationsCreatedInput, Prisma.UserUpdateWithoutBankReconciliationsCreatedInput>, Prisma.UserUncheckedUpdateWithoutBankReconciliationsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutPettyCashFundsCustodiedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCustodiedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCustodiedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashFundsCustodiedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutPettyCashFundsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashFundsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPettyCashFundsCustodiedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCustodiedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCustodiedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashFundsCustodiedInput
+  upsert?: Prisma.UserUpsertWithoutPettyCashFundsCustodiedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPettyCashFundsCustodiedInput, Prisma.UserUpdateWithoutPettyCashFundsCustodiedInput>, Prisma.UserUncheckedUpdateWithoutPettyCashFundsCustodiedInput>
+}
+
+export type UserUpdateOneWithoutPettyCashFundsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashFundsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPettyCashFundsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPettyCashFundsCreatedInput, Prisma.UserUpdateWithoutPettyCashFundsCreatedInput>, Prisma.UserUncheckedUpdateWithoutPettyCashFundsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutPettyCashVouchersCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashVouchersCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashVouchersCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPettyCashVouchersCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashVouchersCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashVouchersCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPettyCashVouchersCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPettyCashVouchersCreatedInput, Prisma.UserUpdateWithoutPettyCashVouchersCreatedInput>, Prisma.UserUncheckedUpdateWithoutPettyCashVouchersCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutPettyCashReplenishmentsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashReplenishmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashReplenishmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashReplenishmentsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPettyCashReplenishmentsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPettyCashReplenishmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashReplenishmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPettyCashReplenishmentsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPettyCashReplenishmentsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPettyCashReplenishmentsCreatedInput, Prisma.UserUpdateWithoutPettyCashReplenishmentsCreatedInput>, Prisma.UserUncheckedUpdateWithoutPettyCashReplenishmentsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutSalesReturnsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSalesReturnsCreatedInput, Prisma.UserUncheckedCreateWithoutSalesReturnsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSalesReturnsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSalesReturnsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSalesReturnsCreatedInput, Prisma.UserUncheckedCreateWithoutSalesReturnsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSalesReturnsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutSalesReturnsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSalesReturnsCreatedInput, Prisma.UserUpdateWithoutSalesReturnsCreatedInput>, Prisma.UserUncheckedUpdateWithoutSalesReturnsCreatedInput>
+}
+
 export type UserCreateWithoutBranchInput = {
   id?: string
   username: string
@@ -899,6 +1129,16 @@ export type UserCreateWithoutBranchInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
 
@@ -928,6 +1168,16 @@ export type UserUncheckedCreateWithoutBranchInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -999,6 +1249,16 @@ export type UserCreateWithoutInventoryMovementsInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
 }
 
@@ -1029,6 +1289,16 @@ export type UserUncheckedCreateWithoutInventoryMovementsInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutInventoryMovementsInput = {
@@ -1073,6 +1343,16 @@ export type UserUpdateWithoutInventoryMovementsInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
 }
 
@@ -1103,6 +1383,16 @@ export type UserUncheckedUpdateWithoutInventoryMovementsInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutPurchaseRequestsCreatedInput = {
@@ -1130,6 +1420,16 @@ export type UserCreateWithoutPurchaseRequestsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1160,6 +1460,16 @@ export type UserUncheckedCreateWithoutPurchaseRequestsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1204,6 +1514,16 @@ export type UserUpdateWithoutPurchaseRequestsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1234,6 +1554,16 @@ export type UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1262,6 +1592,16 @@ export type UserCreateWithoutSupplierQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1292,6 +1632,16 @@ export type UserUncheckedCreateWithoutSupplierQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1336,6 +1686,16 @@ export type UserUpdateWithoutSupplierQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1366,6 +1726,16 @@ export type UserUncheckedUpdateWithoutSupplierQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1394,6 +1764,16 @@ export type UserCreateWithoutPurchaseOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1424,6 +1804,16 @@ export type UserUncheckedCreateWithoutPurchaseOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1468,6 +1858,16 @@ export type UserUpdateWithoutPurchaseOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1498,6 +1898,16 @@ export type UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1526,6 +1936,16 @@ export type UserCreateWithoutReceivingsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1556,6 +1976,16 @@ export type UserUncheckedCreateWithoutReceivingsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1589,6 +2019,16 @@ export type UserCreateWithoutReceivingsCheckedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1619,6 +2059,16 @@ export type UserUncheckedCreateWithoutReceivingsCheckedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1663,6 +2113,16 @@ export type UserUpdateWithoutReceivingsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1693,6 +2153,16 @@ export type UserUncheckedUpdateWithoutReceivingsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1732,6 +2202,16 @@ export type UserUpdateWithoutReceivingsCheckedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1762,6 +2242,16 @@ export type UserUncheckedUpdateWithoutReceivingsCheckedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1790,6 +2280,16 @@ export type UserCreateWithoutPurchaseInvoicesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1820,6 +2320,16 @@ export type UserUncheckedCreateWithoutPurchaseInvoicesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1864,6 +2374,16 @@ export type UserUpdateWithoutPurchaseInvoicesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -1894,6 +2414,16 @@ export type UserUncheckedUpdateWithoutPurchaseInvoicesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1922,6 +2452,16 @@ export type UserCreateWithoutAccountsPayablesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -1952,6 +2492,16 @@ export type UserUncheckedCreateWithoutAccountsPayablesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1996,6 +2546,16 @@ export type UserUpdateWithoutAccountsPayablesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2026,6 +2586,16 @@ export type UserUncheckedUpdateWithoutAccountsPayablesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2054,6 +2624,16 @@ export type UserCreateWithoutSupplierPaymentsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -2084,6 +2664,16 @@ export type UserUncheckedCreateWithoutSupplierPaymentsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -2128,6 +2718,16 @@ export type UserUpdateWithoutSupplierPaymentsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2158,6 +2758,16 @@ export type UserUncheckedUpdateWithoutSupplierPaymentsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2186,6 +2796,16 @@ export type UserCreateWithoutCashBankTransactionsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -2216,6 +2836,16 @@ export type UserUncheckedCreateWithoutCashBankTransactionsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -2260,6 +2890,16 @@ export type UserUpdateWithoutCashBankTransactionsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2290,6 +2930,16 @@ export type UserUncheckedUpdateWithoutCashBankTransactionsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2318,6 +2968,16 @@ export type UserCreateWithoutPaymentVouchersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -2348,6 +3008,16 @@ export type UserUncheckedCreateWithoutPaymentVouchersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -2392,6 +3062,16 @@ export type UserUpdateWithoutPaymentVouchersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2422,6 +3102,16 @@ export type UserUncheckedUpdateWithoutPaymentVouchersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2450,6 +3140,16 @@ export type UserCreateWithoutSalesInquiriesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -2480,6 +3180,16 @@ export type UserUncheckedCreateWithoutSalesInquiriesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -2524,6 +3234,16 @@ export type UserUpdateWithoutSalesInquiriesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2554,6 +3274,16 @@ export type UserUncheckedUpdateWithoutSalesInquiriesCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2582,6 +3312,16 @@ export type UserCreateWithoutSalesQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -2612,6 +3352,16 @@ export type UserUncheckedCreateWithoutSalesQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -2656,6 +3406,16 @@ export type UserUpdateWithoutSalesQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2686,6 +3446,16 @@ export type UserUncheckedUpdateWithoutSalesQuotationsCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2714,6 +3484,16 @@ export type UserCreateWithoutSalesOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -2744,6 +3524,16 @@ export type UserUncheckedCreateWithoutSalesOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -2788,6 +3578,16 @@ export type UserUpdateWithoutSalesOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2818,6 +3618,16 @@ export type UserUncheckedUpdateWithoutSalesOrdersCreatedInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2846,6 +3656,16 @@ export type UserCreateWithoutSalesInvoicesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -2876,6 +3696,16 @@ export type UserUncheckedCreateWithoutSalesInvoicesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -2920,6 +3750,16 @@ export type UserUpdateWithoutSalesInvoicesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -2950,6 +3790,16 @@ export type UserUncheckedUpdateWithoutSalesInvoicesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -2978,6 +3828,16 @@ export type UserCreateWithoutCustomerPaymentsCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -3008,6 +3868,16 @@ export type UserUncheckedCreateWithoutCustomerPaymentsCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -3052,6 +3922,16 @@ export type UserUpdateWithoutCustomerPaymentsCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -3082,6 +3962,16 @@ export type UserUncheckedUpdateWithoutCustomerPaymentsCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -3110,6 +4000,16 @@ export type UserCreateWithoutAccountsReceivablesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
   salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
 }
@@ -3140,6 +4040,16 @@ export type UserUncheckedCreateWithoutAccountsReceivablesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -3184,6 +4094,16 @@ export type UserUpdateWithoutAccountsReceivablesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
@@ -3214,6 +4134,1736 @@ export type UserUncheckedUpdateWithoutAccountsReceivablesCreatedInput = {
   salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutInventoryAdjustmentsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutInventoryAdjustmentsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutInventoryAdjustmentsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsCreatedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsCreatedInput>
+}
+
+export type UserCreateWithoutInventoryAdjustmentsApprovedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutInventoryAdjustmentsApprovedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutInventoryAdjustmentsApprovedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsApprovedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsApprovedInput>
+}
+
+export type UserUpsertWithoutInventoryAdjustmentsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInventoryAdjustmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutInventoryAdjustmentsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsCreatedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInventoryAdjustmentsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInventoryAdjustmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutInventoryAdjustmentsCreatedInput>
+}
+
+export type UserUpdateWithoutInventoryAdjustmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInventoryAdjustmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUpsertWithoutInventoryAdjustmentsApprovedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInventoryAdjustmentsApprovedInput, Prisma.UserUncheckedUpdateWithoutInventoryAdjustmentsApprovedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInventoryAdjustmentsApprovedInput, Prisma.UserUncheckedCreateWithoutInventoryAdjustmentsApprovedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInventoryAdjustmentsApprovedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInventoryAdjustmentsApprovedInput, Prisma.UserUncheckedUpdateWithoutInventoryAdjustmentsApprovedInput>
+}
+
+export type UserUpdateWithoutInventoryAdjustmentsApprovedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInventoryAdjustmentsApprovedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutServiceInvoicesCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutServiceInvoicesCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutServiceInvoicesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutServiceInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutServiceInvoicesCreatedInput>
+}
+
+export type UserUpsertWithoutServiceInvoicesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutServiceInvoicesCreatedInput, Prisma.UserUncheckedUpdateWithoutServiceInvoicesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutServiceInvoicesCreatedInput, Prisma.UserUncheckedCreateWithoutServiceInvoicesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutServiceInvoicesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutServiceInvoicesCreatedInput, Prisma.UserUncheckedUpdateWithoutServiceInvoicesCreatedInput>
+}
+
+export type UserUpdateWithoutServiceInvoicesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutServiceInvoicesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutServiceJobsAsTechnicianInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutServiceJobsAsTechnicianInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutServiceJobsAsTechnicianInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutServiceJobsAsTechnicianInput, Prisma.UserUncheckedCreateWithoutServiceJobsAsTechnicianInput>
+}
+
+export type UserUpsertWithoutServiceJobsAsTechnicianInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutServiceJobsAsTechnicianInput, Prisma.UserUncheckedUpdateWithoutServiceJobsAsTechnicianInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutServiceJobsAsTechnicianInput, Prisma.UserUncheckedCreateWithoutServiceJobsAsTechnicianInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutServiceJobsAsTechnicianInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutServiceJobsAsTechnicianInput, Prisma.UserUncheckedUpdateWithoutServiceJobsAsTechnicianInput>
+}
+
+export type UserUpdateWithoutServiceJobsAsTechnicianInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutServiceJobsAsTechnicianInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutBankReconciliationsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutBankReconciliationsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutBankReconciliationsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBankReconciliationsCreatedInput, Prisma.UserUncheckedCreateWithoutBankReconciliationsCreatedInput>
+}
+
+export type UserUpsertWithoutBankReconciliationsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBankReconciliationsCreatedInput, Prisma.UserUncheckedUpdateWithoutBankReconciliationsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBankReconciliationsCreatedInput, Prisma.UserUncheckedCreateWithoutBankReconciliationsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBankReconciliationsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBankReconciliationsCreatedInput, Prisma.UserUncheckedUpdateWithoutBankReconciliationsCreatedInput>
+}
+
+export type UserUpdateWithoutBankReconciliationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBankReconciliationsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutPettyCashFundsCustodiedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPettyCashFundsCustodiedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPettyCashFundsCustodiedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCustodiedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCustodiedInput>
+}
+
+export type UserCreateWithoutPettyCashFundsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPettyCashFundsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPettyCashFundsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCreatedInput>
+}
+
+export type UserUpsertWithoutPettyCashFundsCustodiedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashFundsCustodiedInput, Prisma.UserUncheckedUpdateWithoutPettyCashFundsCustodiedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCustodiedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCustodiedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPettyCashFundsCustodiedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashFundsCustodiedInput, Prisma.UserUncheckedUpdateWithoutPettyCashFundsCustodiedInput>
+}
+
+export type UserUpdateWithoutPettyCashFundsCustodiedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPettyCashFundsCustodiedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUpsertWithoutPettyCashFundsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashFundsCreatedInput, Prisma.UserUncheckedUpdateWithoutPettyCashFundsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashFundsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashFundsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPettyCashFundsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashFundsCreatedInput, Prisma.UserUncheckedUpdateWithoutPettyCashFundsCreatedInput>
+}
+
+export type UserUpdateWithoutPettyCashFundsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPettyCashFundsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutPettyCashVouchersCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPettyCashVouchersCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPettyCashVouchersCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashVouchersCreatedInput>
+}
+
+export type UserUpsertWithoutPettyCashVouchersCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashVouchersCreatedInput, Prisma.UserUncheckedUpdateWithoutPettyCashVouchersCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashVouchersCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashVouchersCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPettyCashVouchersCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashVouchersCreatedInput, Prisma.UserUncheckedUpdateWithoutPettyCashVouchersCreatedInput>
+}
+
+export type UserUpdateWithoutPettyCashVouchersCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPettyCashVouchersCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutPettyCashReplenishmentsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutPettyCashReplenishmentsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutPettyCashReplenishmentsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashReplenishmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashReplenishmentsCreatedInput>
+}
+
+export type UserUpsertWithoutPettyCashReplenishmentsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashReplenishmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutPettyCashReplenishmentsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPettyCashReplenishmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPettyCashReplenishmentsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPettyCashReplenishmentsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPettyCashReplenishmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutPettyCashReplenishmentsCreatedInput>
+}
+
+export type UserUpdateWithoutPettyCashReplenishmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPettyCashReplenishmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutSalesReturnsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceCreateNestedManyWithoutCreatedByInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutSalesReturnsCreatedInput = {
+  id?: string
+  username: string
+  email?: string | null
+  fullName: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  branchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsCreated?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCreatedByInput
+  receivingsChecked?: Prisma.ReceivingUncheckedCreateNestedManyWithoutCheckedByInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedCreateNestedManyWithoutCreatedByInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedCreateNestedManyWithoutCreatedByInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedCreateNestedManyWithoutCreatedByInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedCreateNestedManyWithoutApprovedByInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCustodianInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedCreateNestedManyWithoutCreatedByInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedCreateNestedManyWithoutCreatedByInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedCreateNestedManyWithoutTechnicianInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutSalesReturnsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSalesReturnsCreatedInput, Prisma.UserUncheckedCreateWithoutSalesReturnsCreatedInput>
+}
+
+export type UserUpsertWithoutSalesReturnsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSalesReturnsCreatedInput, Prisma.UserUncheckedUpdateWithoutSalesReturnsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSalesReturnsCreatedInput, Prisma.UserUncheckedCreateWithoutSalesReturnsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSalesReturnsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSalesReturnsCreatedInput, Prisma.UserUncheckedUpdateWithoutSalesReturnsCreatedInput>
+}
+
+export type UserUpdateWithoutSalesReturnsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSalesReturnsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestsCreated?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierQuotationsCreated?: Prisma.SupplierQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchaseOrdersCreated?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsCreated?: Prisma.ReceivingUncheckedUpdateManyWithoutCreatedByNestedInput
+  receivingsChecked?: Prisma.ReceivingUncheckedUpdateManyWithoutCheckedByNestedInput
+  purchaseInvoicesCreated?: Prisma.PurchaseInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsPayablesCreated?: Prisma.AccountsPayableUncheckedUpdateManyWithoutCreatedByNestedInput
+  supplierPaymentsCreated?: Prisma.SupplierPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  cashBankTransactionsCreated?: Prisma.CashBankTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentVouchersCreated?: Prisma.PaymentVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInquiriesCreated?: Prisma.SalesInquiryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesQuotationsCreated?: Prisma.SalesQuotationUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesOrdersCreated?: Prisma.SalesOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -3255,6 +5905,16 @@ export type UserUpdateWithoutBranchInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -3284,6 +5944,16 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   salesInvoicesCreated?: Prisma.SalesInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   customerPaymentsCreated?: Prisma.CustomerPaymentUncheckedUpdateManyWithoutCreatedByNestedInput
   accountsReceivablesCreated?: Prisma.AccountsReceivableUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsCreated?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  inventoryAdjustmentsApproved?: Prisma.InventoryAdjustmentUncheckedUpdateManyWithoutApprovedByNestedInput
+  bankReconciliationsCreated?: Prisma.BankReconciliationUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashFundsCustodied?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCustodianNestedInput
+  pettyCashFundsCreated?: Prisma.PettyCashFundUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashVouchersCreated?: Prisma.PettyCashVoucherUncheckedUpdateManyWithoutCreatedByNestedInput
+  pettyCashReplenishmentsCreated?: Prisma.PettyCashReplenishmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesReturnsCreated?: Prisma.SalesReturnUncheckedUpdateManyWithoutCreatedByNestedInput
+  serviceJobsAsTechnician?: Prisma.ServiceJobUncheckedUpdateManyWithoutTechnicianNestedInput
+  serviceInvoicesCreated?: Prisma.ServiceInvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -3321,6 +5991,16 @@ export type UserCountOutputType = {
   salesInvoicesCreated: number
   customerPaymentsCreated: number
   accountsReceivablesCreated: number
+  inventoryAdjustmentsCreated: number
+  inventoryAdjustmentsApproved: number
+  bankReconciliationsCreated: number
+  pettyCashFundsCustodied: number
+  pettyCashFundsCreated: number
+  pettyCashVouchersCreated: number
+  pettyCashReplenishmentsCreated: number
+  salesReturnsCreated: number
+  serviceJobsAsTechnician: number
+  serviceInvoicesCreated: number
   inventoryMovements: number
 }
 
@@ -3341,6 +6021,16 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   salesInvoicesCreated?: boolean | UserCountOutputTypeCountSalesInvoicesCreatedArgs
   customerPaymentsCreated?: boolean | UserCountOutputTypeCountCustomerPaymentsCreatedArgs
   accountsReceivablesCreated?: boolean | UserCountOutputTypeCountAccountsReceivablesCreatedArgs
+  inventoryAdjustmentsCreated?: boolean | UserCountOutputTypeCountInventoryAdjustmentsCreatedArgs
+  inventoryAdjustmentsApproved?: boolean | UserCountOutputTypeCountInventoryAdjustmentsApprovedArgs
+  bankReconciliationsCreated?: boolean | UserCountOutputTypeCountBankReconciliationsCreatedArgs
+  pettyCashFundsCustodied?: boolean | UserCountOutputTypeCountPettyCashFundsCustodiedArgs
+  pettyCashFundsCreated?: boolean | UserCountOutputTypeCountPettyCashFundsCreatedArgs
+  pettyCashVouchersCreated?: boolean | UserCountOutputTypeCountPettyCashVouchersCreatedArgs
+  pettyCashReplenishmentsCreated?: boolean | UserCountOutputTypeCountPettyCashReplenishmentsCreatedArgs
+  salesReturnsCreated?: boolean | UserCountOutputTypeCountSalesReturnsCreatedArgs
+  serviceJobsAsTechnician?: boolean | UserCountOutputTypeCountServiceJobsAsTechnicianArgs
+  serviceInvoicesCreated?: boolean | UserCountOutputTypeCountServiceInvoicesCreatedArgs
   inventoryMovements?: boolean | UserCountOutputTypeCountInventoryMovementsArgs
 }
 
@@ -3469,6 +6159,76 @@ export type UserCountOutputTypeCountAccountsReceivablesCreatedArgs<ExtArgs exten
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountInventoryAdjustmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InventoryAdjustmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInventoryAdjustmentsApprovedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InventoryAdjustmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBankReconciliationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BankReconciliationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPettyCashFundsCustodiedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PettyCashFundWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPettyCashFundsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PettyCashFundWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPettyCashVouchersCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PettyCashVoucherWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPettyCashReplenishmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PettyCashReplenishmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSalesReturnsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SalesReturnWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountServiceJobsAsTechnicianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceJobWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountServiceInvoicesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceInvoiceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountInventoryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InventoryMovementWhereInput
 }
@@ -3501,6 +6261,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   salesInvoicesCreated?: boolean | Prisma.User$salesInvoicesCreatedArgs<ExtArgs>
   customerPaymentsCreated?: boolean | Prisma.User$customerPaymentsCreatedArgs<ExtArgs>
   accountsReceivablesCreated?: boolean | Prisma.User$accountsReceivablesCreatedArgs<ExtArgs>
+  inventoryAdjustmentsCreated?: boolean | Prisma.User$inventoryAdjustmentsCreatedArgs<ExtArgs>
+  inventoryAdjustmentsApproved?: boolean | Prisma.User$inventoryAdjustmentsApprovedArgs<ExtArgs>
+  bankReconciliationsCreated?: boolean | Prisma.User$bankReconciliationsCreatedArgs<ExtArgs>
+  pettyCashFundsCustodied?: boolean | Prisma.User$pettyCashFundsCustodiedArgs<ExtArgs>
+  pettyCashFundsCreated?: boolean | Prisma.User$pettyCashFundsCreatedArgs<ExtArgs>
+  pettyCashVouchersCreated?: boolean | Prisma.User$pettyCashVouchersCreatedArgs<ExtArgs>
+  pettyCashReplenishmentsCreated?: boolean | Prisma.User$pettyCashReplenishmentsCreatedArgs<ExtArgs>
+  salesReturnsCreated?: boolean | Prisma.User$salesReturnsCreatedArgs<ExtArgs>
+  serviceJobsAsTechnician?: boolean | Prisma.User$serviceJobsAsTechnicianArgs<ExtArgs>
+  serviceInvoicesCreated?: boolean | Prisma.User$serviceInvoicesCreatedArgs<ExtArgs>
   branch?: boolean | Prisma.User$branchArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3565,6 +6335,16 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   salesInvoicesCreated?: boolean | Prisma.User$salesInvoicesCreatedArgs<ExtArgs>
   customerPaymentsCreated?: boolean | Prisma.User$customerPaymentsCreatedArgs<ExtArgs>
   accountsReceivablesCreated?: boolean | Prisma.User$accountsReceivablesCreatedArgs<ExtArgs>
+  inventoryAdjustmentsCreated?: boolean | Prisma.User$inventoryAdjustmentsCreatedArgs<ExtArgs>
+  inventoryAdjustmentsApproved?: boolean | Prisma.User$inventoryAdjustmentsApprovedArgs<ExtArgs>
+  bankReconciliationsCreated?: boolean | Prisma.User$bankReconciliationsCreatedArgs<ExtArgs>
+  pettyCashFundsCustodied?: boolean | Prisma.User$pettyCashFundsCustodiedArgs<ExtArgs>
+  pettyCashFundsCreated?: boolean | Prisma.User$pettyCashFundsCreatedArgs<ExtArgs>
+  pettyCashVouchersCreated?: boolean | Prisma.User$pettyCashVouchersCreatedArgs<ExtArgs>
+  pettyCashReplenishmentsCreated?: boolean | Prisma.User$pettyCashReplenishmentsCreatedArgs<ExtArgs>
+  salesReturnsCreated?: boolean | Prisma.User$salesReturnsCreatedArgs<ExtArgs>
+  serviceJobsAsTechnician?: boolean | Prisma.User$serviceJobsAsTechnicianArgs<ExtArgs>
+  serviceInvoicesCreated?: boolean | Prisma.User$serviceInvoicesCreatedArgs<ExtArgs>
   branch?: boolean | Prisma.User$branchArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3595,6 +6375,16 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     salesInvoicesCreated: Prisma.$SalesInvoicePayload<ExtArgs>[]
     customerPaymentsCreated: Prisma.$CustomerPaymentPayload<ExtArgs>[]
     accountsReceivablesCreated: Prisma.$AccountsReceivablePayload<ExtArgs>[]
+    inventoryAdjustmentsCreated: Prisma.$InventoryAdjustmentPayload<ExtArgs>[]
+    inventoryAdjustmentsApproved: Prisma.$InventoryAdjustmentPayload<ExtArgs>[]
+    bankReconciliationsCreated: Prisma.$BankReconciliationPayload<ExtArgs>[]
+    pettyCashFundsCustodied: Prisma.$PettyCashFundPayload<ExtArgs>[]
+    pettyCashFundsCreated: Prisma.$PettyCashFundPayload<ExtArgs>[]
+    pettyCashVouchersCreated: Prisma.$PettyCashVoucherPayload<ExtArgs>[]
+    pettyCashReplenishmentsCreated: Prisma.$PettyCashReplenishmentPayload<ExtArgs>[]
+    salesReturnsCreated: Prisma.$SalesReturnPayload<ExtArgs>[]
+    serviceJobsAsTechnician: Prisma.$ServiceJobPayload<ExtArgs>[]
+    serviceInvoicesCreated: Prisma.$ServiceInvoicePayload<ExtArgs>[]
     branch: Prisma.$BranchPayload<ExtArgs> | null
     inventoryMovements: Prisma.$InventoryMovementPayload<ExtArgs>[]
   }
@@ -4019,6 +6809,16 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   salesInvoicesCreated<T extends Prisma.User$salesInvoicesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$salesInvoicesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customerPaymentsCreated<T extends Prisma.User$customerPaymentsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$customerPaymentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accountsReceivablesCreated<T extends Prisma.User$accountsReceivablesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsReceivablesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountsReceivablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  inventoryAdjustmentsCreated<T extends Prisma.User$inventoryAdjustmentsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inventoryAdjustmentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  inventoryAdjustmentsApproved<T extends Prisma.User$inventoryAdjustmentsApprovedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inventoryAdjustmentsApprovedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bankReconciliationsCreated<T extends Prisma.User$bankReconciliationsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bankReconciliationsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BankReconciliationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pettyCashFundsCustodied<T extends Prisma.User$pettyCashFundsCustodiedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pettyCashFundsCustodiedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PettyCashFundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pettyCashFundsCreated<T extends Prisma.User$pettyCashFundsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pettyCashFundsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PettyCashFundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pettyCashVouchersCreated<T extends Prisma.User$pettyCashVouchersCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pettyCashVouchersCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PettyCashVoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pettyCashReplenishmentsCreated<T extends Prisma.User$pettyCashReplenishmentsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pettyCashReplenishmentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PettyCashReplenishmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  salesReturnsCreated<T extends Prisma.User$salesReturnsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$salesReturnsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesReturnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  serviceJobsAsTechnician<T extends Prisma.User$serviceJobsAsTechnicianArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$serviceJobsAsTechnicianArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  serviceInvoicesCreated<T extends Prisma.User$serviceInvoicesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$serviceInvoicesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceInvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   branch<T extends Prisma.User$branchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$branchArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inventoryMovements<T extends Prisma.User$inventoryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inventoryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -4842,6 +7642,246 @@ export type User$accountsReceivablesCreatedArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.AccountsReceivableScalarFieldEnum | Prisma.AccountsReceivableScalarFieldEnum[]
+}
+
+/**
+ * User.inventoryAdjustmentsCreated
+ */
+export type User$inventoryAdjustmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InventoryAdjustment
+   */
+  select?: Prisma.InventoryAdjustmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InventoryAdjustment
+   */
+  omit?: Prisma.InventoryAdjustmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InventoryAdjustmentInclude<ExtArgs> | null
+  where?: Prisma.InventoryAdjustmentWhereInput
+  orderBy?: Prisma.InventoryAdjustmentOrderByWithRelationInput | Prisma.InventoryAdjustmentOrderByWithRelationInput[]
+  cursor?: Prisma.InventoryAdjustmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InventoryAdjustmentScalarFieldEnum | Prisma.InventoryAdjustmentScalarFieldEnum[]
+}
+
+/**
+ * User.inventoryAdjustmentsApproved
+ */
+export type User$inventoryAdjustmentsApprovedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InventoryAdjustment
+   */
+  select?: Prisma.InventoryAdjustmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InventoryAdjustment
+   */
+  omit?: Prisma.InventoryAdjustmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InventoryAdjustmentInclude<ExtArgs> | null
+  where?: Prisma.InventoryAdjustmentWhereInput
+  orderBy?: Prisma.InventoryAdjustmentOrderByWithRelationInput | Prisma.InventoryAdjustmentOrderByWithRelationInput[]
+  cursor?: Prisma.InventoryAdjustmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InventoryAdjustmentScalarFieldEnum | Prisma.InventoryAdjustmentScalarFieldEnum[]
+}
+
+/**
+ * User.bankReconciliationsCreated
+ */
+export type User$bankReconciliationsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BankReconciliation
+   */
+  select?: Prisma.BankReconciliationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BankReconciliation
+   */
+  omit?: Prisma.BankReconciliationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BankReconciliationInclude<ExtArgs> | null
+  where?: Prisma.BankReconciliationWhereInput
+  orderBy?: Prisma.BankReconciliationOrderByWithRelationInput | Prisma.BankReconciliationOrderByWithRelationInput[]
+  cursor?: Prisma.BankReconciliationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BankReconciliationScalarFieldEnum | Prisma.BankReconciliationScalarFieldEnum[]
+}
+
+/**
+ * User.pettyCashFundsCustodied
+ */
+export type User$pettyCashFundsCustodiedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PettyCashFund
+   */
+  select?: Prisma.PettyCashFundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PettyCashFund
+   */
+  omit?: Prisma.PettyCashFundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PettyCashFundInclude<ExtArgs> | null
+  where?: Prisma.PettyCashFundWhereInput
+  orderBy?: Prisma.PettyCashFundOrderByWithRelationInput | Prisma.PettyCashFundOrderByWithRelationInput[]
+  cursor?: Prisma.PettyCashFundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PettyCashFundScalarFieldEnum | Prisma.PettyCashFundScalarFieldEnum[]
+}
+
+/**
+ * User.pettyCashFundsCreated
+ */
+export type User$pettyCashFundsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PettyCashFund
+   */
+  select?: Prisma.PettyCashFundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PettyCashFund
+   */
+  omit?: Prisma.PettyCashFundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PettyCashFundInclude<ExtArgs> | null
+  where?: Prisma.PettyCashFundWhereInput
+  orderBy?: Prisma.PettyCashFundOrderByWithRelationInput | Prisma.PettyCashFundOrderByWithRelationInput[]
+  cursor?: Prisma.PettyCashFundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PettyCashFundScalarFieldEnum | Prisma.PettyCashFundScalarFieldEnum[]
+}
+
+/**
+ * User.pettyCashVouchersCreated
+ */
+export type User$pettyCashVouchersCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PettyCashVoucher
+   */
+  select?: Prisma.PettyCashVoucherSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PettyCashVoucher
+   */
+  omit?: Prisma.PettyCashVoucherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PettyCashVoucherInclude<ExtArgs> | null
+  where?: Prisma.PettyCashVoucherWhereInput
+  orderBy?: Prisma.PettyCashVoucherOrderByWithRelationInput | Prisma.PettyCashVoucherOrderByWithRelationInput[]
+  cursor?: Prisma.PettyCashVoucherWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PettyCashVoucherScalarFieldEnum | Prisma.PettyCashVoucherScalarFieldEnum[]
+}
+
+/**
+ * User.pettyCashReplenishmentsCreated
+ */
+export type User$pettyCashReplenishmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PettyCashReplenishment
+   */
+  select?: Prisma.PettyCashReplenishmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PettyCashReplenishment
+   */
+  omit?: Prisma.PettyCashReplenishmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PettyCashReplenishmentInclude<ExtArgs> | null
+  where?: Prisma.PettyCashReplenishmentWhereInput
+  orderBy?: Prisma.PettyCashReplenishmentOrderByWithRelationInput | Prisma.PettyCashReplenishmentOrderByWithRelationInput[]
+  cursor?: Prisma.PettyCashReplenishmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PettyCashReplenishmentScalarFieldEnum | Prisma.PettyCashReplenishmentScalarFieldEnum[]
+}
+
+/**
+ * User.salesReturnsCreated
+ */
+export type User$salesReturnsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SalesReturn
+   */
+  select?: Prisma.SalesReturnSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SalesReturn
+   */
+  omit?: Prisma.SalesReturnOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SalesReturnInclude<ExtArgs> | null
+  where?: Prisma.SalesReturnWhereInput
+  orderBy?: Prisma.SalesReturnOrderByWithRelationInput | Prisma.SalesReturnOrderByWithRelationInput[]
+  cursor?: Prisma.SalesReturnWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SalesReturnScalarFieldEnum | Prisma.SalesReturnScalarFieldEnum[]
+}
+
+/**
+ * User.serviceJobsAsTechnician
+ */
+export type User$serviceJobsAsTechnicianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceJob
+   */
+  select?: Prisma.ServiceJobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceJob
+   */
+  omit?: Prisma.ServiceJobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceJobInclude<ExtArgs> | null
+  where?: Prisma.ServiceJobWhereInput
+  orderBy?: Prisma.ServiceJobOrderByWithRelationInput | Prisma.ServiceJobOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceJobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceJobScalarFieldEnum | Prisma.ServiceJobScalarFieldEnum[]
+}
+
+/**
+ * User.serviceInvoicesCreated
+ */
+export type User$serviceInvoicesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceInvoice
+   */
+  select?: Prisma.ServiceInvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceInvoice
+   */
+  omit?: Prisma.ServiceInvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceInvoiceInclude<ExtArgs> | null
+  where?: Prisma.ServiceInvoiceWhereInput
+  orderBy?: Prisma.ServiceInvoiceOrderByWithRelationInput | Prisma.ServiceInvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceInvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceInvoiceScalarFieldEnum | Prisma.ServiceInvoiceScalarFieldEnum[]
 }
 
 /**

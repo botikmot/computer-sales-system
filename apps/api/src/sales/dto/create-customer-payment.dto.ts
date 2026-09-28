@@ -4,17 +4,23 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  MaxLength,
+  Min,
 } from 'class-validator';
 
 export class CreateCustomerPaymentDto {
+  @IsOptional()
   @IsUUID()
-  salesInvoiceId!: string;
+  salesInvoiceId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  serviceInvoiceId?: string;
 
   @IsUUID()
   accountId!: string;
 
   @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0.01)
   amount!: number;
 
   @IsOptional()
@@ -23,11 +29,9 @@ export class CreateCustomerPaymentDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(200)
   referenceNo?: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(2000)
   notes?: string;
 }

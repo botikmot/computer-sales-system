@@ -88,7 +88,20 @@ export const ModelName = {
   SalesInvoice: 'SalesInvoice',
   SalesInvoiceItem: 'SalesInvoiceItem',
   CustomerPayment: 'CustomerPayment',
-  AccountsReceivable: 'AccountsReceivable'
+  AccountsReceivable: 'AccountsReceivable',
+  InventoryAdjustment: 'InventoryAdjustment',
+  InventoryAdjustmentItem: 'InventoryAdjustmentItem',
+  ServiceInvoice: 'ServiceInvoice',
+  ServiceJob: 'ServiceJob',
+  ServiceJobPart: 'ServiceJobPart',
+  ServiceInvoiceItem: 'ServiceInvoiceItem',
+  BankReconciliation: 'BankReconciliation',
+  BankReconciliationItem: 'BankReconciliationItem',
+  PettyCashFund: 'PettyCashFund',
+  PettyCashVoucher: 'PettyCashVoucher',
+  PettyCashReplenishment: 'PettyCashReplenishment',
+  SalesReturn: 'SalesReturn',
+  SalesReturnItem: 'SalesReturnItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -498,6 +511,8 @@ export const CashBankTransactionScalarFieldEnum = {
   branchId: 'branchId',
   supplierPaymentId: 'supplierPaymentId',
   customerPaymentId: 'customerPaymentId',
+  pettyCashReplenishmentId: 'pettyCashReplenishmentId',
+  salesReturnId: 'salesReturnId',
   accountId: 'accountId',
   accountType: 'accountType',
   accountName: 'accountName',
@@ -705,6 +720,7 @@ export const CustomerPaymentScalarFieldEnum = {
   branchId: 'branchId',
   customerId: 'customerId',
   salesInvoiceId: 'salesInvoiceId',
+  serviceInvoiceId: 'serviceInvoiceId',
   accountId: 'accountId',
   amount: 'amount',
   paymentDate: 'paymentDate',
@@ -724,6 +740,7 @@ export const AccountsReceivableScalarFieldEnum = {
   branchId: 'branchId',
   customerId: 'customerId',
   salesInvoiceId: 'salesInvoiceId',
+  serviceInvoiceId: 'serviceInvoiceId',
   originalAmount: 'originalAmount',
   amountPaid: 'amountPaid',
   balanceDue: 'balanceDue',
@@ -736,6 +753,243 @@ export const AccountsReceivableScalarFieldEnum = {
 } as const
 
 export type AccountsReceivableScalarFieldEnum = (typeof AccountsReceivableScalarFieldEnum)[keyof typeof AccountsReceivableScalarFieldEnum]
+
+
+export const InventoryAdjustmentScalarFieldEnum = {
+  id: 'id',
+  adjustmentNo: 'adjustmentNo',
+  branchId: 'branchId',
+  status: 'status',
+  adjustmentDate: 'adjustmentDate',
+  notes: 'notes',
+  createdById: 'createdById',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  rejectedAt: 'rejectedAt',
+  rejectionReason: 'rejectionReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InventoryAdjustmentScalarFieldEnum = (typeof InventoryAdjustmentScalarFieldEnum)[keyof typeof InventoryAdjustmentScalarFieldEnum]
+
+
+export const InventoryAdjustmentItemScalarFieldEnum = {
+  id: 'id',
+  adjustmentId: 'adjustmentId',
+  productId: 'productId',
+  systemQuantity: 'systemQuantity',
+  countedQuantity: 'countedQuantity',
+  difference: 'difference',
+  unitCost: 'unitCost',
+  totalCost: 'totalCost',
+  reason: 'reason',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InventoryAdjustmentItemScalarFieldEnum = (typeof InventoryAdjustmentItemScalarFieldEnum)[keyof typeof InventoryAdjustmentItemScalarFieldEnum]
+
+
+export const ServiceInvoiceScalarFieldEnum = {
+  id: 'id',
+  invoiceNo: 'invoiceNo',
+  branchId: 'branchId',
+  customerId: 'customerId',
+  serviceJobId: 'serviceJobId',
+  status: 'status',
+  paymentMode: 'paymentMode',
+  invoiceDate: 'invoiceDate',
+  dueDate: 'dueDate',
+  subtotal: 'subtotal',
+  discount: 'discount',
+  tax: 'tax',
+  total: 'total',
+  amountPaid: 'amountPaid',
+  balanceDue: 'balanceDue',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceInvoiceScalarFieldEnum = (typeof ServiceInvoiceScalarFieldEnum)[keyof typeof ServiceInvoiceScalarFieldEnum]
+
+
+export const ServiceJobScalarFieldEnum = {
+  id: 'id',
+  jobNo: 'jobNo',
+  branchId: 'branchId',
+  customerId: 'customerId',
+  technicianId: 'technicianId',
+  status: 'status',
+  diagnosticFindings: 'diagnosticFindings',
+  laborCharge: 'laborCharge',
+  customerApproved: 'customerApproved',
+  customerApprovedAt: 'customerApprovedAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceJobScalarFieldEnum = (typeof ServiceJobScalarFieldEnum)[keyof typeof ServiceJobScalarFieldEnum]
+
+
+export const ServiceJobPartScalarFieldEnum = {
+  id: 'id',
+  serviceJobId: 'serviceJobId',
+  productId: 'productId',
+  requiredQuantity: 'requiredQuantity',
+  issuedQuantity: 'issuedQuantity',
+  unitCost: 'unitCost',
+  totalCost: 'totalCost',
+  notes: 'notes'
+} as const
+
+export type ServiceJobPartScalarFieldEnum = (typeof ServiceJobPartScalarFieldEnum)[keyof typeof ServiceJobPartScalarFieldEnum]
+
+
+export const ServiceInvoiceItemScalarFieldEnum = {
+  id: 'id',
+  serviceInvoiceId: 'serviceInvoiceId',
+  productId: 'productId',
+  itemType: 'itemType',
+  description: 'description',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  subtotal: 'subtotal'
+} as const
+
+export type ServiceInvoiceItemScalarFieldEnum = (typeof ServiceInvoiceItemScalarFieldEnum)[keyof typeof ServiceInvoiceItemScalarFieldEnum]
+
+
+export const BankReconciliationScalarFieldEnum = {
+  id: 'id',
+  reconciliationNo: 'reconciliationNo',
+  branchId: 'branchId',
+  accountId: 'accountId',
+  statementDate: 'statementDate',
+  statementEndingBalance: 'statementEndingBalance',
+  bookBalance: 'bookBalance',
+  adjustedBankBalance: 'adjustedBankBalance',
+  adjustedBookBalance: 'adjustedBookBalance',
+  difference: 'difference',
+  status: 'status',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankReconciliationScalarFieldEnum = (typeof BankReconciliationScalarFieldEnum)[keyof typeof BankReconciliationScalarFieldEnum]
+
+
+export const BankReconciliationItemScalarFieldEnum = {
+  id: 'id',
+  reconciliationId: 'reconciliationId',
+  type: 'type',
+  cashBankTransactionId: 'cashBankTransactionId',
+  amount: 'amount',
+  referenceNo: 'referenceNo',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type BankReconciliationItemScalarFieldEnum = (typeof BankReconciliationItemScalarFieldEnum)[keyof typeof BankReconciliationItemScalarFieldEnum]
+
+
+export const PettyCashFundScalarFieldEnum = {
+  id: 'id',
+  fundNo: 'fundNo',
+  branchId: 'branchId',
+  name: 'name',
+  custodianId: 'custodianId',
+  openingBalance: 'openingBalance',
+  currentBalance: 'currentBalance',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PettyCashFundScalarFieldEnum = (typeof PettyCashFundScalarFieldEnum)[keyof typeof PettyCashFundScalarFieldEnum]
+
+
+export const PettyCashVoucherScalarFieldEnum = {
+  id: 'id',
+  voucherNo: 'voucherNo',
+  fundId: 'fundId',
+  expenseDate: 'expenseDate',
+  description: 'description',
+  amount: 'amount',
+  category: 'category',
+  payee: 'payee',
+  referenceNo: 'referenceNo',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PettyCashVoucherScalarFieldEnum = (typeof PettyCashVoucherScalarFieldEnum)[keyof typeof PettyCashVoucherScalarFieldEnum]
+
+
+export const PettyCashReplenishmentScalarFieldEnum = {
+  id: 'id',
+  replenishmentNo: 'replenishmentNo',
+  fundId: 'fundId',
+  accountId: 'accountId',
+  replenishmentDate: 'replenishmentDate',
+  amount: 'amount',
+  status: 'status',
+  referenceNo: 'referenceNo',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PettyCashReplenishmentScalarFieldEnum = (typeof PettyCashReplenishmentScalarFieldEnum)[keyof typeof PettyCashReplenishmentScalarFieldEnum]
+
+
+export const SalesReturnScalarFieldEnum = {
+  id: 'id',
+  returnNo: 'returnNo',
+  branchId: 'branchId',
+  customerId: 'customerId',
+  salesInvoiceId: 'salesInvoiceId',
+  status: 'status',
+  settlementMode: 'settlementMode',
+  returnDate: 'returnDate',
+  subtotal: 'subtotal',
+  total: 'total',
+  reason: 'reason',
+  notes: 'notes',
+  refundAccountId: 'refundAccountId',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SalesReturnScalarFieldEnum = (typeof SalesReturnScalarFieldEnum)[keyof typeof SalesReturnScalarFieldEnum]
+
+
+export const SalesReturnItemScalarFieldEnum = {
+  id: 'id',
+  salesReturnId: 'salesReturnId',
+  salesInvoiceItemId: 'salesInvoiceItemId',
+  productId: 'productId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  subtotal: 'subtotal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SalesReturnItemScalarFieldEnum = (typeof SalesReturnItemScalarFieldEnum)[keyof typeof SalesReturnItemScalarFieldEnum]
 
 
 export const SortOrder = {

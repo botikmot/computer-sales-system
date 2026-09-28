@@ -302,9 +302,13 @@ export type ProductWhereInput = {
   salesOrderItems?: Prisma.SalesOrderItemListRelationFilter
   inventoryReservations?: Prisma.InventoryReservationListRelationFilter
   salesInvoiceItems?: Prisma.SalesInvoiceItemListRelationFilter
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemListRelationFilter
+  salesReturnItems?: Prisma.SalesReturnItemListRelationFilter
   category?: Prisma.XOR<Prisma.ProductCategoryNullableScalarRelationFilter, Prisma.ProductCategoryWhereInput> | null
   inventoryBalances?: Prisma.InventoryBalanceListRelationFilter
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
+  serviceJobParts?: Prisma.ServiceJobPartListRelationFilter
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemListRelationFilter
   finishedBom?: Prisma.XOR<Prisma.BillOfMaterialNullableScalarRelationFilter, Prisma.BillOfMaterialWhereInput> | null
   bomComponents?: Prisma.BillOfMaterialItemListRelationFilter
   assemblyOutputs?: Prisma.AssemblyListRelationFilter
@@ -336,9 +340,13 @@ export type ProductOrderByWithRelationInput = {
   salesOrderItems?: Prisma.SalesOrderItemOrderByRelationAggregateInput
   inventoryReservations?: Prisma.InventoryReservationOrderByRelationAggregateInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemOrderByRelationAggregateInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemOrderByRelationAggregateInput
+  salesReturnItems?: Prisma.SalesReturnItemOrderByRelationAggregateInput
   category?: Prisma.ProductCategoryOrderByWithRelationInput
   inventoryBalances?: Prisma.InventoryBalanceOrderByRelationAggregateInput
   inventoryMovements?: Prisma.InventoryMovementOrderByRelationAggregateInput
+  serviceJobParts?: Prisma.ServiceJobPartOrderByRelationAggregateInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemOrderByRelationAggregateInput
   finishedBom?: Prisma.BillOfMaterialOrderByWithRelationInput
   bomComponents?: Prisma.BillOfMaterialItemOrderByRelationAggregateInput
   assemblyOutputs?: Prisma.AssemblyOrderByRelationAggregateInput
@@ -373,9 +381,13 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   salesOrderItems?: Prisma.SalesOrderItemListRelationFilter
   inventoryReservations?: Prisma.InventoryReservationListRelationFilter
   salesInvoiceItems?: Prisma.SalesInvoiceItemListRelationFilter
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemListRelationFilter
+  salesReturnItems?: Prisma.SalesReturnItemListRelationFilter
   category?: Prisma.XOR<Prisma.ProductCategoryNullableScalarRelationFilter, Prisma.ProductCategoryWhereInput> | null
   inventoryBalances?: Prisma.InventoryBalanceListRelationFilter
   inventoryMovements?: Prisma.InventoryMovementListRelationFilter
+  serviceJobParts?: Prisma.ServiceJobPartListRelationFilter
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemListRelationFilter
   finishedBom?: Prisma.XOR<Prisma.BillOfMaterialNullableScalarRelationFilter, Prisma.BillOfMaterialWhereInput> | null
   bomComponents?: Prisma.BillOfMaterialItemListRelationFilter
   assemblyOutputs?: Prisma.AssemblyListRelationFilter
@@ -448,9 +460,13 @@ export type ProductCreateInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -482,8 +498,12 @@ export type ProductUncheckedCreateInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -514,9 +534,13 @@ export type ProductUpdateInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -548,8 +572,12 @@ export type ProductUncheckedUpdateInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -680,6 +708,11 @@ export type ProductSumOrderByAggregateInput = {
 export type ProductScalarRelationFilter = {
   is?: Prisma.ProductWhereInput
   isNot?: Prisma.ProductWhereInput
+}
+
+export type ProductNullableScalarRelationFilter = {
+  is?: Prisma.ProductWhereInput | null
+  isNot?: Prisma.ProductWhereInput | null
 }
 
 export type ProductCreateNestedManyWithoutCategoryInput = {
@@ -956,6 +989,64 @@ export type ProductUpdateOneRequiredWithoutSalesInvoiceItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutSalesInvoiceItemsInput, Prisma.ProductUpdateWithoutSalesInvoiceItemsInput>, Prisma.ProductUncheckedUpdateWithoutSalesInvoiceItemsInput>
 }
 
+export type ProductCreateNestedOneWithoutInventoryAdjustmentItemsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutInventoryAdjustmentItemsInput, Prisma.ProductUncheckedCreateWithoutInventoryAdjustmentItemsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutInventoryAdjustmentItemsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutInventoryAdjustmentItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutInventoryAdjustmentItemsInput, Prisma.ProductUncheckedCreateWithoutInventoryAdjustmentItemsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutInventoryAdjustmentItemsInput
+  upsert?: Prisma.ProductUpsertWithoutInventoryAdjustmentItemsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutInventoryAdjustmentItemsInput, Prisma.ProductUpdateWithoutInventoryAdjustmentItemsInput>, Prisma.ProductUncheckedUpdateWithoutInventoryAdjustmentItemsInput>
+}
+
+export type ProductCreateNestedOneWithoutServiceJobPartsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutServiceJobPartsInput, Prisma.ProductUncheckedCreateWithoutServiceJobPartsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutServiceJobPartsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutServiceJobPartsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutServiceJobPartsInput, Prisma.ProductUncheckedCreateWithoutServiceJobPartsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutServiceJobPartsInput
+  upsert?: Prisma.ProductUpsertWithoutServiceJobPartsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutServiceJobPartsInput, Prisma.ProductUpdateWithoutServiceJobPartsInput>, Prisma.ProductUncheckedUpdateWithoutServiceJobPartsInput>
+}
+
+export type ProductCreateNestedOneWithoutServiceInvoiceItemsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutServiceInvoiceItemsInput, Prisma.ProductUncheckedCreateWithoutServiceInvoiceItemsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutServiceInvoiceItemsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneWithoutServiceInvoiceItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutServiceInvoiceItemsInput, Prisma.ProductUncheckedCreateWithoutServiceInvoiceItemsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutServiceInvoiceItemsInput
+  upsert?: Prisma.ProductUpsertWithoutServiceInvoiceItemsInput
+  disconnect?: Prisma.ProductWhereInput | boolean
+  delete?: Prisma.ProductWhereInput | boolean
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutServiceInvoiceItemsInput, Prisma.ProductUpdateWithoutServiceInvoiceItemsInput>, Prisma.ProductUncheckedUpdateWithoutServiceInvoiceItemsInput>
+}
+
+export type ProductCreateNestedOneWithoutSalesReturnItemsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutSalesReturnItemsInput, Prisma.ProductUncheckedCreateWithoutSalesReturnItemsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutSalesReturnItemsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutSalesReturnItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutSalesReturnItemsInput, Prisma.ProductUncheckedCreateWithoutSalesReturnItemsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutSalesReturnItemsInput
+  upsert?: Prisma.ProductUpsertWithoutSalesReturnItemsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutSalesReturnItemsInput, Prisma.ProductUpdateWithoutSalesReturnItemsInput>, Prisma.ProductUncheckedUpdateWithoutSalesReturnItemsInput>
+}
+
 export type ProductCreateWithoutCategoryInput = {
   id?: string
   sku: string
@@ -980,8 +1071,12 @@ export type ProductCreateWithoutCategoryInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -1012,8 +1107,12 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -1090,8 +1189,12 @@ export type ProductCreateWithoutInventoryBalancesInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -1123,7 +1226,11 @@ export type ProductUncheckedCreateWithoutInventoryBalancesInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -1170,8 +1277,12 @@ export type ProductUpdateWithoutInventoryBalancesInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -1203,7 +1314,11 @@ export type ProductUncheckedUpdateWithoutInventoryBalancesInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -1234,8 +1349,12 @@ export type ProductCreateWithoutInventoryMovementsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -1267,7 +1386,11 @@ export type ProductUncheckedCreateWithoutInventoryMovementsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -1314,8 +1437,12 @@ export type ProductUpdateWithoutInventoryMovementsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -1347,7 +1474,11 @@ export type ProductUncheckedUpdateWithoutInventoryMovementsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -1378,9 +1509,13 @@ export type ProductCreateWithoutFinishedBomInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
   assemblyComponents?: Prisma.AssemblyComponentCreateNestedManyWithoutComponentProductInput
@@ -1411,8 +1546,12 @@ export type ProductUncheckedCreateWithoutFinishedBomInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
   assemblyComponents?: Prisma.AssemblyComponentUncheckedCreateNestedManyWithoutComponentProductInput
@@ -1458,9 +1597,13 @@ export type ProductUpdateWithoutFinishedBomInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
   assemblyComponents?: Prisma.AssemblyComponentUpdateManyWithoutComponentProductNestedInput
@@ -1491,8 +1634,12 @@ export type ProductUncheckedUpdateWithoutFinishedBomInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
   assemblyComponents?: Prisma.AssemblyComponentUncheckedUpdateManyWithoutComponentProductNestedInput
@@ -1522,9 +1669,13 @@ export type ProductCreateWithoutBomComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
   assemblyComponents?: Prisma.AssemblyComponentCreateNestedManyWithoutComponentProductInput
@@ -1555,8 +1706,12 @@ export type ProductUncheckedCreateWithoutBomComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
   assemblyComponents?: Prisma.AssemblyComponentUncheckedCreateNestedManyWithoutComponentProductInput
@@ -1602,9 +1757,13 @@ export type ProductUpdateWithoutBomComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
   assemblyComponents?: Prisma.AssemblyComponentUpdateManyWithoutComponentProductNestedInput
@@ -1635,8 +1794,12 @@ export type ProductUncheckedUpdateWithoutBomComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
   assemblyComponents?: Prisma.AssemblyComponentUncheckedUpdateManyWithoutComponentProductNestedInput
@@ -1666,9 +1829,13 @@ export type ProductCreateWithoutAssemblyOutputsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyComponents?: Prisma.AssemblyComponentCreateNestedManyWithoutComponentProductInput
@@ -1699,8 +1866,12 @@ export type ProductUncheckedCreateWithoutAssemblyOutputsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyComponents?: Prisma.AssemblyComponentUncheckedCreateNestedManyWithoutComponentProductInput
@@ -1746,9 +1917,13 @@ export type ProductUpdateWithoutAssemblyOutputsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyComponents?: Prisma.AssemblyComponentUpdateManyWithoutComponentProductNestedInput
@@ -1779,8 +1954,12 @@ export type ProductUncheckedUpdateWithoutAssemblyOutputsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyComponents?: Prisma.AssemblyComponentUncheckedUpdateManyWithoutComponentProductNestedInput
@@ -1810,9 +1989,13 @@ export type ProductCreateWithoutAssemblyComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -1843,8 +2026,12 @@ export type ProductUncheckedCreateWithoutAssemblyComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -1890,9 +2077,13 @@ export type ProductUpdateWithoutAssemblyComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -1923,8 +2114,12 @@ export type ProductUncheckedUpdateWithoutAssemblyComponentsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -1953,9 +2148,13 @@ export type ProductCreateWithoutPurchaseRequestItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -1986,8 +2185,12 @@ export type ProductUncheckedCreateWithoutPurchaseRequestItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -2033,9 +2236,13 @@ export type ProductUpdateWithoutPurchaseRequestItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -2066,8 +2273,12 @@ export type ProductUncheckedUpdateWithoutPurchaseRequestItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -2097,9 +2308,13 @@ export type ProductCreateWithoutSupplierQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -2130,8 +2345,12 @@ export type ProductUncheckedCreateWithoutSupplierQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -2177,9 +2396,13 @@ export type ProductUpdateWithoutSupplierQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -2210,8 +2433,12 @@ export type ProductUncheckedUpdateWithoutSupplierQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -2241,9 +2468,13 @@ export type ProductCreateWithoutPurchaseOrderItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -2274,8 +2505,12 @@ export type ProductUncheckedCreateWithoutPurchaseOrderItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -2321,9 +2556,13 @@ export type ProductUpdateWithoutPurchaseOrderItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -2354,8 +2593,12 @@ export type ProductUncheckedUpdateWithoutPurchaseOrderItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -2385,9 +2628,13 @@ export type ProductCreateWithoutReceivingItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -2418,8 +2665,12 @@ export type ProductUncheckedCreateWithoutReceivingItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -2465,9 +2716,13 @@ export type ProductUpdateWithoutReceivingItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -2498,8 +2753,12 @@ export type ProductUncheckedUpdateWithoutReceivingItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -2529,9 +2788,13 @@ export type ProductCreateWithoutPurchaseInvoiceItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -2562,8 +2825,12 @@ export type ProductUncheckedCreateWithoutPurchaseInvoiceItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -2609,9 +2876,13 @@ export type ProductUpdateWithoutPurchaseInvoiceItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -2642,8 +2913,12 @@ export type ProductUncheckedUpdateWithoutPurchaseInvoiceItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -2673,9 +2948,13 @@ export type ProductCreateWithoutSalesInquiryItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -2706,8 +2985,12 @@ export type ProductUncheckedCreateWithoutSalesInquiryItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -2753,9 +3036,13 @@ export type ProductUpdateWithoutSalesInquiryItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -2786,8 +3073,12 @@ export type ProductUncheckedUpdateWithoutSalesInquiryItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -2817,9 +3108,13 @@ export type ProductCreateWithoutSalesQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -2850,8 +3145,12 @@ export type ProductUncheckedCreateWithoutSalesQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -2897,9 +3196,13 @@ export type ProductUpdateWithoutSalesQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -2930,8 +3233,12 @@ export type ProductUncheckedUpdateWithoutSalesQuotationItemsInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -2961,9 +3268,13 @@ export type ProductCreateWithoutSalesOrderItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -2994,8 +3305,12 @@ export type ProductUncheckedCreateWithoutSalesOrderItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -3041,9 +3356,13 @@ export type ProductUpdateWithoutSalesOrderItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -3074,8 +3393,12 @@ export type ProductUncheckedUpdateWithoutSalesOrderItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -3105,9 +3428,13 @@ export type ProductCreateWithoutInventoryReservationsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemCreateNestedManyWithoutProductInput
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -3138,8 +3465,12 @@ export type ProductUncheckedCreateWithoutInventoryReservationsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUncheckedCreateNestedManyWithoutProductInput
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -3185,9 +3516,13 @@ export type ProductUpdateWithoutInventoryReservationsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUpdateManyWithoutProductNestedInput
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -3218,8 +3553,12 @@ export type ProductUncheckedUpdateWithoutInventoryReservationsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUncheckedUpdateManyWithoutProductNestedInput
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -3249,9 +3588,13 @@ export type ProductCreateWithoutSalesInvoiceItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemCreateNestedManyWithoutProductInput
   salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
   category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
   inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
@@ -3282,8 +3625,12 @@ export type ProductUncheckedCreateWithoutSalesInvoiceItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUncheckedCreateNestedManyWithoutProductInput
   salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
   finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
   assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
@@ -3329,9 +3676,13 @@ export type ProductUpdateWithoutSalesInvoiceItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUpdateManyWithoutProductNestedInput
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -3362,8 +3713,652 @@ export type ProductUncheckedUpdateWithoutSalesInvoiceItemsInput = {
   salesQuotationItems?: Prisma.SalesQuotationItemUncheckedUpdateManyWithoutProductNestedInput
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductCreateWithoutInventoryAdjustmentItemsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
+  category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductUncheckedCreateWithoutInventoryAdjustmentItemsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  categoryId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductCreateOrConnectWithoutInventoryAdjustmentItemsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutInventoryAdjustmentItemsInput, Prisma.ProductUncheckedCreateWithoutInventoryAdjustmentItemsInput>
+}
+
+export type ProductUpsertWithoutInventoryAdjustmentItemsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutInventoryAdjustmentItemsInput, Prisma.ProductUncheckedUpdateWithoutInventoryAdjustmentItemsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutInventoryAdjustmentItemsInput, Prisma.ProductUncheckedCreateWithoutInventoryAdjustmentItemsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutInventoryAdjustmentItemsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutInventoryAdjustmentItemsInput, Prisma.ProductUncheckedUpdateWithoutInventoryAdjustmentItemsInput>
+}
+
+export type ProductUpdateWithoutInventoryAdjustmentItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
+  category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutInventoryAdjustmentItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductCreateWithoutServiceJobPartsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
+  category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductUncheckedCreateWithoutServiceJobPartsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  categoryId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductCreateOrConnectWithoutServiceJobPartsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutServiceJobPartsInput, Prisma.ProductUncheckedCreateWithoutServiceJobPartsInput>
+}
+
+export type ProductUpsertWithoutServiceJobPartsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutServiceJobPartsInput, Prisma.ProductUncheckedUpdateWithoutServiceJobPartsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutServiceJobPartsInput, Prisma.ProductUncheckedCreateWithoutServiceJobPartsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutServiceJobPartsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutServiceJobPartsInput, Prisma.ProductUncheckedUpdateWithoutServiceJobPartsInput>
+}
+
+export type ProductUpdateWithoutServiceJobPartsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
+  category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutServiceJobPartsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductCreateWithoutServiceInvoiceItemsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemCreateNestedManyWithoutProductInput
+  category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductUncheckedCreateWithoutServiceInvoiceItemsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  categoryId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductCreateOrConnectWithoutServiceInvoiceItemsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutServiceInvoiceItemsInput, Prisma.ProductUncheckedCreateWithoutServiceInvoiceItemsInput>
+}
+
+export type ProductUpsertWithoutServiceInvoiceItemsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutServiceInvoiceItemsInput, Prisma.ProductUncheckedUpdateWithoutServiceInvoiceItemsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutServiceInvoiceItemsInput, Prisma.ProductUncheckedCreateWithoutServiceInvoiceItemsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutServiceInvoiceItemsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutServiceInvoiceItemsInput, Prisma.ProductUncheckedUpdateWithoutServiceInvoiceItemsInput>
+}
+
+export type ProductUpdateWithoutServiceInvoiceItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
+  category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutServiceInvoiceItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductCreateWithoutSalesReturnItemsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemCreateNestedManyWithoutProductInput
+  category?: Prisma.ProductCategoryCreateNestedOneWithoutProductsInput
+  inventoryBalances?: Prisma.InventoryBalanceCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductUncheckedCreateWithoutSalesReturnItemsInput = {
+  id?: string
+  sku: string
+  name: string
+  description?: string | null
+  brand?: string | null
+  model?: string | null
+  unit?: string
+  defaultSellingPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: boolean
+  trackInventory?: boolean
+  categoryId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedCreateNestedManyWithoutProductInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutProductInput
+  receivingItems?: Prisma.ReceivingItemUncheckedCreateNestedManyWithoutProductInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedCreateNestedManyWithoutProductInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedCreateNestedManyWithoutProductInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedCreateNestedManyWithoutProductInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedCreateNestedManyWithoutProductInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedCreateNestedManyWithoutProductInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutProductInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedCreateNestedManyWithoutProductInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedCreateNestedManyWithoutProductInput
+  finishedBom?: Prisma.BillOfMaterialUncheckedCreateNestedOneWithoutProductInput
+  bomComponents?: Prisma.BillOfMaterialItemUncheckedCreateNestedManyWithoutComponentProductInput
+  assemblyOutputs?: Prisma.AssemblyUncheckedCreateNestedManyWithoutFinishedProductInput
+  assemblyComponents?: Prisma.AssemblyComponentUncheckedCreateNestedManyWithoutComponentProductInput
+}
+
+export type ProductCreateOrConnectWithoutSalesReturnItemsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutSalesReturnItemsInput, Prisma.ProductUncheckedCreateWithoutSalesReturnItemsInput>
+}
+
+export type ProductUpsertWithoutSalesReturnItemsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutSalesReturnItemsInput, Prisma.ProductUncheckedUpdateWithoutSalesReturnItemsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutSalesReturnItemsInput, Prisma.ProductUncheckedCreateWithoutSalesReturnItemsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutSalesReturnItemsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutSalesReturnItemsInput, Prisma.ProductUncheckedUpdateWithoutSalesReturnItemsInput>
+}
+
+export type ProductUpdateWithoutSalesReturnItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  category?: Prisma.ProductCategoryUpdateOneWithoutProductsNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
+  finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
+  bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
+  assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
+  assemblyComponents?: Prisma.AssemblyComponentUpdateManyWithoutComponentProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutSalesReturnItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultSellingPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  defaultCostPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trackInventory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedUpdateManyWithoutProductNestedInput
+  supplierQuotationItems?: Prisma.SupplierQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  receivingItems?: Prisma.ReceivingItemUncheckedUpdateManyWithoutProductNestedInput
+  purchaseInvoiceItems?: Prisma.PurchaseInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  salesInquiryItems?: Prisma.SalesInquiryItemUncheckedUpdateManyWithoutProductNestedInput
+  salesQuotationItems?: Prisma.SalesQuotationItemUncheckedUpdateManyWithoutProductNestedInput
+  salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
+  salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -3410,8 +4405,12 @@ export type ProductUpdateWithoutCategoryInput = {
   salesOrderItems?: Prisma.SalesOrderItemUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUpdateManyWithoutFinishedProductNestedInput
@@ -3442,8 +4441,12 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   salesOrderItems?: Prisma.SalesOrderItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryReservations?: Prisma.InventoryReservationUncheckedUpdateManyWithoutProductNestedInput
   salesInvoiceItems?: Prisma.SalesInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
+  inventoryAdjustmentItems?: Prisma.InventoryAdjustmentItemUncheckedUpdateManyWithoutProductNestedInput
+  salesReturnItems?: Prisma.SalesReturnItemUncheckedUpdateManyWithoutProductNestedInput
   inventoryBalances?: Prisma.InventoryBalanceUncheckedUpdateManyWithoutProductNestedInput
   inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutProductNestedInput
+  serviceJobParts?: Prisma.ServiceJobPartUncheckedUpdateManyWithoutProductNestedInput
+  serviceInvoiceItems?: Prisma.ServiceInvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   finishedBom?: Prisma.BillOfMaterialUncheckedUpdateOneWithoutProductNestedInput
   bomComponents?: Prisma.BillOfMaterialItemUncheckedUpdateManyWithoutComponentProductNestedInput
   assemblyOutputs?: Prisma.AssemblyUncheckedUpdateManyWithoutFinishedProductNestedInput
@@ -3482,8 +4485,12 @@ export type ProductCountOutputType = {
   salesOrderItems: number
   inventoryReservations: number
   salesInvoiceItems: number
+  inventoryAdjustmentItems: number
+  salesReturnItems: number
   inventoryBalances: number
   inventoryMovements: number
+  serviceJobParts: number
+  serviceInvoiceItems: number
   bomComponents: number
   assemblyOutputs: number
   assemblyComponents: number
@@ -3500,8 +4507,12 @@ export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   salesOrderItems?: boolean | ProductCountOutputTypeCountSalesOrderItemsArgs
   inventoryReservations?: boolean | ProductCountOutputTypeCountInventoryReservationsArgs
   salesInvoiceItems?: boolean | ProductCountOutputTypeCountSalesInvoiceItemsArgs
+  inventoryAdjustmentItems?: boolean | ProductCountOutputTypeCountInventoryAdjustmentItemsArgs
+  salesReturnItems?: boolean | ProductCountOutputTypeCountSalesReturnItemsArgs
   inventoryBalances?: boolean | ProductCountOutputTypeCountInventoryBalancesArgs
   inventoryMovements?: boolean | ProductCountOutputTypeCountInventoryMovementsArgs
+  serviceJobParts?: boolean | ProductCountOutputTypeCountServiceJobPartsArgs
+  serviceInvoiceItems?: boolean | ProductCountOutputTypeCountServiceInvoiceItemsArgs
   bomComponents?: boolean | ProductCountOutputTypeCountBomComponentsArgs
   assemblyOutputs?: boolean | ProductCountOutputTypeCountAssemblyOutputsArgs
   assemblyComponents?: boolean | ProductCountOutputTypeCountAssemblyComponentsArgs
@@ -3590,6 +4601,20 @@ export type ProductCountOutputTypeCountSalesInvoiceItemsArgs<ExtArgs extends run
 /**
  * ProductCountOutputType without action
  */
+export type ProductCountOutputTypeCountInventoryAdjustmentItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InventoryAdjustmentItemWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountSalesReturnItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SalesReturnItemWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
 export type ProductCountOutputTypeCountInventoryBalancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InventoryBalanceWhereInput
 }
@@ -3599,6 +4624,20 @@ export type ProductCountOutputTypeCountInventoryBalancesArgs<ExtArgs extends run
  */
 export type ProductCountOutputTypeCountInventoryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InventoryMovementWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountServiceJobPartsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceJobPartWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountServiceInvoiceItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceInvoiceItemWhereInput
 }
 
 /**
@@ -3648,9 +4687,13 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   salesOrderItems?: boolean | Prisma.Product$salesOrderItemsArgs<ExtArgs>
   inventoryReservations?: boolean | Prisma.Product$inventoryReservationsArgs<ExtArgs>
   salesInvoiceItems?: boolean | Prisma.Product$salesInvoiceItemsArgs<ExtArgs>
+  inventoryAdjustmentItems?: boolean | Prisma.Product$inventoryAdjustmentItemsArgs<ExtArgs>
+  salesReturnItems?: boolean | Prisma.Product$salesReturnItemsArgs<ExtArgs>
   category?: boolean | Prisma.Product$categoryArgs<ExtArgs>
   inventoryBalances?: boolean | Prisma.Product$inventoryBalancesArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.Product$inventoryMovementsArgs<ExtArgs>
+  serviceJobParts?: boolean | Prisma.Product$serviceJobPartsArgs<ExtArgs>
+  serviceInvoiceItems?: boolean | Prisma.Product$serviceInvoiceItemsArgs<ExtArgs>
   finishedBom?: boolean | Prisma.Product$finishedBomArgs<ExtArgs>
   bomComponents?: boolean | Prisma.Product$bomComponentsArgs<ExtArgs>
   assemblyOutputs?: boolean | Prisma.Product$assemblyOutputsArgs<ExtArgs>
@@ -3723,9 +4766,13 @@ export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   salesOrderItems?: boolean | Prisma.Product$salesOrderItemsArgs<ExtArgs>
   inventoryReservations?: boolean | Prisma.Product$inventoryReservationsArgs<ExtArgs>
   salesInvoiceItems?: boolean | Prisma.Product$salesInvoiceItemsArgs<ExtArgs>
+  inventoryAdjustmentItems?: boolean | Prisma.Product$inventoryAdjustmentItemsArgs<ExtArgs>
+  salesReturnItems?: boolean | Prisma.Product$salesReturnItemsArgs<ExtArgs>
   category?: boolean | Prisma.Product$categoryArgs<ExtArgs>
   inventoryBalances?: boolean | Prisma.Product$inventoryBalancesArgs<ExtArgs>
   inventoryMovements?: boolean | Prisma.Product$inventoryMovementsArgs<ExtArgs>
+  serviceJobParts?: boolean | Prisma.Product$serviceJobPartsArgs<ExtArgs>
+  serviceInvoiceItems?: boolean | Prisma.Product$serviceInvoiceItemsArgs<ExtArgs>
   finishedBom?: boolean | Prisma.Product$finishedBomArgs<ExtArgs>
   bomComponents?: boolean | Prisma.Product$bomComponentsArgs<ExtArgs>
   assemblyOutputs?: boolean | Prisma.Product$assemblyOutputsArgs<ExtArgs>
@@ -3752,9 +4799,13 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     salesOrderItems: Prisma.$SalesOrderItemPayload<ExtArgs>[]
     inventoryReservations: Prisma.$InventoryReservationPayload<ExtArgs>[]
     salesInvoiceItems: Prisma.$SalesInvoiceItemPayload<ExtArgs>[]
+    inventoryAdjustmentItems: Prisma.$InventoryAdjustmentItemPayload<ExtArgs>[]
+    salesReturnItems: Prisma.$SalesReturnItemPayload<ExtArgs>[]
     category: Prisma.$ProductCategoryPayload<ExtArgs> | null
     inventoryBalances: Prisma.$InventoryBalancePayload<ExtArgs>[]
     inventoryMovements: Prisma.$InventoryMovementPayload<ExtArgs>[]
+    serviceJobParts: Prisma.$ServiceJobPartPayload<ExtArgs>[]
+    serviceInvoiceItems: Prisma.$ServiceInvoiceItemPayload<ExtArgs>[]
     finishedBom: Prisma.$BillOfMaterialPayload<ExtArgs> | null
     bomComponents: Prisma.$BillOfMaterialItemPayload<ExtArgs>[]
     assemblyOutputs: Prisma.$AssemblyPayload<ExtArgs>[]
@@ -4179,9 +5230,13 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   salesOrderItems<T extends Prisma.Product$salesOrderItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$salesOrderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inventoryReservations<T extends Prisma.Product$inventoryReservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$inventoryReservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   salesInvoiceItems<T extends Prisma.Product$salesInvoiceItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$salesInvoiceItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesInvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  inventoryAdjustmentItems<T extends Prisma.Product$inventoryAdjustmentItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$inventoryAdjustmentItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryAdjustmentItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  salesReturnItems<T extends Prisma.Product$salesReturnItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$salesReturnItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesReturnItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   category<T extends Prisma.Product$categoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$categoryArgs<ExtArgs>>): Prisma.Prisma__ProductCategoryClient<runtime.Types.Result.GetResult<Prisma.$ProductCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inventoryBalances<T extends Prisma.Product$inventoryBalancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$inventoryBalancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inventoryMovements<T extends Prisma.Product$inventoryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$inventoryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  serviceJobParts<T extends Prisma.Product$serviceJobPartsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$serviceJobPartsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceJobPartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  serviceInvoiceItems<T extends Prisma.Product$serviceInvoiceItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$serviceInvoiceItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceInvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   finishedBom<T extends Prisma.Product$finishedBomArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$finishedBomArgs<ExtArgs>>): Prisma.Prisma__BillOfMaterialClient<runtime.Types.Result.GetResult<Prisma.$BillOfMaterialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bomComponents<T extends Prisma.Product$bomComponentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$bomComponentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BillOfMaterialItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assemblyOutputs<T extends Prisma.Product$assemblyOutputsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$assemblyOutputsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssemblyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4870,6 +5925,54 @@ export type Product$salesInvoiceItemsArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
+ * Product.inventoryAdjustmentItems
+ */
+export type Product$inventoryAdjustmentItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InventoryAdjustmentItem
+   */
+  select?: Prisma.InventoryAdjustmentItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InventoryAdjustmentItem
+   */
+  omit?: Prisma.InventoryAdjustmentItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InventoryAdjustmentItemInclude<ExtArgs> | null
+  where?: Prisma.InventoryAdjustmentItemWhereInput
+  orderBy?: Prisma.InventoryAdjustmentItemOrderByWithRelationInput | Prisma.InventoryAdjustmentItemOrderByWithRelationInput[]
+  cursor?: Prisma.InventoryAdjustmentItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InventoryAdjustmentItemScalarFieldEnum | Prisma.InventoryAdjustmentItemScalarFieldEnum[]
+}
+
+/**
+ * Product.salesReturnItems
+ */
+export type Product$salesReturnItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SalesReturnItem
+   */
+  select?: Prisma.SalesReturnItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SalesReturnItem
+   */
+  omit?: Prisma.SalesReturnItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SalesReturnItemInclude<ExtArgs> | null
+  where?: Prisma.SalesReturnItemWhereInput
+  orderBy?: Prisma.SalesReturnItemOrderByWithRelationInput | Prisma.SalesReturnItemOrderByWithRelationInput[]
+  cursor?: Prisma.SalesReturnItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SalesReturnItemScalarFieldEnum | Prisma.SalesReturnItemScalarFieldEnum[]
+}
+
+/**
  * Product.category
  */
 export type Product$categoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4934,6 +6037,54 @@ export type Product$inventoryMovementsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.InventoryMovementScalarFieldEnum | Prisma.InventoryMovementScalarFieldEnum[]
+}
+
+/**
+ * Product.serviceJobParts
+ */
+export type Product$serviceJobPartsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceJobPart
+   */
+  select?: Prisma.ServiceJobPartSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceJobPart
+   */
+  omit?: Prisma.ServiceJobPartOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceJobPartInclude<ExtArgs> | null
+  where?: Prisma.ServiceJobPartWhereInput
+  orderBy?: Prisma.ServiceJobPartOrderByWithRelationInput | Prisma.ServiceJobPartOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceJobPartWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceJobPartScalarFieldEnum | Prisma.ServiceJobPartScalarFieldEnum[]
+}
+
+/**
+ * Product.serviceInvoiceItems
+ */
+export type Product$serviceInvoiceItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceInvoiceItem
+   */
+  select?: Prisma.ServiceInvoiceItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceInvoiceItem
+   */
+  omit?: Prisma.ServiceInvoiceItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceInvoiceItemInclude<ExtArgs> | null
+  where?: Prisma.ServiceInvoiceItemWhereInput
+  orderBy?: Prisma.ServiceInvoiceItemOrderByWithRelationInput | Prisma.ServiceInvoiceItemOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceInvoiceItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceInvoiceItemScalarFieldEnum | Prisma.ServiceInvoiceItemScalarFieldEnum[]
 }
 
 /**

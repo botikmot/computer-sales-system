@@ -43,6 +43,7 @@ export type AccountsReceivableMinAggregateOutputType = {
   branchId: string | null
   customerId: string | null
   salesInvoiceId: string | null
+  serviceInvoiceId: string | null
   originalAmount: runtime.Decimal | null
   amountPaid: runtime.Decimal | null
   balanceDue: runtime.Decimal | null
@@ -59,6 +60,7 @@ export type AccountsReceivableMaxAggregateOutputType = {
   branchId: string | null
   customerId: string | null
   salesInvoiceId: string | null
+  serviceInvoiceId: string | null
   originalAmount: runtime.Decimal | null
   amountPaid: runtime.Decimal | null
   balanceDue: runtime.Decimal | null
@@ -75,6 +77,7 @@ export type AccountsReceivableCountAggregateOutputType = {
   branchId: number
   customerId: number
   salesInvoiceId: number
+  serviceInvoiceId: number
   originalAmount: number
   amountPaid: number
   balanceDue: number
@@ -105,6 +108,7 @@ export type AccountsReceivableMinAggregateInputType = {
   branchId?: true
   customerId?: true
   salesInvoiceId?: true
+  serviceInvoiceId?: true
   originalAmount?: true
   amountPaid?: true
   balanceDue?: true
@@ -121,6 +125,7 @@ export type AccountsReceivableMaxAggregateInputType = {
   branchId?: true
   customerId?: true
   salesInvoiceId?: true
+  serviceInvoiceId?: true
   originalAmount?: true
   amountPaid?: true
   balanceDue?: true
@@ -137,6 +142,7 @@ export type AccountsReceivableCountAggregateInputType = {
   branchId?: true
   customerId?: true
   salesInvoiceId?: true
+  serviceInvoiceId?: true
   originalAmount?: true
   amountPaid?: true
   balanceDue?: true
@@ -239,7 +245,8 @@ export type AccountsReceivableGroupByOutputType = {
   id: string
   branchId: string
   customerId: string
-  salesInvoiceId: string
+  salesInvoiceId: string | null
+  serviceInvoiceId: string | null
   originalAmount: runtime.Decimal
   amountPaid: runtime.Decimal
   balanceDue: runtime.Decimal
@@ -278,7 +285,8 @@ export type AccountsReceivableWhereInput = {
   id?: Prisma.StringFilter<"AccountsReceivable"> | string
   branchId?: Prisma.StringFilter<"AccountsReceivable"> | string
   customerId?: Prisma.StringFilter<"AccountsReceivable"> | string
-  salesInvoiceId?: Prisma.StringFilter<"AccountsReceivable"> | string
+  salesInvoiceId?: Prisma.StringNullableFilter<"AccountsReceivable"> | string | null
+  serviceInvoiceId?: Prisma.StringNullableFilter<"AccountsReceivable"> | string | null
   originalAmount?: Prisma.DecimalFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -290,7 +298,8 @@ export type AccountsReceivableWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"AccountsReceivable"> | Date | string
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
-  salesInvoice?: Prisma.XOR<Prisma.SalesInvoiceScalarRelationFilter, Prisma.SalesInvoiceWhereInput>
+  salesInvoice?: Prisma.XOR<Prisma.SalesInvoiceNullableScalarRelationFilter, Prisma.SalesInvoiceWhereInput> | null
+  serviceInvoice?: Prisma.XOR<Prisma.ServiceInvoiceNullableScalarRelationFilter, Prisma.ServiceInvoiceWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -298,7 +307,8 @@ export type AccountsReceivableOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
-  salesInvoiceId?: Prisma.SortOrder
+  salesInvoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  serviceInvoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   originalAmount?: Prisma.SortOrder
   amountPaid?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
@@ -311,12 +321,14 @@ export type AccountsReceivableOrderByWithRelationInput = {
   branch?: Prisma.BranchOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
   salesInvoice?: Prisma.SalesInvoiceOrderByWithRelationInput
+  serviceInvoice?: Prisma.ServiceInvoiceOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type AccountsReceivableWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   salesInvoiceId?: string
+  serviceInvoiceId?: string
   AND?: Prisma.AccountsReceivableWhereInput | Prisma.AccountsReceivableWhereInput[]
   OR?: Prisma.AccountsReceivableWhereInput[]
   NOT?: Prisma.AccountsReceivableWhereInput | Prisma.AccountsReceivableWhereInput[]
@@ -333,15 +345,17 @@ export type AccountsReceivableWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"AccountsReceivable"> | Date | string
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
-  salesInvoice?: Prisma.XOR<Prisma.SalesInvoiceScalarRelationFilter, Prisma.SalesInvoiceWhereInput>
+  salesInvoice?: Prisma.XOR<Prisma.SalesInvoiceNullableScalarRelationFilter, Prisma.SalesInvoiceWhereInput> | null
+  serviceInvoice?: Prisma.XOR<Prisma.ServiceInvoiceNullableScalarRelationFilter, Prisma.ServiceInvoiceWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "salesInvoiceId">
+}, "id" | "salesInvoiceId" | "serviceInvoiceId">
 
 export type AccountsReceivableOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
-  salesInvoiceId?: Prisma.SortOrder
+  salesInvoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  serviceInvoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   originalAmount?: Prisma.SortOrder
   amountPaid?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
@@ -365,7 +379,8 @@ export type AccountsReceivableScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"AccountsReceivable"> | string
   branchId?: Prisma.StringWithAggregatesFilter<"AccountsReceivable"> | string
   customerId?: Prisma.StringWithAggregatesFilter<"AccountsReceivable"> | string
-  salesInvoiceId?: Prisma.StringWithAggregatesFilter<"AccountsReceivable"> | string
+  salesInvoiceId?: Prisma.StringNullableWithAggregatesFilter<"AccountsReceivable"> | string | null
+  serviceInvoiceId?: Prisma.StringNullableWithAggregatesFilter<"AccountsReceivable"> | string | null
   originalAmount?: Prisma.DecimalWithAggregatesFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalWithAggregatesFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalWithAggregatesFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -389,7 +404,8 @@ export type AccountsReceivableCreateInput = {
   updatedAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutAccountsReceivablesInput
   customer: Prisma.CustomerCreateNestedOneWithoutAccountsReceivablesInput
-  salesInvoice: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  salesInvoice?: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  serviceInvoice?: Prisma.ServiceInvoiceCreateNestedOneWithoutAccountsReceivableInput
   createdBy?: Prisma.UserCreateNestedOneWithoutAccountsReceivablesCreatedInput
 }
 
@@ -397,7 +413,8 @@ export type AccountsReceivableUncheckedCreateInput = {
   id?: string
   branchId: string
   customerId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -421,7 +438,8 @@ export type AccountsReceivableUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutAccountsReceivablesNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutAccountsReceivablesNestedInput
-  salesInvoice?: Prisma.SalesInvoiceUpdateOneRequiredWithoutAccountsReceivableNestedInput
+  salesInvoice?: Prisma.SalesInvoiceUpdateOneWithoutAccountsReceivableNestedInput
+  serviceInvoice?: Prisma.ServiceInvoiceUpdateOneWithoutAccountsReceivableNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutAccountsReceivablesCreatedNestedInput
 }
 
@@ -429,7 +447,8 @@ export type AccountsReceivableUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -445,7 +464,8 @@ export type AccountsReceivableCreateManyInput = {
   id?: string
   branchId: string
   customerId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -473,7 +493,8 @@ export type AccountsReceivableUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -505,6 +526,7 @@ export type AccountsReceivableCountOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   salesInvoiceId?: Prisma.SortOrder
+  serviceInvoiceId?: Prisma.SortOrder
   originalAmount?: Prisma.SortOrder
   amountPaid?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
@@ -527,6 +549,7 @@ export type AccountsReceivableMaxOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   salesInvoiceId?: Prisma.SortOrder
+  serviceInvoiceId?: Prisma.SortOrder
   originalAmount?: Prisma.SortOrder
   amountPaid?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
@@ -543,6 +566,7 @@ export type AccountsReceivableMinOrderByAggregateInput = {
   branchId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   salesInvoiceId?: Prisma.SortOrder
+  serviceInvoiceId?: Prisma.SortOrder
   originalAmount?: Prisma.SortOrder
   amountPaid?: Prisma.SortOrder
   balanceDue?: Prisma.SortOrder
@@ -722,6 +746,38 @@ export type EnumAccountsReceivableStatusFieldUpdateOperationsInput = {
   set?: $Enums.AccountsReceivableStatus
 }
 
+export type AccountsReceivableCreateNestedOneWithoutServiceInvoiceInput = {
+  create?: Prisma.XOR<Prisma.AccountsReceivableCreateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedCreateWithoutServiceInvoiceInput>
+  connectOrCreate?: Prisma.AccountsReceivableCreateOrConnectWithoutServiceInvoiceInput
+  connect?: Prisma.AccountsReceivableWhereUniqueInput
+}
+
+export type AccountsReceivableUncheckedCreateNestedOneWithoutServiceInvoiceInput = {
+  create?: Prisma.XOR<Prisma.AccountsReceivableCreateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedCreateWithoutServiceInvoiceInput>
+  connectOrCreate?: Prisma.AccountsReceivableCreateOrConnectWithoutServiceInvoiceInput
+  connect?: Prisma.AccountsReceivableWhereUniqueInput
+}
+
+export type AccountsReceivableUpdateOneWithoutServiceInvoiceNestedInput = {
+  create?: Prisma.XOR<Prisma.AccountsReceivableCreateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedCreateWithoutServiceInvoiceInput>
+  connectOrCreate?: Prisma.AccountsReceivableCreateOrConnectWithoutServiceInvoiceInput
+  upsert?: Prisma.AccountsReceivableUpsertWithoutServiceInvoiceInput
+  disconnect?: Prisma.AccountsReceivableWhereInput | boolean
+  delete?: Prisma.AccountsReceivableWhereInput | boolean
+  connect?: Prisma.AccountsReceivableWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AccountsReceivableUpdateToOneWithWhereWithoutServiceInvoiceInput, Prisma.AccountsReceivableUpdateWithoutServiceInvoiceInput>, Prisma.AccountsReceivableUncheckedUpdateWithoutServiceInvoiceInput>
+}
+
+export type AccountsReceivableUncheckedUpdateOneWithoutServiceInvoiceNestedInput = {
+  create?: Prisma.XOR<Prisma.AccountsReceivableCreateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedCreateWithoutServiceInvoiceInput>
+  connectOrCreate?: Prisma.AccountsReceivableCreateOrConnectWithoutServiceInvoiceInput
+  upsert?: Prisma.AccountsReceivableUpsertWithoutServiceInvoiceInput
+  disconnect?: Prisma.AccountsReceivableWhereInput | boolean
+  delete?: Prisma.AccountsReceivableWhereInput | boolean
+  connect?: Prisma.AccountsReceivableWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AccountsReceivableUpdateToOneWithWhereWithoutServiceInvoiceInput, Prisma.AccountsReceivableUpdateWithoutServiceInvoiceInput>, Prisma.AccountsReceivableUncheckedUpdateWithoutServiceInvoiceInput>
+}
+
 export type AccountsReceivableCreateWithoutBranchInput = {
   id?: string
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -733,14 +789,16 @@ export type AccountsReceivableCreateWithoutBranchInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutAccountsReceivablesInput
-  salesInvoice: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  salesInvoice?: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  serviceInvoice?: Prisma.ServiceInvoiceCreateNestedOneWithoutAccountsReceivableInput
   createdBy?: Prisma.UserCreateNestedOneWithoutAccountsReceivablesCreatedInput
 }
 
 export type AccountsReceivableUncheckedCreateWithoutBranchInput = {
   id?: string
   customerId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -785,7 +843,8 @@ export type AccountsReceivableScalarWhereInput = {
   id?: Prisma.StringFilter<"AccountsReceivable"> | string
   branchId?: Prisma.StringFilter<"AccountsReceivable"> | string
   customerId?: Prisma.StringFilter<"AccountsReceivable"> | string
-  salesInvoiceId?: Prisma.StringFilter<"AccountsReceivable"> | string
+  salesInvoiceId?: Prisma.StringNullableFilter<"AccountsReceivable"> | string | null
+  serviceInvoiceId?: Prisma.StringNullableFilter<"AccountsReceivable"> | string | null
   originalAmount?: Prisma.DecimalFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFilter<"AccountsReceivable"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -809,14 +868,16 @@ export type AccountsReceivableCreateWithoutCreatedByInput = {
   updatedAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutAccountsReceivablesInput
   customer: Prisma.CustomerCreateNestedOneWithoutAccountsReceivablesInput
-  salesInvoice: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  salesInvoice?: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  serviceInvoice?: Prisma.ServiceInvoiceCreateNestedOneWithoutAccountsReceivableInput
 }
 
 export type AccountsReceivableUncheckedCreateWithoutCreatedByInput = {
   id?: string
   branchId: string
   customerId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -864,14 +925,16 @@ export type AccountsReceivableCreateWithoutCustomerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutAccountsReceivablesInput
-  salesInvoice: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  salesInvoice?: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  serviceInvoice?: Prisma.ServiceInvoiceCreateNestedOneWithoutAccountsReceivableInput
   createdBy?: Prisma.UserCreateNestedOneWithoutAccountsReceivablesCreatedInput
 }
 
 export type AccountsReceivableUncheckedCreateWithoutCustomerInput = {
   id?: string
   branchId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -921,6 +984,7 @@ export type AccountsReceivableCreateWithoutSalesInvoiceInput = {
   updatedAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutAccountsReceivablesInput
   customer: Prisma.CustomerCreateNestedOneWithoutAccountsReceivablesInput
+  serviceInvoice?: Prisma.ServiceInvoiceCreateNestedOneWithoutAccountsReceivableInput
   createdBy?: Prisma.UserCreateNestedOneWithoutAccountsReceivablesCreatedInput
 }
 
@@ -928,6 +992,7 @@ export type AccountsReceivableUncheckedCreateWithoutSalesInvoiceInput = {
   id?: string
   branchId: string
   customerId: string
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -967,6 +1032,7 @@ export type AccountsReceivableUpdateWithoutSalesInvoiceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutAccountsReceivablesNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutAccountsReceivablesNestedInput
+  serviceInvoice?: Prisma.ServiceInvoiceUpdateOneWithoutAccountsReceivableNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutAccountsReceivablesCreatedNestedInput
 }
 
@@ -974,6 +1040,87 @@ export type AccountsReceivableUncheckedUpdateWithoutSalesInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumAccountsReceivableStatusFieldUpdateOperationsInput | $Enums.AccountsReceivableStatus
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AccountsReceivableCreateWithoutServiceInvoiceInput = {
+  id?: string
+  originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.AccountsReceivableStatus
+  dueDate?: Date | string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branch: Prisma.BranchCreateNestedOneWithoutAccountsReceivablesInput
+  customer: Prisma.CustomerCreateNestedOneWithoutAccountsReceivablesInput
+  salesInvoice?: Prisma.SalesInvoiceCreateNestedOneWithoutAccountsReceivableInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutAccountsReceivablesCreatedInput
+}
+
+export type AccountsReceivableUncheckedCreateWithoutServiceInvoiceInput = {
+  id?: string
+  branchId: string
+  customerId: string
+  salesInvoiceId?: string | null
+  originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.AccountsReceivableStatus
+  dueDate?: Date | string | null
+  notes?: string | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AccountsReceivableCreateOrConnectWithoutServiceInvoiceInput = {
+  where: Prisma.AccountsReceivableWhereUniqueInput
+  create: Prisma.XOR<Prisma.AccountsReceivableCreateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedCreateWithoutServiceInvoiceInput>
+}
+
+export type AccountsReceivableUpsertWithoutServiceInvoiceInput = {
+  update: Prisma.XOR<Prisma.AccountsReceivableUpdateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedUpdateWithoutServiceInvoiceInput>
+  create: Prisma.XOR<Prisma.AccountsReceivableCreateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedCreateWithoutServiceInvoiceInput>
+  where?: Prisma.AccountsReceivableWhereInput
+}
+
+export type AccountsReceivableUpdateToOneWithWhereWithoutServiceInvoiceInput = {
+  where?: Prisma.AccountsReceivableWhereInput
+  data: Prisma.XOR<Prisma.AccountsReceivableUpdateWithoutServiceInvoiceInput, Prisma.AccountsReceivableUncheckedUpdateWithoutServiceInvoiceInput>
+}
+
+export type AccountsReceivableUpdateWithoutServiceInvoiceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumAccountsReceivableStatusFieldUpdateOperationsInput | $Enums.AccountsReceivableStatus
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branch?: Prisma.BranchUpdateOneRequiredWithoutAccountsReceivablesNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutAccountsReceivablesNestedInput
+  salesInvoice?: Prisma.SalesInvoiceUpdateOneWithoutAccountsReceivableNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutAccountsReceivablesCreatedNestedInput
+}
+
+export type AccountsReceivableUncheckedUpdateWithoutServiceInvoiceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -988,7 +1135,8 @@ export type AccountsReceivableUncheckedUpdateWithoutSalesInvoiceInput = {
 export type AccountsReceivableCreateManyBranchInput = {
   id?: string
   customerId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1011,14 +1159,16 @@ export type AccountsReceivableUpdateWithoutBranchInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutAccountsReceivablesNestedInput
-  salesInvoice?: Prisma.SalesInvoiceUpdateOneRequiredWithoutAccountsReceivableNestedInput
+  salesInvoice?: Prisma.SalesInvoiceUpdateOneWithoutAccountsReceivableNestedInput
+  serviceInvoice?: Prisma.ServiceInvoiceUpdateOneWithoutAccountsReceivableNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutAccountsReceivablesCreatedNestedInput
 }
 
 export type AccountsReceivableUncheckedUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1033,7 +1183,8 @@ export type AccountsReceivableUncheckedUpdateWithoutBranchInput = {
 export type AccountsReceivableUncheckedUpdateManyWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1049,7 +1200,8 @@ export type AccountsReceivableCreateManyCreatedByInput = {
   id?: string
   branchId: string
   customerId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1072,14 +1224,16 @@ export type AccountsReceivableUpdateWithoutCreatedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutAccountsReceivablesNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutAccountsReceivablesNestedInput
-  salesInvoice?: Prisma.SalesInvoiceUpdateOneRequiredWithoutAccountsReceivableNestedInput
+  salesInvoice?: Prisma.SalesInvoiceUpdateOneWithoutAccountsReceivableNestedInput
+  serviceInvoice?: Prisma.ServiceInvoiceUpdateOneWithoutAccountsReceivableNestedInput
 }
 
 export type AccountsReceivableUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1094,7 +1248,8 @@ export type AccountsReceivableUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1108,7 +1263,8 @@ export type AccountsReceivableUncheckedUpdateManyWithoutCreatedByInput = {
 export type AccountsReceivableCreateManyCustomerInput = {
   id?: string
   branchId: string
-  salesInvoiceId: string
+  salesInvoiceId?: string | null
+  serviceInvoiceId?: string | null
   originalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1131,14 +1287,16 @@ export type AccountsReceivableUpdateWithoutCustomerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutAccountsReceivablesNestedInput
-  salesInvoice?: Prisma.SalesInvoiceUpdateOneRequiredWithoutAccountsReceivableNestedInput
+  salesInvoice?: Prisma.SalesInvoiceUpdateOneWithoutAccountsReceivableNestedInput
+  serviceInvoice?: Prisma.ServiceInvoiceUpdateOneWithoutAccountsReceivableNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutAccountsReceivablesCreatedNestedInput
 }
 
 export type AccountsReceivableUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1153,7 +1311,8 @@ export type AccountsReceivableUncheckedUpdateWithoutCustomerInput = {
 export type AccountsReceivableUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  salesInvoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  salesInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   originalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceDue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1172,6 +1331,7 @@ export type AccountsReceivableSelect<ExtArgs extends runtime.Types.Extensions.In
   branchId?: boolean
   customerId?: boolean
   salesInvoiceId?: boolean
+  serviceInvoiceId?: boolean
   originalAmount?: boolean
   amountPaid?: boolean
   balanceDue?: boolean
@@ -1183,7 +1343,8 @@ export type AccountsReceivableSelect<ExtArgs extends runtime.Types.Extensions.In
   updatedAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
-  salesInvoice?: boolean | Prisma.SalesInvoiceDefaultArgs<ExtArgs>
+  salesInvoice?: boolean | Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs>
+  serviceInvoice?: boolean | Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs>
   createdBy?: boolean | Prisma.AccountsReceivable$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["accountsReceivable"]>
 
@@ -1192,6 +1353,7 @@ export type AccountsReceivableSelectCreateManyAndReturn<ExtArgs extends runtime.
   branchId?: boolean
   customerId?: boolean
   salesInvoiceId?: boolean
+  serviceInvoiceId?: boolean
   originalAmount?: boolean
   amountPaid?: boolean
   balanceDue?: boolean
@@ -1203,7 +1365,8 @@ export type AccountsReceivableSelectCreateManyAndReturn<ExtArgs extends runtime.
   updatedAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
-  salesInvoice?: boolean | Prisma.SalesInvoiceDefaultArgs<ExtArgs>
+  salesInvoice?: boolean | Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs>
+  serviceInvoice?: boolean | Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs>
   createdBy?: boolean | Prisma.AccountsReceivable$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["accountsReceivable"]>
 
@@ -1212,6 +1375,7 @@ export type AccountsReceivableSelectUpdateManyAndReturn<ExtArgs extends runtime.
   branchId?: boolean
   customerId?: boolean
   salesInvoiceId?: boolean
+  serviceInvoiceId?: boolean
   originalAmount?: boolean
   amountPaid?: boolean
   balanceDue?: boolean
@@ -1223,7 +1387,8 @@ export type AccountsReceivableSelectUpdateManyAndReturn<ExtArgs extends runtime.
   updatedAt?: boolean
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
-  salesInvoice?: boolean | Prisma.SalesInvoiceDefaultArgs<ExtArgs>
+  salesInvoice?: boolean | Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs>
+  serviceInvoice?: boolean | Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs>
   createdBy?: boolean | Prisma.AccountsReceivable$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["accountsReceivable"]>
 
@@ -1232,6 +1397,7 @@ export type AccountsReceivableSelectScalar = {
   branchId?: boolean
   customerId?: boolean
   salesInvoiceId?: boolean
+  serviceInvoiceId?: boolean
   originalAmount?: boolean
   amountPaid?: boolean
   balanceDue?: boolean
@@ -1243,23 +1409,26 @@ export type AccountsReceivableSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AccountsReceivableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "branchId" | "customerId" | "salesInvoiceId" | "originalAmount" | "amountPaid" | "balanceDue" | "status" | "dueDate" | "notes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["accountsReceivable"]>
+export type AccountsReceivableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "branchId" | "customerId" | "salesInvoiceId" | "serviceInvoiceId" | "originalAmount" | "amountPaid" | "balanceDue" | "status" | "dueDate" | "notes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["accountsReceivable"]>
 export type AccountsReceivableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
-  salesInvoice?: boolean | Prisma.SalesInvoiceDefaultArgs<ExtArgs>
+  salesInvoice?: boolean | Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs>
+  serviceInvoice?: boolean | Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs>
   createdBy?: boolean | Prisma.AccountsReceivable$createdByArgs<ExtArgs>
 }
 export type AccountsReceivableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
-  salesInvoice?: boolean | Prisma.SalesInvoiceDefaultArgs<ExtArgs>
+  salesInvoice?: boolean | Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs>
+  serviceInvoice?: boolean | Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs>
   createdBy?: boolean | Prisma.AccountsReceivable$createdByArgs<ExtArgs>
 }
 export type AccountsReceivableIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
-  salesInvoice?: boolean | Prisma.SalesInvoiceDefaultArgs<ExtArgs>
+  salesInvoice?: boolean | Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs>
+  serviceInvoice?: boolean | Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs>
   createdBy?: boolean | Prisma.AccountsReceivable$createdByArgs<ExtArgs>
 }
 
@@ -1268,14 +1437,16 @@ export type $AccountsReceivablePayload<ExtArgs extends runtime.Types.Extensions.
   objects: {
     branch: Prisma.$BranchPayload<ExtArgs>
     customer: Prisma.$CustomerPayload<ExtArgs>
-    salesInvoice: Prisma.$SalesInvoicePayload<ExtArgs>
+    salesInvoice: Prisma.$SalesInvoicePayload<ExtArgs> | null
+    serviceInvoice: Prisma.$ServiceInvoicePayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     branchId: string
     customerId: string
-    salesInvoiceId: string
+    salesInvoiceId: string | null
+    serviceInvoiceId: string | null
     originalAmount: runtime.Decimal
     amountPaid: runtime.Decimal
     balanceDue: runtime.Decimal
@@ -1681,7 +1852,8 @@ export interface Prisma__AccountsReceivableClient<T, Null = never, ExtArgs exten
   readonly [Symbol.toStringTag]: "PrismaPromise"
   branch<T extends Prisma.BranchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BranchDefaultArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  salesInvoice<T extends Prisma.SalesInvoiceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SalesInvoiceDefaultArgs<ExtArgs>>): Prisma.Prisma__SalesInvoiceClient<runtime.Types.Result.GetResult<Prisma.$SalesInvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  salesInvoice<T extends Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccountsReceivable$salesInvoiceArgs<ExtArgs>>): Prisma.Prisma__SalesInvoiceClient<runtime.Types.Result.GetResult<Prisma.$SalesInvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  serviceInvoice<T extends Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccountsReceivable$serviceInvoiceArgs<ExtArgs>>): Prisma.Prisma__ServiceInvoiceClient<runtime.Types.Result.GetResult<Prisma.$ServiceInvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.AccountsReceivable$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccountsReceivable$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1716,6 +1888,7 @@ export interface AccountsReceivableFieldRefs {
   readonly branchId: Prisma.FieldRef<"AccountsReceivable", 'String'>
   readonly customerId: Prisma.FieldRef<"AccountsReceivable", 'String'>
   readonly salesInvoiceId: Prisma.FieldRef<"AccountsReceivable", 'String'>
+  readonly serviceInvoiceId: Prisma.FieldRef<"AccountsReceivable", 'String'>
   readonly originalAmount: Prisma.FieldRef<"AccountsReceivable", 'Decimal'>
   readonly amountPaid: Prisma.FieldRef<"AccountsReceivable", 'Decimal'>
   readonly balanceDue: Prisma.FieldRef<"AccountsReceivable", 'Decimal'>
@@ -2123,6 +2296,44 @@ export type AccountsReceivableDeleteManyArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many AccountsReceivables to delete.
    */
   limit?: number
+}
+
+/**
+ * AccountsReceivable.salesInvoice
+ */
+export type AccountsReceivable$salesInvoiceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SalesInvoice
+   */
+  select?: Prisma.SalesInvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SalesInvoice
+   */
+  omit?: Prisma.SalesInvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SalesInvoiceInclude<ExtArgs> | null
+  where?: Prisma.SalesInvoiceWhereInput
+}
+
+/**
+ * AccountsReceivable.serviceInvoice
+ */
+export type AccountsReceivable$serviceInvoiceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceInvoice
+   */
+  select?: Prisma.ServiceInvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceInvoice
+   */
+  omit?: Prisma.ServiceInvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceInvoiceInclude<ExtArgs> | null
+  where?: Prisma.ServiceInvoiceWhereInput
 }
 
 /**

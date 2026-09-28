@@ -29,6 +29,7 @@ enum InventoryMovementType {
   ASSEMBLY_CONSUMPTION
   ASSEMBLY_OUTPUT
   ADJUSTMENT
+  SALES_RETURN
 }
 
 enum AssemblyStatus {
@@ -108,6 +109,10 @@ enum CashBankAccountType {
 enum CashBankTransactionType {
   SUPPLIER_PAYMENT
   CUSTOMER_PAYMENT
+  PETTY_CASH_REPLENISHMENT
+  OTHER_RECEIPT
+  EXPENSE
+  CUSTOMER_REFUND
 }
 
 enum CashBankTransactionDirection {
@@ -175,6 +180,93 @@ enum AccountsReceivableStatus {
   CANCELLED
 }
 
+enum InventoryAdjustmentStatus {
+  DRAFT
+  COUNTED
+  FOR_APPROVAL
+  CONFIRMED
+  APPROVED
+  REJECTED
+  POSTED
+  CANCELLED
+}
+
+enum ServiceInvoiceStatus {
+  DRAFT
+  POSTED
+  CANCELLED
+}
+
+enum ServicePaymentMode {
+  CASH
+  CREDIT
+}
+
+enum ServiceJobStatus {
+  DRAFT
+  DIAGNOSING
+  AWAITING_APPROVAL
+  APPROVED
+  IN_PROGRESS
+  READY_FOR_RELEASE
+  COMPLETED
+  CANCELLED
+}
+
+enum ServiceInvoiceItemType {
+  LABOR
+  PART
+  OTHER
+}
+
+enum BankReconciliationStatus {
+  DRAFT
+  COMPLETED
+  CANCELLED
+}
+
+enum BankReconciliationItemType {
+  OUTSTANDING_CHECK
+  DEPOSIT_IN_TRANSIT
+  BANK_CHARGE
+  BANK_CREDIT
+  OTHER
+}
+
+enum PettyCashFundStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum PettyCashVoucherStatus {
+  DRAFT
+  POSTED
+  VOIDED
+}
+
+enum PettyCashReplenishmentStatus {
+  DRAFT
+  POSTED
+  CANCELLED
+}
+
+enum PettyCashTransactionType {
+  EXPENSE
+  REPLENISHMENT
+}
+
+enum SalesReturnStatus {
+  DRAFT
+  POSTED
+  CANCELLED
+}
+
+enum SalesReturnSettlementMode {
+  CASH_REFUND
+  AR_ADJUSTMENT
+  NO_REFUND
+}
+
 model Branch {
   id                    String                 @id @default(uuid())
   code                  String                 @unique
@@ -202,6 +294,12 @@ model Branch {
   salesInvoices         SalesInvoice[]
   customerPayments      CustomerPayment[]
   accountsReceivables   AccountsReceivable[]
+  inventoryAdjustments  InventoryAdjustment[]
+  serviceInvoices       ServiceInvoice[]
+  serviceJobs           ServiceJob[]
+  bankReconciliations   BankReconciliation[]
+  pettyCashFunds        PettyCashFund[]
+  salesReturns          SalesReturn[]
 
   users              User[]
   inventoryBalances  InventoryBalance[]
@@ -212,29 +310,40 @@ model Branch {
 }
 
 model User {
-  id                          String                @id @default(uuid())
-  username                    String                @unique
-  email                       String?               @unique
-  fullName                    String
-  passwordHash                String
-  role                        UserRole              @default(SALES)
-  status                      UserStatus            @default(ACTIVE)
-  purchaseRequestsCreated     PurchaseRequest[]     @relation("PurchaseRequestCreatedBy")
-  supplierQuotationsCreated   SupplierQuotation[]   @relation("SupplierQuotationCreatedBy")
-  purchaseOrdersCreated       PurchaseOrder[]       @relation("PurchaseOrderCreatedBy")
-  receivingsCreated           Receiving[]           @relation("ReceivingCreatedBy")
-  receivingsChecked           Receiving[]           @relation("ReceivingCheckedBy")
-  purchaseInvoicesCreated     PurchaseInvoice[]     @relation("PurchaseInvoiceCreatedBy")
-  accountsPayablesCreated     AccountsPayable[]     @relation("AccountsPayableCreatedBy")
-  supplierPaymentsCreated     SupplierPayment[]     @relation("SupplierPaymentsCreated")
-  cashBankTransactionsCreated CashBankTransaction[] @relation("CashBankTransactionsCreated")
-  paymentVouchersCreated      PaymentVoucher[]      @relation("PaymentVouchersCreated")
-  salesInquiriesCreated       SalesInquiry[]        @relation("SalesInquiriesCreated")
-  salesQuotationsCreated      SalesQuotation[]      @relation("SalesQuotationsCreated")
-  salesOrdersCreated          SalesOrder[]          @relation("SalesOrdersCreated")
-  salesInvoicesCreated        SalesInvoice[]        @relation("SalesInvoicesCreated")
-  customerPaymentsCreated     CustomerPayment[]     @relation("CustomerPaymentsCreated")
-  accountsReceivablesCreated  AccountsReceivable[]  @relation("AccountsReceivablesCreated")
+  id                             String                   @id @default(uuid())
+  username                       String                   @unique
+  email                          String?                  @unique
+  fullName                       String
+  passwordHash                   String
+  role                           UserRole                 @default(SALES)
+  status                         UserStatus               @default(ACTIVE)
+  purchaseRequestsCreated        PurchaseRequest[]        @relation("PurchaseRequestCreatedBy")
+  supplierQuotationsCreated      SupplierQuotation[]      @relation("SupplierQuotationCreatedBy")
+  purchaseOrdersCreated          PurchaseOrder[]          @relation("PurchaseOrderCreatedBy")
+  receivingsCreated              Receiving[]              @relation("ReceivingCreatedBy")
+  receivingsChecked              Receiving[]              @relation("ReceivingCheckedBy")
+  purchaseInvoicesCreated        PurchaseInvoice[]        @relation("PurchaseInvoiceCreatedBy")
+  accountsPayablesCreated        AccountsPayable[]        @relation("AccountsPayableCreatedBy")
+  supplierPaymentsCreated        SupplierPayment[]        @relation("SupplierPaymentsCreated")
+  cashBankTransactionsCreated    CashBankTransaction[]    @relation("CashBankTransactionsCreated")
+  paymentVouchersCreated         PaymentVoucher[]         @relation("PaymentVouchersCreated")
+  salesInquiriesCreated          SalesInquiry[]           @relation("SalesInquiriesCreated")
+  salesQuotationsCreated         SalesQuotation[]         @relation("SalesQuotationsCreated")
+  salesOrdersCreated             SalesOrder[]             @relation("SalesOrdersCreated")
+  salesInvoicesCreated           SalesInvoice[]           @relation("SalesInvoicesCreated")
+  customerPaymentsCreated        CustomerPayment[]        @relation("CustomerPaymentsCreated")
+  accountsReceivablesCreated     AccountsReceivable[]     @relation("AccountsReceivablesCreated")
+  inventoryAdjustmentsCreated    InventoryAdjustment[]    @relation("InventoryAdjustmentCreatedBy")
+  inventoryAdjustmentsApproved   InventoryAdjustment[]    @relation("InventoryAdjustmentApprovedBy")
+  bankReconciliationsCreated     BankReconciliation[]     @relation("BankReconciliationsCreated")
+  pettyCashFundsCustodied        PettyCashFund[]          @relation("PettyCashCustodian")
+  pettyCashFundsCreated          PettyCashFund[]          @relation("PettyCashFundsCreated")
+  pettyCashVouchersCreated       PettyCashVoucher[]       @relation("PettyCashVouchersCreated")
+  pettyCashReplenishmentsCreated PettyCashReplenishment[] @relation("PettyCashReplenishmentsCreated")
+  salesReturnsCreated            SalesReturn[]            @relation("SalesReturnsCreated")
+
+  serviceJobsAsTechnician ServiceJob[]     @relation("ServiceJobsTechnician")
+  serviceInvoicesCreated  ServiceInvoice[] @relation("ServiceInvoicesCreated")
 
   branchId String?
   branch   Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
@@ -265,6 +374,9 @@ model Customer {
   salesInvoices       SalesInvoice[]
   customerPayments    CustomerPayment[]
   accountsReceivables AccountsReceivable[]
+  serviceInvoices     ServiceInvoice[]
+  serviceJobs         ServiceJob[]
+  salesReturns        SalesReturn[]
 
   @@index([name])
   @@index([isActive])
@@ -314,24 +426,29 @@ model Product {
   defaultSellingPrice Decimal? @db.Decimal(12, 2)
   defaultCostPrice    Decimal? @db.Decimal(12, 2)
 
-  isActive               Boolean                 @default(true)
-  trackInventory         Boolean                 @default(true)
-  purchaseRequestItems   PurchaseRequestItem[]
-  supplierQuotationItems SupplierQuotationItem[]
-  purchaseOrderItems     PurchaseOrderItem[]
-  receivingItems         ReceivingItem[]
-  purchaseInvoiceItems   PurchaseInvoiceItem[]
-  salesInquiryItems      SalesInquiryItem[]
-  salesQuotationItems    SalesQuotationItem[]
-  salesOrderItems        SalesOrderItem[]
-  inventoryReservations  InventoryReservation[]
-  salesInvoiceItems      SalesInvoiceItem[]
+  isActive                 Boolean                   @default(true)
+  trackInventory           Boolean                   @default(true)
+  purchaseRequestItems     PurchaseRequestItem[]
+  supplierQuotationItems   SupplierQuotationItem[]
+  purchaseOrderItems       PurchaseOrderItem[]
+  receivingItems           ReceivingItem[]
+  purchaseInvoiceItems     PurchaseInvoiceItem[]
+  salesInquiryItems        SalesInquiryItem[]
+  salesQuotationItems      SalesQuotationItem[]
+  salesOrderItems          SalesOrderItem[]
+  inventoryReservations    InventoryReservation[]
+  salesInvoiceItems        SalesInvoiceItem[]
+  inventoryAdjustmentItems InventoryAdjustmentItem[]
+  salesReturnItems         SalesReturnItem[]
 
   categoryId String?
   category   ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   inventoryBalances  InventoryBalance[]
   inventoryMovements InventoryMovement[]
+
+  serviceJobParts     ServiceJobPart[]
+  serviceInvoiceItems ServiceInvoiceItem[]
 
   finishedBom   BillOfMaterial?      @relation("BOMFinishedProduct")
   bomComponents BillOfMaterialItem[] @relation("BOMComponent")
@@ -837,9 +954,11 @@ model SupplierPayment {
 model CashBankTransaction {
   id String @id @default(uuid())
 
-  branchId          String
-  supplierPaymentId String? @unique
-  customerPaymentId String? @unique
+  branchId                 String
+  supplierPaymentId        String? @unique
+  customerPaymentId        String? @unique
+  pettyCashReplenishmentId String? @unique
+  salesReturnId            String? @unique
 
   accountId String
 
@@ -848,6 +967,8 @@ model CashBankTransaction {
 
   transactionType CashBankTransactionType
   direction       CashBankTransactionDirection
+
+  bankReconciliationItems BankReconciliationItem[]
 
   amount Decimal @db.Decimal(12, 2)
 
@@ -859,8 +980,10 @@ model CashBankTransaction {
 
   account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
 
-  supplierPayment SupplierPayment? @relation(fields: [supplierPaymentId], references: [id], onDelete: Restrict)
-  customerPayment CustomerPayment? @relation(fields: [customerPaymentId], references: [id], onDelete: Restrict)
+  supplierPayment        SupplierPayment?        @relation(fields: [supplierPaymentId], references: [id], onDelete: Restrict)
+  customerPayment        CustomerPayment?        @relation(fields: [customerPaymentId], references: [id], onDelete: Restrict)
+  pettyCashReplenishment PettyCashReplenishment? @relation(fields: [pettyCashReplenishmentId], references: [id], onDelete: SetNull)
+  salesReturn            SalesReturn?            @relation(fields: [salesReturnId], references: [id], onDelete: SetNull)
 
   createdById String?
   createdBy   User?   @relation("CashBankTransactionsCreated", fields: [createdById], references: [id], onDelete: SetNull)
@@ -890,9 +1013,12 @@ model CashBankAccount {
 
   branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
 
-  supplierPayments SupplierPayment[]
-  transactions     CashBankTransaction[]
-  customerPayments CustomerPayment[]
+  supplierPayments        SupplierPayment[]
+  transactions            CashBankTransaction[]
+  customerPayments        CustomerPayment[]
+  bankReconciliations     BankReconciliation[]
+  pettyCashReplenishments PettyCashReplenishment[]
+  salesReturns            SalesReturn[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1177,6 +1303,7 @@ model SalesInvoice {
 
   items              SalesInvoiceItem[]
   customerPayments   CustomerPayment[]
+  salesReturns       SalesReturn[]
   accountsReceivable AccountsReceivable?
 
   createdById String?
@@ -1201,6 +1328,8 @@ model SalesInvoiceItem {
 
   quantity Int
 
+  salesReturnItems SalesReturnItem[]
+
   unitPrice Decimal @db.Decimal(12, 2)
   subtotal  Decimal @db.Decimal(12, 2)
 
@@ -1217,10 +1346,11 @@ model CustomerPayment {
 
   paymentNo String @unique
 
-  branchId       String
-  customerId     String
-  salesInvoiceId String
-  accountId      String
+  branchId         String
+  customerId       String
+  salesInvoiceId   String?
+  serviceInvoiceId String?
+  accountId        String
 
   amount Decimal @db.Decimal(12, 2)
 
@@ -1234,7 +1364,9 @@ model CustomerPayment {
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
 
-  salesInvoice SalesInvoice @relation(fields: [salesInvoiceId], references: [id], onDelete: Restrict)
+  salesInvoice SalesInvoice? @relation(fields: [salesInvoiceId], references: [id], onDelete: Restrict)
+
+  serviceInvoice ServiceInvoice? @relation(fields: [serviceInvoiceId], references: [id], onDelete: Restrict)
 
   account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
 
@@ -1249,16 +1381,18 @@ model CustomerPayment {
   @@index([branchId])
   @@index([customerId])
   @@index([salesInvoiceId])
+  @@index([serviceInvoiceId])
   @@index([accountId])
   @@index([paymentDate])
   @@index([status])
 }
 
 model AccountsReceivable {
-  id             String @id @default(uuid())
-  branchId       String
-  customerId     String
-  salesInvoiceId String @unique
+  id               String  @id @default(uuid())
+  branchId         String
+  customerId       String
+  salesInvoiceId   String? @unique
+  serviceInvoiceId String? @unique
 
   originalAmount Decimal @db.Decimal(12, 2)
   amountPaid     Decimal @default(0) @db.Decimal(12, 2)
@@ -1273,7 +1407,9 @@ model AccountsReceivable {
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
 
-  salesInvoice SalesInvoice @relation(fields: [salesInvoiceId], references: [id], onDelete: Restrict)
+  salesInvoice SalesInvoice? @relation(fields: [salesInvoiceId], references: [id], onDelete: Restrict)
+
+  serviceInvoice ServiceInvoice? @relation(fields: [serviceInvoiceId], references: [id], onDelete: Restrict)
 
   createdById String?
   createdBy   User?   @relation("AccountsReceivablesCreated", fields: [createdById], references: [id], onDelete: SetNull)
@@ -1286,4 +1422,441 @@ model AccountsReceivable {
   @@index([status])
   @@index([dueDate])
   @@index([createdAt])
+  @@index([salesInvoiceId])
+  @@index([serviceInvoiceId])
+}
+
+model InventoryAdjustment {
+  id           String @id @default(uuid())
+  adjustmentNo String @unique
+
+  branchId String
+  status   InventoryAdjustmentStatus @default(DRAFT)
+
+  adjustmentDate DateTime @default(now())
+
+  notes String?
+
+  createdById  String?
+  approvedById String?
+  approvedAt   DateTime?
+
+  rejectedAt      DateTime?
+  rejectionReason String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  createdBy User? @relation("InventoryAdjustmentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  approvedBy User? @relation("InventoryAdjustmentApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+
+  items InventoryAdjustmentItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([status])
+  @@index([adjustmentDate])
+}
+
+model InventoryAdjustmentItem {
+  id String @id @default(uuid())
+
+  adjustmentId String
+  productId    String
+
+  systemQuantity  Int
+  countedQuantity Int
+  difference      Int
+
+  unitCost  Decimal @default(0) @db.Decimal(12, 2)
+  totalCost Decimal @default(0) @db.Decimal(12, 2)
+
+  reason String?
+  notes  String?
+
+  adjustment InventoryAdjustment @relation(fields: [adjustmentId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([adjustmentId, productId])
+  @@index([adjustmentId])
+  @@index([productId])
+}
+
+model ServiceInvoice {
+  id String @id @default(uuid())
+
+  invoiceNo String @unique
+
+  branchId     String
+  customerId   String
+  serviceJobId String @unique
+
+  status      ServiceInvoiceStatus @default(DRAFT)
+  paymentMode ServicePaymentMode
+
+  invoiceDate DateTime  @default(now())
+  dueDate     DateTime?
+
+  subtotal Decimal @db.Decimal(12, 2)
+  discount Decimal @default(0) @db.Decimal(12, 2)
+  tax      Decimal @default(0) @db.Decimal(12, 2)
+  total    Decimal @db.Decimal(12, 2)
+
+  amountPaid Decimal @default(0) @db.Decimal(12, 2)
+  balanceDue Decimal @db.Decimal(12, 2)
+
+  notes String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  serviceJob ServiceJob @relation(fields: [serviceJobId], references: [id], onDelete: Restrict)
+
+  items ServiceInvoiceItem[]
+
+  customerPayments   CustomerPayment[]
+  accountsReceivable AccountsReceivable?
+
+  createdById String?
+  createdBy   User?   @relation("ServiceInvoicesCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([status])
+  @@index([paymentMode])
+  @@index([invoiceDate])
+  @@index([dueDate])
+}
+
+model ServiceJob {
+  id String @id @default(uuid())
+
+  jobNo String @unique
+
+  branchId     String
+  customerId   String
+  technicianId String?
+
+  status ServiceJobStatus @default(DRAFT)
+
+  diagnosticFindings String?
+  laborCharge        Decimal @default(0) @db.Decimal(12, 2)
+
+  customerApproved   Boolean   @default(false)
+  customerApprovedAt DateTime?
+
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  notes String?
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  technician User? @relation("ServiceJobsTechnician", fields: [technicianId], references: [id], onDelete: SetNull)
+
+  parts ServiceJobPart[]
+
+  invoice ServiceInvoice?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([technicianId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ServiceJobPart {
+  id String @id @default(uuid())
+
+  serviceJobId String
+  productId    String
+
+  requiredQuantity Int
+  issuedQuantity   Int @default(0)
+
+  unitCost  Decimal @default(0) @db.Decimal(12, 2)
+  totalCost Decimal @default(0) @db.Decimal(12, 2)
+
+  notes String?
+
+  serviceJob ServiceJob @relation(fields: [serviceJobId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@unique([serviceJobId, productId])
+  @@index([productId])
+}
+
+model ServiceInvoiceItem {
+  id String @id @default(uuid())
+
+  serviceInvoiceId String
+  productId        String?
+
+  itemType ServiceInvoiceItemType
+
+  description String
+
+  quantity  Decimal @default(1) @db.Decimal(12, 2)
+  unitPrice Decimal @db.Decimal(12, 2)
+  subtotal  Decimal @db.Decimal(12, 2)
+
+  serviceInvoice ServiceInvoice @relation(fields: [serviceInvoiceId], references: [id], onDelete: Cascade)
+
+  product Product? @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([serviceInvoiceId])
+  @@index([productId])
+}
+
+model BankReconciliation {
+  id String @id @default(uuid())
+
+  reconciliationNo String @unique
+
+  branchId  String
+  accountId String
+
+  statementDate DateTime
+
+  statementEndingBalance Decimal @db.Decimal(12, 2)
+
+  bookBalance         Decimal @db.Decimal(12, 2)
+  adjustedBankBalance Decimal @db.Decimal(12, 2)
+  adjustedBookBalance Decimal @db.Decimal(12, 2)
+  difference          Decimal @db.Decimal(12, 2)
+
+  status BankReconciliationStatus @default(DRAFT)
+
+  notes String?
+
+  branch  Branch          @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  items BankReconciliationItem[]
+
+  createdById String?
+  createdBy   User?   @relation("BankReconciliationsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([accountId])
+  @@index([statementDate])
+  @@index([status])
+}
+
+model BankReconciliationItem {
+  id String @id @default(uuid())
+
+  reconciliationId String
+
+  type BankReconciliationItemType
+
+  cashBankTransactionId String?
+
+  amount Decimal @db.Decimal(12, 2)
+
+  referenceNo String?
+  notes       String?
+
+  reconciliation BankReconciliation @relation(fields: [reconciliationId], references: [id], onDelete: Cascade)
+
+  cashBankTransaction CashBankTransaction? @relation(fields: [cashBankTransactionId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([reconciliationId])
+  @@index([cashBankTransactionId])
+  @@index([type])
+}
+
+model PettyCashFund {
+  id String @id @default(uuid())
+
+  fundNo String @unique
+
+  branchId String
+
+  name String
+
+  custodianId String?
+
+  openingBalance Decimal @default(0) @db.Decimal(12, 2)
+  currentBalance Decimal @default(0) @db.Decimal(12, 2)
+
+  status PettyCashFundStatus @default(ACTIVE)
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  custodian User? @relation("PettyCashCustodian", fields: [custodianId], references: [id], onDelete: SetNull)
+
+  vouchers       PettyCashVoucher[]
+  replenishments PettyCashReplenishment[]
+
+  createdById String?
+  createdBy   User?   @relation("PettyCashFundsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([custodianId])
+  @@index([status])
+}
+
+model PettyCashVoucher {
+  id String @id @default(uuid())
+
+  voucherNo String @unique
+
+  fundId String
+
+  expenseDate DateTime
+
+  description String
+
+  amount Decimal @db.Decimal(12, 2)
+
+  category String
+
+  payee String?
+
+  referenceNo String?
+
+  status PettyCashVoucherStatus @default(DRAFT)
+
+  fund PettyCashFund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  createdById String?
+  createdBy   User?   @relation("PettyCashVouchersCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([fundId])
+  @@index([expenseDate])
+  @@index([status])
+  @@index([category])
+}
+
+model PettyCashReplenishment {
+  id String @id @default(uuid())
+
+  replenishmentNo String @unique
+
+  fundId String
+
+  accountId String
+
+  replenishmentDate DateTime
+
+  amount Decimal @db.Decimal(12, 2)
+
+  status PettyCashReplenishmentStatus @default(DRAFT)
+
+  referenceNo String?
+
+  cashBankTransaction CashBankTransaction?
+
+  notes String?
+
+  fund PettyCashFund @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  account CashBankAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  createdById String?
+  createdBy   User?   @relation("PettyCashReplenishmentsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([fundId])
+  @@index([accountId])
+  @@index([replenishmentDate])
+  @@index([status])
+}
+
+model SalesReturn {
+  id       String @id @default(uuid())
+  returnNo String @unique
+
+  branchId       String
+  customerId     String
+  salesInvoiceId String
+
+  status         SalesReturnStatus         @default(DRAFT)
+  settlementMode SalesReturnSettlementMode @default(NO_REFUND)
+
+  returnDate DateTime @default(now())
+
+  subtotal Decimal @db.Decimal(12, 2)
+  total    Decimal @db.Decimal(12, 2)
+
+  reason String?
+  notes  String?
+
+  branch       Branch       @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  salesInvoice SalesInvoice @relation(fields: [salesInvoiceId], references: [id], onDelete: Restrict)
+
+  items SalesReturnItem[]
+
+  refundAccountId String?
+  refundAccount   CashBankAccount? @relation(fields: [refundAccountId], references: [id], onDelete: Restrict)
+
+  cashBankTransaction CashBankTransaction?
+
+  createdById String?
+  createdBy   User?   @relation("SalesReturnsCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([customerId])
+  @@index([salesInvoiceId])
+  @@index([status])
+  @@index([returnDate])
+}
+
+model SalesReturnItem {
+  id String @id @default(uuid())
+
+  salesReturnId      String
+  salesInvoiceItemId String
+  productId          String
+
+  quantity Int
+
+  unitPrice Decimal @db.Decimal(12, 2)
+  subtotal  Decimal @db.Decimal(12, 2)
+
+  salesReturn      SalesReturn      @relation(fields: [salesReturnId], references: [id], onDelete: Cascade)
+  salesInvoiceItem SalesInvoiceItem @relation(fields: [salesInvoiceItemId], references: [id], onDelete: Restrict)
+  product          Product          @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([salesReturnId, salesInvoiceItemId])
+  @@index([salesReturnId])
+  @@index([salesInvoiceItemId])
+  @@index([productId])
 }

@@ -231,3 +231,68 @@ export type CustomerPayment = Prisma.CustomerPaymentModel
  * 
  */
 export type AccountsReceivable = Prisma.AccountsReceivableModel
+/**
+ * Model InventoryAdjustment
+ * 
+ */
+export type InventoryAdjustment = Prisma.InventoryAdjustmentModel
+/**
+ * Model InventoryAdjustmentItem
+ * 
+ */
+export type InventoryAdjustmentItem = Prisma.InventoryAdjustmentItemModel
+/**
+ * Model ServiceInvoice
+ * 
+ */
+export type ServiceInvoice = Prisma.ServiceInvoiceModel
+/**
+ * Model ServiceJob
+ * 
+ */
+export type ServiceJob = Prisma.ServiceJobModel
+/**
+ * Model ServiceJobPart
+ * 
+ */
+export type ServiceJobPart = Prisma.ServiceJobPartModel
+/**
+ * Model ServiceInvoiceItem
+ * 
+ */
+export type ServiceInvoiceItem = Prisma.ServiceInvoiceItemModel
+/**
+ * Model BankReconciliation
+ * 
+ */
+export type BankReconciliation = Prisma.BankReconciliationModel
+/**
+ * Model BankReconciliationItem
+ * 
+ */
+export type BankReconciliationItem = Prisma.BankReconciliationItemModel
+/**
+ * Model PettyCashFund
+ * 
+ */
+export type PettyCashFund = Prisma.PettyCashFundModel
+/**
+ * Model PettyCashVoucher
+ * 
+ */
+export type PettyCashVoucher = Prisma.PettyCashVoucherModel
+/**
+ * Model PettyCashReplenishment
+ * 
+ */
+export type PettyCashReplenishment = Prisma.PettyCashReplenishmentModel
+/**
+ * Model SalesReturn
+ * 
+ */
+export type SalesReturn = Prisma.SalesReturnModel
+/**
+ * Model SalesReturnItem
+ * 
+ */
+export type SalesReturnItem = Prisma.SalesReturnItemModel

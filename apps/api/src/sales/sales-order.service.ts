@@ -47,6 +47,7 @@ export class SalesOrderService {
           branchId: quotation.branchId,
           customerId: quotation.customerId,
           quotationId: quotation.id,
+          createdById: quotation.createdById,
 
           status: 'CONFIRMED',
 

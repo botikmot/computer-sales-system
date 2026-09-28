@@ -54,6 +54,7 @@ export class SalesInvoiceService {
           branchId: order.branchId,
           customerId: order.customerId,
           salesOrderId: order.id,
+          createdById: order.createdById,
 
           status: 'POSTED',
           paymentMode,

@@ -1,0 +1,255 @@
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+
+import {
+  Prisma,
+  ServiceInvoiceItemType,
+  ServiceInvoiceStatus,
+  ServicePaymentMode,
+} from '@computer-sales/database';
+
+import { PrismaService } from '../database/prisma.service.js';
+
+import { CreateServiceInvoiceDto } from './dto/create-service-invoice.dto.js';
+
+@Injectable()
+export class ServiceInvoiceService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createFromServiceJob(
+    serviceJobId: string,
+    dto: CreateServiceInvoiceDto,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const job = await tx.serviceJob.findUnique({
+        where: {
+          id: serviceJobId,
+        },
+        include: {
+          customer: true,
+          branch: true,
+          parts: {
+            include: {
+              product: true,
+            },
+          },
+          invoice: true,
+        },
+      });
+
+      if (!job) {
+        throw new NotFoundException('Service job not found.');
+      }
+
+      if (job.status !== 'COMPLETED') {
+        throw new BadRequestException(
+          'Only completed service jobs can be invoiced.',
+        );
+      }
+
+      if (job.invoice) {
+        throw new ConflictException(
+          'This service job already has a service invoice.',
+        );
+      }
+
+      const paymentMode =
+        dto.paymentMode === 'CREDIT'
+          ? ServicePaymentMode.CREDIT
+          : ServicePaymentMode.CASH;
+
+      const laborCharge = new Prisma.Decimal(job.laborCharge);
+
+      const invoiceItems: {
+        itemType: ServiceInvoiceItemType;
+        productId?: string;
+        description: string;
+        quantity: Prisma.Decimal;
+        unitPrice: Prisma.Decimal;
+        subtotal: Prisma.Decimal;
+      }[] = [];
+
+      if (laborCharge.gt(0)) {
+        invoiceItems.push({
+          itemType: ServiceInvoiceItemType.LABOR,
+          description: 'Repair labor',
+          quantity: new Prisma.Decimal(1),
+          unitPrice: laborCharge,
+          subtotal: laborCharge,
+        });
+      }
+
+      for (const part of job.parts) {
+        if (part.issuedQuantity <= 0) {
+          continue;
+        }
+
+        const quantity = new Prisma.Decimal(part.issuedQuantity);
+
+        const unitPrice = part.product.defaultSellingPrice ?? part.unitCost;
+
+        const subtotal = unitPrice.mul(quantity);
+
+        invoiceItems.push({
+          itemType: ServiceInvoiceItemType.PART,
+          productId: part.productId,
+          description: part.product.name,
+          quantity,
+          unitPrice,
+          subtotal,
+        });
+      }
+
+      if (!invoiceItems.length) {
+        throw new BadRequestException(
+          'Service job has no billable labor or issued parts.',
+        );
+      }
+
+      const subtotal = invoiceItems.reduce(
+        (sum, item) => sum.plus(item.subtotal),
+        new Prisma.Decimal(0),
+      );
+
+      const discount = new Prisma.Decimal(0);
+      const tax = new Prisma.Decimal(0);
+      const total = subtotal.minus(discount).plus(tax);
+
+      const invoiceNo = `SVI-${this.generateReference()}`;
+
+      const invoice = await tx.serviceInvoice.create({
+        data: {
+          invoiceNo,
+
+          branchId: job.branchId,
+          customerId: job.customerId,
+          serviceJobId: job.id,
+
+          status: ServiceInvoiceStatus.POSTED,
+          paymentMode,
+
+          invoiceDate: new Date(),
+
+          dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+
+          subtotal,
+          discount,
+          tax,
+          total,
+
+          amountPaid: new Prisma.Decimal(0),
+          balanceDue: total,
+
+          notes: dto.notes ?? job.notes,
+
+          items: {
+            create: invoiceItems,
+          },
+        },
+        include: {
+          branch: true,
+          customer: true,
+          serviceJob: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
+          accountsReceivable: true,
+        },
+      });
+
+      if (paymentMode === ServicePaymentMode.CREDIT) {
+        await tx.accountsReceivable.create({
+          data: {
+            branchId: job.branchId,
+            customerId: job.customerId,
+
+            serviceInvoiceId: invoice.id,
+
+            originalAmount: total,
+            amountPaid: new Prisma.Decimal(0),
+            balanceDue: total,
+
+            status: 'OPEN',
+
+            dueDate: invoice.dueDate,
+            notes: invoice.notes,
+          },
+        });
+      }
+
+      return tx.serviceInvoice.findUniqueOrThrow({
+        where: {
+          id: invoice.id,
+        },
+        include: {
+          branch: true,
+          customer: true,
+          serviceJob: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
+          accountsReceivable: true,
+        },
+      });
+    });
+  }
+
+  async findAll() {
+    return this.prisma.serviceInvoice.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        branch: true,
+        customer: true,
+        serviceJob: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
+        accountsReceivable: true,
+      },
+    });
+  }
+
+  async findOne(id: string) {
+    const invoice = await this.prisma.serviceInvoice.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        branch: true,
+        customer: true,
+        serviceJob: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
+        accountsReceivable: true,
+      },
+    });
+
+    if (!invoice) {
+      throw new NotFoundException('Service invoice not found.');
+    }
+
+    return invoice;
+  }
+
+  private generateReference(): string {
+    return `${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 8)
+      .toUpperCase()}`;
+  }
+}
