@@ -4,7 +4,7 @@ import { ReportsService } from './reports.service.js';
 import { CashBankReportQueryDto } from './dto/cash-bank-report-query.dto.js';
 
 @Controller('reports/cash-bank')
-export class ReportsController {
+export class CashBankReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
   @Get('daily')

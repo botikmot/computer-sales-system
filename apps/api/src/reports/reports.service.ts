@@ -7,10 +7,205 @@ import { AccountsReceivableReportQueryDto } from './dto/accounts-receivable-repo
 import { AccountsPayableReportQueryDto } from './dto/accounts-payable-report-query.dto.js';
 import { SalesReportQueryDto } from './dto/sales-report-query.dto.js';
 import { ServiceReportQueryDto } from './dto/service-report-query.dto.js';
+import { ManagementReportQueryDto } from './dto/management-report-query.dto.js';
+import { PurchasingReportQueryDto } from './dto/purchasing-report-query.dto.js';
+import { InventoryReportQueryDto } from './dto/inventory-report-query.dto.js';
 
 @Injectable()
 export class ReportsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private getRequiredManagementPeriod(query: ManagementReportQueryDto) {
+    if (!query.from || !query.to) {
+      throw new BadRequestException('from and to are required.');
+    }
+
+    const dateRange = this.getOptionalDateRange(query.from, query.to);
+
+    if (!dateRange) {
+      throw new BadRequestException('Invalid date range.');
+    }
+
+    return dateRange;
+  }
+
+  private getManagementAsOfDate(value?: string) {
+    const date = value ? new Date(`${value}T23:59:59.999Z`) : new Date();
+
+    if (Number.isNaN(date.getTime())) {
+      throw new BadRequestException('Invalid asOfDate.');
+    }
+
+    return date;
+  }
+
+  async incomeStatement(query: ManagementReportQueryDto) {
+    const dateRange = this.getRequiredManagementPeriod(query);
+
+    const [
+      salesAggregate,
+      returnsAggregate,
+      serviceAggregate,
+      saleCogsAggregate,
+      repairPartsAggregate,
+      expenseAggregate,
+      pettyExpenseAggregate,
+    ] = await Promise.all([
+      this.prisma.salesInvoice.aggregate({
+        where: {
+          status: 'POSTED',
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          invoiceDate: dateRange,
+        },
+        _sum: {
+          total: true,
+        },
+      }),
+
+      this.prisma.salesReturn.aggregate({
+        where: {
+          status: 'POSTED',
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          returnDate: dateRange,
+        },
+        _sum: {
+          total: true,
+        },
+      }),
+
+      this.prisma.serviceInvoice.aggregate({
+        where: {
+          status: 'POSTED',
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          invoiceDate: dateRange,
+        },
+        _sum: {
+          total: true,
+        },
+      }),
+
+      this.prisma.inventoryMovement.aggregate({
+        where: {
+          type: 'SALE_OUT',
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          createdAt: dateRange,
+        },
+        _sum: {
+          totalCost: true,
+        },
+      }),
+
+      this.prisma.serviceJobPart.aggregate({
+        where: {
+          issuedQuantity: {
+            gt: 0,
+          },
+          serviceJob: {
+            ...(query.branchId ? { branchId: query.branchId } : {}),
+            invoice: {
+              status: 'POSTED',
+              invoiceDate: dateRange,
+            },
+          },
+        },
+        _sum: {
+          totalCost: true,
+        },
+      }),
+
+      this.prisma.cashBankTransaction.aggregate({
+        where: {
+          transactionType: 'EXPENSE',
+          direction: 'OUT',
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          transactionDate: dateRange,
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+
+      this.prisma.pettyCashVoucher.aggregate({
+        where: {
+          status: 'POSTED',
+          ...(query.branchId
+            ? {
+                fund: {
+                  branchId: query.branchId,
+                },
+              }
+            : {}),
+          expenseDate: dateRange,
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const salesRevenue = salesAggregate._sum.total ?? new Prisma.Decimal(0);
+
+    const salesReturns = returnsAggregate._sum.total ?? new Prisma.Decimal(0);
+
+    const serviceRevenue = serviceAggregate._sum.total ?? new Prisma.Decimal(0);
+
+    const netSalesRevenue = salesRevenue.sub(salesReturns);
+
+    const totalRevenue = netSalesRevenue.add(serviceRevenue);
+
+    const salesCogs = saleCogsAggregate._sum.totalCost ?? new Prisma.Decimal(0);
+
+    const repairPartsCost =
+      repairPartsAggregate._sum.totalCost ?? new Prisma.Decimal(0);
+
+    const totalCogs = salesCogs.add(repairPartsCost);
+
+    const grossProfit = totalRevenue.sub(totalCogs);
+
+    const cashExpenses = expenseAggregate._sum.amount ?? new Prisma.Decimal(0);
+
+    const pettyCashExpenses =
+      pettyExpenseAggregate._sum.amount ?? new Prisma.Decimal(0);
+
+    const operatingExpenses = cashExpenses.add(pettyCashExpenses);
+
+    const estimatedNetIncome = grossProfit.sub(operatingExpenses);
+
+    const grossMargin = totalRevenue.gt(0)
+      ? grossProfit.div(totalRevenue).mul(100)
+      : new Prisma.Decimal(0);
+
+    return {
+      from: query.from,
+      to: query.to,
+
+      revenue: {
+        sales: salesRevenue.toDecimalPlaces(2),
+        salesReturns: salesReturns.toDecimalPlaces(2),
+        netSales: netSalesRevenue.toDecimalPlaces(2),
+        service: serviceRevenue.toDecimalPlaces(2),
+        total: totalRevenue.toDecimalPlaces(2),
+      },
+
+      costOfSales: {
+        salesCogs: salesCogs.toDecimalPlaces(2),
+        repairPartsCost: repairPartsCost.toDecimalPlaces(2),
+        total: totalCogs.toDecimalPlaces(2),
+      },
+
+      grossProfit: grossProfit.toDecimalPlaces(2),
+
+      grossMargin: grossMargin.toDecimalPlaces(2),
+
+      operatingExpenses: {
+        cashExpenses: cashExpenses.toDecimalPlaces(2),
+        pettyCashExpenses: pettyCashExpenses.toDecimalPlaces(2),
+        total: operatingExpenses.toDecimalPlaces(2),
+      },
+
+      estimatedNetIncome: estimatedNetIncome.toDecimalPlaces(2),
+    };
+  }
 
   private getSalesDateRange(query: SalesReportQueryDto) {
     if (query.date) {
@@ -2117,6 +2312,1055 @@ export class ReportsService {
       to: query.to ?? null,
       count: technicians.length,
       technicians,
+    };
+  }
+
+  async balanceSheet(query: ManagementReportQueryDto) {
+    const asOfDate = this.getManagementAsOfDate(query.asOfDate);
+
+    const accounts = await this.prisma.cashBankAccount.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        accountType: {
+          in: ['CASH', 'BANK'],
+        },
+      },
+    });
+
+    const accountBalances = await Promise.all(
+      accounts.map(async (account) => {
+        const aggregate = await this.prisma.cashBankTransaction.aggregate({
+          where: {
+            accountId: account.id,
+            transactionDate: {
+              lte: asOfDate,
+            },
+          },
+          _sum: {
+            amount: true,
+          },
+        });
+
+        const transactions = await this.prisma.cashBankTransaction.findMany({
+          where: {
+            accountId: account.id,
+            transactionDate: {
+              lte: asOfDate,
+            },
+          },
+          select: {
+            amount: true,
+            direction: true,
+          },
+        });
+
+        const inflow = transactions
+          .filter((item) => item.direction === 'IN')
+          .reduce((sum, item) => sum.add(item.amount), new Prisma.Decimal(0));
+
+        const outflow = transactions
+          .filter((item) => item.direction === 'OUT')
+          .reduce((sum, item) => sum.add(item.amount), new Prisma.Decimal(0));
+
+        const currentBalance = account.openingBalance.add(inflow).sub(outflow);
+
+        return {
+          id: account.id,
+          name: account.name,
+          accountType: account.accountType,
+          openingBalance: account.openingBalance,
+          transactionNet: inflow.sub(outflow),
+          balance: currentBalance,
+        };
+      }),
+    );
+
+    const inventory = await this.prisma.inventoryBalance.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+      },
+      include: {
+        product: true,
+        branch: true,
+      },
+    });
+
+    const inventoryValue = inventory.reduce(
+      (sum, item) => sum.add(item.averageCost.mul(item.quantity)),
+      new Prisma.Decimal(0),
+    );
+
+    const [receivables, payables] = await Promise.all([
+      this.prisma.accountsReceivable.findMany({
+        where: {
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          status: {
+            in: ['OPEN', 'PARTIALLY_PAID'],
+          },
+          balanceDue: {
+            gt: 0,
+          },
+          createdAt: {
+            lte: asOfDate,
+          },
+        },
+      }),
+
+      this.prisma.accountsPayable.findMany({
+        where: {
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          status: {
+            in: ['OPEN', 'PARTIALLY_PAID'],
+          },
+          balanceDue: {
+            gt: 0,
+          },
+          createdAt: {
+            lte: asOfDate,
+          },
+        },
+      }),
+    ]);
+
+    const cashAndBank = accountBalances.reduce(
+      (sum, account) => sum.add(account.balance),
+      new Prisma.Decimal(0),
+    );
+
+    const accountsReceivable = receivables.reduce(
+      (sum, record) => sum.add(record.balanceDue),
+      new Prisma.Decimal(0),
+    );
+
+    const accountsPayable = payables.reduce(
+      (sum, record) => sum.add(record.balanceDue),
+      new Prisma.Decimal(0),
+    );
+
+    const totalAssets = cashAndBank.add(accountsReceivable).add(inventoryValue);
+
+    const totalLiabilities = accountsPayable;
+
+    const derivedEquity = totalAssets.sub(totalLiabilities);
+
+    return {
+      asOfDate,
+
+      assets: {
+        cashAndBank: cashAndBank.toDecimalPlaces(2),
+        accountsReceivable: accountsReceivable.toDecimalPlaces(2),
+        inventory: inventoryValue.toDecimalPlaces(2),
+        total: totalAssets.toDecimalPlaces(2),
+      },
+
+      liabilities: {
+        accountsPayable: accountsPayable.toDecimalPlaces(2),
+        total: totalLiabilities.toDecimalPlaces(2),
+      },
+
+      derivedEquity: derivedEquity.toDecimalPlaces(2),
+
+      accounts: accountBalances,
+      inventoryCount: inventory.length,
+      receivableCount: receivables.length,
+      payableCount: payables.length,
+    };
+  }
+
+  async cashFlow(query: ManagementReportQueryDto) {
+    const dateRange = this.getRequiredManagementPeriod(query);
+
+    const [transactions, pettyCashExpenses] = await Promise.all([
+      this.prisma.cashBankTransaction.findMany({
+        where: {
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          transactionDate: dateRange,
+        },
+        include: {
+          customerPayment: {
+            select: {
+              salesInvoiceId: true,
+              serviceInvoiceId: true,
+            },
+          },
+        },
+        orderBy: {
+          transactionDate: 'asc',
+        },
+      }),
+
+      this.prisma.pettyCashVoucher.findMany({
+        where: {
+          status: 'POSTED',
+          ...(query.branchId
+            ? {
+                fund: {
+                  branchId: query.branchId,
+                },
+              }
+            : {}),
+          expenseDate: dateRange,
+        },
+        select: {
+          id: true,
+          voucherNo: true,
+          expenseDate: true,
+          description: true,
+          amount: true,
+          category: true,
+        },
+        orderBy: {
+          expenseDate: 'asc',
+        },
+      }),
+    ]);
+
+    let customerCollections = new Prisma.Decimal(0);
+
+    let otherReceipts = new Prisma.Decimal(0);
+
+    let supplierPayments = new Prisma.Decimal(0);
+
+    let operatingExpenses = new Prisma.Decimal(0);
+
+    let customerRefunds = new Prisma.Decimal(0);
+
+    for (const transaction of transactions) {
+      if (transaction.transactionType === 'PETTY_CASH_REPLENISHMENT') {
+        continue;
+      }
+
+      if (transaction.transactionType === 'CUSTOMER_PAYMENT') {
+        customerCollections = customerCollections.add(transaction.amount);
+        continue;
+      }
+
+      if (transaction.transactionType === 'OTHER_RECEIPT') {
+        otherReceipts = otherReceipts.add(transaction.amount);
+        continue;
+      }
+
+      if (transaction.transactionType === 'SUPPLIER_PAYMENT') {
+        supplierPayments = supplierPayments.add(transaction.amount);
+        continue;
+      }
+
+      if (transaction.transactionType === 'CUSTOMER_REFUND') {
+        customerRefunds = customerRefunds.add(transaction.amount);
+        continue;
+      }
+
+      if (transaction.transactionType === 'EXPENSE') {
+        operatingExpenses = operatingExpenses.add(transaction.amount);
+      }
+    }
+
+    const pettyCashExpenseTotal = pettyCashExpenses.reduce(
+      (sum, item) => sum.add(item.amount),
+      new Prisma.Decimal(0),
+    );
+
+    const totalCashIn = customerCollections.add(otherReceipts);
+
+    const totalCashOut = supplierPayments
+      .add(operatingExpenses)
+      .add(customerRefunds)
+      .add(pettyCashExpenseTotal);
+
+    const netCashFlow = totalCashIn.sub(totalCashOut);
+
+    return {
+      from: query.from,
+      to: query.to,
+
+      inflows: {
+        customerCollections: customerCollections.toDecimalPlaces(2),
+        otherReceipts: otherReceipts.toDecimalPlaces(2),
+        total: totalCashIn.toDecimalPlaces(2),
+      },
+
+      outflows: {
+        supplierPayments: supplierPayments.toDecimalPlaces(2),
+        operatingExpenses: operatingExpenses.toDecimalPlaces(2),
+        customerRefunds: customerRefunds.toDecimalPlaces(2),
+        pettyCashExpenses: pettyCashExpenseTotal.toDecimalPlaces(2),
+        total: totalCashOut.toDecimalPlaces(2),
+      },
+
+      netCashFlow: netCashFlow.toDecimalPlaces(2),
+
+      transactionCount: transactions.length,
+
+      pettyCashExpenseCount: pettyCashExpenses.length,
+    };
+  }
+
+  async salesProfitability(query: ManagementReportQueryDto) {
+    const statement = await this.incomeStatement(query);
+
+    return {
+      from: statement.from,
+      to: statement.to,
+
+      revenue: statement.revenue,
+
+      costOfSales: statement.costOfSales,
+
+      grossProfit: statement.grossProfit,
+
+      grossMargin: statement.grossMargin,
+
+      operatingExpenses: statement.operatingExpenses,
+
+      estimatedNetProfit: statement.estimatedNetIncome,
+    };
+  }
+
+  async inventoryValuation(query: ManagementReportQueryDto) {
+    const balances = await this.prisma.inventoryBalance.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+      },
+      include: {
+        branch: true,
+        product: true,
+      },
+      orderBy: {
+        updatedAt: 'asc',
+      },
+    });
+
+    const items = balances.map((balance) => ({
+      branchId: balance.branchId,
+      branchName: balance.branch.name,
+
+      productId: balance.productId,
+      sku: balance.product.sku,
+      productName: balance.product.name,
+
+      quantity: balance.quantity,
+
+      averageCost: balance.averageCost.toDecimalPlaces(2),
+
+      inventoryValue: balance.averageCost
+        .mul(balance.quantity)
+        .toDecimalPlaces(2),
+    }));
+
+    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+
+    const totalValue = items.reduce(
+      (sum, item) => sum.add(item.inventoryValue),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      asOfDate: query.asOfDate ?? new Date().toISOString(),
+
+      count: items.length,
+
+      totalQuantity,
+
+      totalValue: totalValue.toDecimalPlaces(2),
+
+      items,
+    };
+  }
+
+  async arApAging(query: ManagementReportQueryDto) {
+    const asOfDate = this.getManagementAsOfDate(query.asOfDate);
+
+    const [receivables, payables] = await Promise.all([
+      this.prisma.accountsReceivable.findMany({
+        where: {
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          status: {
+            in: ['OPEN', 'PARTIALLY_PAID'],
+          },
+          balanceDue: {
+            gt: 0,
+          },
+        },
+        include: {
+          customer: true,
+        },
+        orderBy: {
+          dueDate: 'asc',
+        },
+      }),
+
+      this.prisma.accountsPayable.findMany({
+        where: {
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          status: {
+            in: ['OPEN', 'PARTIALLY_PAID'],
+          },
+          balanceDue: {
+            gt: 0,
+          },
+        },
+        include: {
+          supplier: true,
+        },
+        orderBy: {
+          dueDate: 'asc',
+        },
+      }),
+    ]);
+
+    const bucket = (dueDate: Date | null) => {
+      if (!dueDate) {
+        return 'NO_DUE_DATE';
+      }
+
+      const diffMs = asOfDate.getTime() - dueDate.getTime();
+
+      if (diffMs <= 0) {
+        return 'CURRENT';
+      }
+
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      if (days <= 30) {
+        return '1_30';
+      }
+
+      if (days <= 60) {
+        return '31_60';
+      }
+
+      if (days <= 90) {
+        return '61_90';
+      }
+
+      return '91_PLUS';
+    };
+
+    const createBuckets = () => ({
+      CURRENT: new Prisma.Decimal(0),
+      '1_30': new Prisma.Decimal(0),
+      '31_60': new Prisma.Decimal(0),
+      '61_90': new Prisma.Decimal(0),
+      '91_PLUS': new Prisma.Decimal(0),
+      NO_DUE_DATE: new Prisma.Decimal(0),
+    });
+
+    const arBuckets = createBuckets();
+    const apBuckets = createBuckets();
+
+    for (const record of receivables) {
+      const key = bucket(record.dueDate);
+
+      arBuckets[key] = arBuckets[key].add(record.balanceDue);
+    }
+
+    for (const record of payables) {
+      const key = bucket(record.dueDate);
+
+      apBuckets[key] = apBuckets[key].add(record.balanceDue);
+    }
+
+    const serializeBuckets = (buckets: ReturnType<typeof createBuckets>) => ({
+      current: buckets.CURRENT.toDecimalPlaces(2),
+      '1_30': buckets['1_30'].toDecimalPlaces(2),
+      '31_60': buckets['31_60'].toDecimalPlaces(2),
+      '61_90': buckets['61_90'].toDecimalPlaces(2),
+      '91_plus': buckets['91_PLUS'].toDecimalPlaces(2),
+      noDueDate: buckets.NO_DUE_DATE.toDecimalPlaces(2),
+    });
+
+    const arTotal = receivables.reduce(
+      (sum, record) => sum.add(record.balanceDue),
+      new Prisma.Decimal(0),
+    );
+
+    const apTotal = payables.reduce(
+      (sum, record) => sum.add(record.balanceDue),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      asOfDate,
+
+      accountsReceivable: {
+        count: receivables.length,
+        total: arTotal.toDecimalPlaces(2),
+        aging: serializeBuckets(arBuckets),
+        records: receivables,
+      },
+
+      accountsPayable: {
+        count: payables.length,
+        total: apTotal.toDecimalPlaces(2),
+        aging: serializeBuckets(apBuckets),
+        records: payables,
+      },
+    };
+  }
+
+  async purchaseOrderReport(query: PurchasingReportQueryDto) {
+    const orderDate = this.getOptionalDateRange(query.from, query.to);
+
+    const purchaseOrders = await this.prisma.purchaseOrder.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+        ...(query.status ? { status: query.status } : {}),
+        ...(orderDate ? { orderDate } : {}),
+      },
+
+      include: {
+        supplier: true,
+        branch: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+
+      orderBy: {
+        orderDate: 'asc',
+      },
+    });
+
+    const total = purchaseOrders.reduce(
+      (sum, order) => sum.add(order.total),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: purchaseOrders.length,
+      total: total.toDecimalPlaces(2),
+      purchaseOrders,
+    };
+  }
+
+  async purchasesBySupplier(query: PurchasingReportQueryDto) {
+    const invoiceDate = this.getOptionalDateRange(query.from, query.to);
+
+    const invoices = await this.prisma.purchaseInvoice.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+
+        status: 'POSTED',
+
+        ...(invoiceDate ? { invoiceDate } : {}),
+      },
+
+      include: {
+        supplier: true,
+        branch: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+
+      orderBy: {
+        invoiceDate: 'asc',
+      },
+    });
+
+    const grouped = new Map<
+      string,
+      {
+        supplier: (typeof invoices)[number]['supplier'];
+        invoiceCount: number;
+        subtotal: Prisma.Decimal;
+        total: Prisma.Decimal;
+      }
+    >();
+
+    for (const invoice of invoices) {
+      const existing = grouped.get(invoice.supplierId);
+
+      if (!existing) {
+        grouped.set(invoice.supplierId, {
+          supplier: invoice.supplier,
+          invoiceCount: 1,
+          subtotal: invoice.subtotal,
+          total: invoice.total,
+        });
+
+        continue;
+      }
+
+      existing.invoiceCount += 1;
+      existing.subtotal = existing.subtotal.add(invoice.subtotal);
+      existing.total = existing.total.add(invoice.total);
+    }
+
+    const suppliers = Array.from(grouped.values()).map((item) => ({
+      supplier: item.supplier,
+      invoiceCount: item.invoiceCount,
+      subtotal: item.subtotal.toDecimalPlaces(2),
+      total: item.total.toDecimalPlaces(2),
+    }));
+
+    const grandTotal = suppliers.reduce(
+      (sum, supplier) => sum.add(supplier.total),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: suppliers.length,
+      grandTotal: grandTotal.toDecimalPlaces(2),
+      suppliers,
+    };
+  }
+
+  async purchasesByDate(query: PurchasingReportQueryDto) {
+    const invoiceDate = this.getOptionalDateRange(query.from, query.to);
+
+    const invoices = await this.prisma.purchaseInvoice.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+
+        status: 'POSTED',
+
+        ...(invoiceDate ? { invoiceDate } : {}),
+      },
+
+      include: {
+        supplier: true,
+        branch: true,
+      },
+
+      orderBy: {
+        invoiceDate: 'asc',
+      },
+    });
+
+    const grouped = new Map<
+      string,
+      {
+        date: string;
+        invoiceCount: number;
+        total: Prisma.Decimal;
+      }
+    >();
+
+    for (const invoice of invoices) {
+      const date = invoice.invoiceDate.toISOString().slice(0, 10);
+
+      const existing = grouped.get(date);
+
+      if (!existing) {
+        grouped.set(date, {
+          date,
+          invoiceCount: 1,
+          total: invoice.total,
+        });
+
+        continue;
+      }
+
+      existing.invoiceCount += 1;
+      existing.total = existing.total.add(invoice.total);
+    }
+
+    const dates = Array.from(grouped.values()).map((item) => ({
+      ...item,
+      total: item.total.toDecimalPlaces(2),
+    }));
+
+    const grandTotal = dates.reduce(
+      (sum, item) => sum.add(item.total),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: dates.length,
+      grandTotal: grandTotal.toDecimalPlaces(2),
+      dates,
+    };
+  }
+
+  async outstandingPurchaseOrders(query: PurchasingReportQueryDto) {
+    const orderDate = this.getOptionalDateRange(query.from, query.to);
+
+    const purchaseOrders = await this.prisma.purchaseOrder.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+
+        status: {
+          in: ['APPROVED', 'SENT', 'PARTIALLY_RECEIVED'],
+        },
+
+        ...(orderDate ? { orderDate } : {}),
+      },
+
+      include: {
+        supplier: true,
+        branch: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+
+      orderBy: {
+        orderDate: 'asc',
+      },
+    });
+
+    const records = purchaseOrders
+      .map((order) => {
+        const items = order.items
+          .map((item) => {
+            const remainingQuantity = item.quantity - item.receivedQuantity;
+
+            return {
+              ...item,
+              remainingQuantity,
+            };
+          })
+          .filter((item) => item.remainingQuantity > 0);
+
+        return {
+          ...order,
+          items,
+        };
+      })
+      .filter((order) => order.items.length > 0);
+
+    const outstandingTotal = records.reduce((sum, order) => {
+      const orderOutstanding = order.items.reduce(
+        (itemSum, item) =>
+          itemSum.add(item.unitCost.mul(item.remainingQuantity)),
+        new Prisma.Decimal(0),
+      );
+
+      return sum.add(orderOutstanding);
+    }, new Prisma.Decimal(0));
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: records.length,
+      outstandingTotal: outstandingTotal.toDecimalPlaces(2),
+      purchaseOrders: records,
+    };
+  }
+
+  async inventoryStock(query: InventoryReportQueryDto) {
+    const balances = await this.prisma.inventoryBalance.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.productId ? { productId: query.productId } : {}),
+      },
+
+      include: {
+        branch: true,
+        product: {
+          include: {
+            category: true,
+          },
+        },
+      },
+
+      orderBy: [
+        {
+          product: {
+            name: 'asc',
+          },
+        },
+      ],
+    });
+
+    const totalQuantity = balances.reduce(
+      (sum, balance) => sum + balance.quantity,
+      0,
+    );
+
+    const totalValue = balances.reduce(
+      (sum, balance) => sum.add(balance.averageCost.mul(balance.quantity)),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      count: balances.length,
+      totalQuantity,
+      totalValue: totalValue.toDecimalPlaces(2),
+      items: balances.map((balance) => ({
+        branchId: balance.branchId,
+        productId: balance.productId,
+        sku: balance.product.sku,
+        productName: balance.product.name,
+        category: balance.product.category?.name ?? null,
+        unit: balance.product.unit,
+        quantity: balance.quantity,
+        averageCost: balance.averageCost,
+        inventoryValue: balance.averageCost
+          .mul(balance.quantity)
+          .toDecimalPlaces(2),
+        updatedAt: balance.updatedAt,
+      })),
+    };
+  }
+
+  async stockCard(query: InventoryReportQueryDto) {
+    const createdAt = this.getOptionalDateRange(query.from, query.to);
+
+    const movements = await this.prisma.inventoryMovement.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.productId ? { productId: query.productId } : {}),
+        ...(createdAt ? { createdAt } : {}),
+      },
+
+      include: {
+        branch: true,
+        product: true,
+      },
+
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    const totalIn = movements
+      .filter((movement) => movement.quantityChange > 0)
+      .reduce((sum, movement) => sum + movement.quantityChange, 0);
+
+    const totalOut = movements
+      .filter((movement) => movement.quantityChange < 0)
+      .reduce((sum, movement) => sum + Math.abs(movement.quantityChange), 0);
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      productId: query.productId ?? null,
+      count: movements.length,
+      totalIn,
+      totalOut,
+      netQuantityChange: totalIn - totalOut,
+      movements: movements.map((movement) => ({
+        id: movement.id,
+        date: movement.createdAt,
+        productId: movement.productId,
+        sku: movement.product.sku,
+        productName: movement.product.name,
+        type: movement.type,
+        quantityChange: movement.quantityChange,
+        balanceAfter: movement.balanceAfter,
+        unitCost: movement.unitCost,
+        totalCost: movement.totalCost,
+        averageCostAfter: movement.averageCostAfter,
+        referenceType: movement.referenceType,
+        referenceId: movement.referenceId,
+        notes: movement.notes,
+      })),
+    };
+  }
+
+  async inventoryValuationReport(query: InventoryReportQueryDto) {
+    const balances = await this.prisma.inventoryBalance.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.productId ? { productId: query.productId } : {}),
+      },
+
+      include: {
+        product: true,
+        branch: true,
+      },
+
+      orderBy: {
+        product: {
+          name: 'asc',
+        },
+      },
+    });
+
+    const items = balances.map((balance) => ({
+      branchId: balance.branchId,
+      productId: balance.productId,
+      sku: balance.product.sku,
+      productName: balance.product.name,
+      quantity: balance.quantity,
+      averageCost: balance.averageCost,
+      inventoryValue: balance.averageCost
+        .mul(balance.quantity)
+        .toDecimalPlaces(2),
+    }));
+
+    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+
+    const totalValue = items.reduce(
+      (sum, item) => sum.add(item.inventoryValue),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      count: items.length,
+      totalQuantity,
+      totalValue: totalValue.toDecimalPlaces(2),
+      items,
+    };
+  }
+
+  async lowStock(query: InventoryReportQueryDto) {
+    const threshold = query.threshold ?? 5;
+
+    const balances = await this.prisma.inventoryBalance.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.productId ? { productId: query.productId } : {}),
+
+        quantity: {
+          lte: threshold,
+        },
+      },
+
+      include: {
+        product: {
+          include: {
+            category: true,
+          },
+        },
+        branch: true,
+      },
+
+      orderBy: {
+        quantity: 'asc',
+      },
+    });
+
+    return {
+      threshold,
+      count: balances.length,
+      items: balances.map((balance) => ({
+        branchId: balance.branchId,
+        productId: balance.productId,
+        sku: balance.product.sku,
+        productName: balance.product.name,
+        category: balance.product.category?.name ?? null,
+        quantity: balance.quantity,
+        averageCost: balance.averageCost,
+        inventoryValue: balance.averageCost
+          .mul(balance.quantity)
+          .toDecimalPlaces(2),
+      })),
+    };
+  }
+
+  async inventoryMovement(query: InventoryReportQueryDto) {
+    const createdAt = this.getOptionalDateRange(query.from, query.to);
+
+    const movements = await this.prisma.inventoryMovement.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.productId ? { productId: query.productId } : {}),
+        ...(query.type ? { type: query.type } : {}),
+        ...(createdAt ? { createdAt } : {}),
+      },
+
+      include: {
+        branch: true,
+        product: true,
+      },
+
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    const totalIn = movements
+      .filter((movement) => movement.quantityChange > 0)
+      .reduce((sum, movement) => sum + movement.quantityChange, 0);
+
+    const totalOut = movements
+      .filter((movement) => movement.quantityChange < 0)
+      .reduce((sum, movement) => sum + Math.abs(movement.quantityChange), 0);
+
+    const totalCost = movements.reduce(
+      (sum, movement) => sum.add(movement.totalCost ?? new Prisma.Decimal(0)),
+      new Prisma.Decimal(0),
+    );
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: movements.length,
+      totalIn,
+      totalOut,
+      netQuantityChange: totalIn - totalOut,
+      totalCost: totalCost.toDecimalPlaces(2),
+      movements,
+    };
+  }
+
+  async physicalCountAdjustments(query: InventoryReportQueryDto) {
+    const adjustmentDate = this.getOptionalDateRange(query.from, query.to);
+
+    const adjustments = await this.prisma.inventoryAdjustment.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.status ? { status: query.status } : {}),
+
+        ...(adjustmentDate ? { adjustmentDate } : {}),
+      },
+
+      include: {
+        branch: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+
+      orderBy: {
+        adjustmentDate: 'asc',
+      },
+    });
+
+    const postedAdjustments = adjustments.filter(
+      (adjustment) => adjustment.status === 'POSTED',
+    );
+
+    const totalAdjustments = postedAdjustments.length;
+
+    const totalIncrease = postedAdjustments.reduce(
+      (sum, adjustment) =>
+        sum +
+        adjustment.items.reduce(
+          (itemSum, item) => itemSum + Math.max(item.difference, 0),
+          0,
+        ),
+      0,
+    );
+
+    const totalDecrease = postedAdjustments.reduce(
+      (sum, adjustment) =>
+        sum +
+        adjustment.items.reduce(
+          (itemSum, item) => itemSum + Math.abs(Math.min(item.difference, 0)),
+          0,
+        ),
+      0,
+    );
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: totalAdjustments,
+      totalIncrease,
+      totalDecrease,
+      adjustments: postedAdjustments,
     };
   }
 }
