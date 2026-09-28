@@ -6,6 +6,7 @@ import { PettyCashReportsController } from './petty-cash-reports.controller.js';
 import { AccountsReceivableReportsController } from './accounts-receivable-reports.controller.js';
 import { AccountsPayableReportsController } from './accounts-payable-reports.controller.js';
 import { SalesReportsController } from './sales-reports.controller.js';
+import { ServiceReportsController } from './service-reports.controller.js';
 
 @Module({
   controllers: [
@@ -14,6 +15,7 @@ import { SalesReportsController } from './sales-reports.controller.js';
     AccountsReceivableReportsController,
     AccountsPayableReportsController,
     SalesReportsController,
+    ServiceReportsController,
   ],
   providers: [ReportsService],
 })

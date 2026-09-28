@@ -6,6 +6,7 @@ import { PettyCashReportQueryDto } from './dto/petty-cash-report-query.dto.js';
 import { AccountsReceivableReportQueryDto } from './dto/accounts-receivable-report-query.dto.js';
 import { AccountsPayableReportQueryDto } from './dto/accounts-payable-report-query.dto.js';
 import { SalesReportQueryDto } from './dto/sales-report-query.dto.js';
+import { ServiceReportQueryDto } from './dto/service-report-query.dto.js';
 
 @Injectable()
 export class ReportsService {
@@ -1684,6 +1685,438 @@ export class ReportsService {
       },
 
       returns,
+    };
+  }
+
+  private getServiceDateRange(query: ServiceReportQueryDto) {
+    const start = query.from
+      ? new Date(`${query.from}T00:00:00.000Z`)
+      : undefined;
+
+    const end = query.to ? new Date(`${query.to}T23:59:59.999Z`) : undefined;
+
+    if (
+      (start && Number.isNaN(start.getTime())) ||
+      (end && Number.isNaN(end.getTime()))
+    ) {
+      throw new BadRequestException('Invalid service report date range.');
+    }
+
+    if (start && end && start > end) {
+      throw new BadRequestException('from date cannot be after to date.');
+    }
+
+    return {
+      ...(start ? { gte: start } : {}),
+      ...(end ? { lte: end } : {}),
+    };
+  }
+
+  async openServiceJobs(query: ServiceReportQueryDto) {
+    const createdAt = this.getServiceDateRange(query);
+
+    const jobs = await this.prisma.serviceJob.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.customerId ? { customerId: query.customerId } : {}),
+        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+        status: {
+          notIn: ['COMPLETED', 'CANCELLED'],
+        },
+        ...(Object.keys(createdAt).length ? { createdAt } : {}),
+      },
+      include: {
+        branch: true,
+        customer: true,
+        technician: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            fullName: true,
+            role: true,
+            status: true,
+            branchId: true,
+          },
+        },
+        parts: {
+          include: {
+            product: true,
+          },
+        },
+        invoice: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: jobs.length,
+      jobs,
+    };
+  }
+
+  async completedRepairs(query: ServiceReportQueryDto) {
+    const completedAt = this.getServiceDateRange(query);
+
+    const jobs = await this.prisma.serviceJob.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.customerId ? { customerId: query.customerId } : {}),
+        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+        status: 'COMPLETED',
+        ...(Object.keys(completedAt).length
+          ? {
+              completedAt: completedAt,
+            }
+          : {}),
+      },
+      include: {
+        branch: true,
+        customer: true,
+        technician: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            fullName: true,
+            role: true,
+            status: true,
+            branchId: true,
+          },
+        },
+        parts: {
+          include: {
+            product: true,
+          },
+        },
+        invoice: true,
+      },
+      orderBy: {
+        completedAt: 'asc',
+      },
+    });
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: jobs.length,
+      jobs,
+    };
+  }
+
+  async pendingRepairs(query: ServiceReportQueryDto) {
+    const createdAt = this.getServiceDateRange(query);
+
+    const jobs = await this.prisma.serviceJob.findMany({
+      where: {
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.customerId ? { customerId: query.customerId } : {}),
+        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+        status: {
+          in: [
+            'AWAITING_APPROVAL',
+            'APPROVED',
+            'IN_PROGRESS',
+            'READY_FOR_RELEASE',
+          ],
+        },
+        ...(Object.keys(createdAt).length ? { createdAt } : {}),
+      },
+      include: {
+        branch: true,
+        customer: true,
+        technician: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            fullName: true,
+            role: true,
+            status: true,
+            branchId: true,
+          },
+        },
+        parts: {
+          include: {
+            product: true,
+          },
+        },
+        invoice: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: jobs.length,
+      jobs,
+    };
+  }
+
+  async servicePartsUsed(query: ServiceReportQueryDto) {
+    const createdAt = this.getServiceDateRange(query);
+
+    const parts = await this.prisma.serviceJobPart.findMany({
+      where: {
+        issuedQuantity: {
+          gt: 0,
+        },
+        ...(query.productId ? { productId: query.productId } : {}),
+        ...(query.branchId
+          ? {
+              serviceJob: {
+                branchId: query.branchId,
+              },
+            }
+          : {}),
+        ...(query.customerId
+          ? {
+              serviceJob: {
+                customerId: query.customerId,
+              },
+            }
+          : {}),
+        ...(query.technicianId
+          ? {
+              serviceJob: {
+                technicianId: query.technicianId,
+              },
+            }
+          : {}),
+        ...(Object.keys(createdAt).length
+          ? {
+              serviceJob: {
+                createdAt,
+              },
+            }
+          : {}),
+      },
+      include: {
+        product: true,
+        serviceJob: {
+          include: {
+            customer: true,
+            technician: {
+              select: {
+                id: true,
+                username: true,
+                email: true,
+                fullName: true,
+                role: true,
+                status: true,
+                branchId: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        serviceJob: {
+          createdAt: 'asc',
+        },
+      },
+    });
+
+    const totalCost = parts.reduce(
+      (sum, part) => sum.add(part.totalCost),
+      new Prisma.Decimal(0),
+    );
+
+    const totalQuantity = parts.reduce(
+      (sum, part) => sum + part.issuedQuantity,
+      0,
+    );
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: parts.length,
+      totalQuantity,
+      totalCost: totalCost.toDecimalPlaces(2),
+      parts,
+    };
+  }
+
+  async serviceRevenue(query: ServiceReportQueryDto) {
+    const invoiceDate = this.getServiceDateRange(query);
+
+    const invoices = await this.prisma.serviceInvoice.findMany({
+      where: {
+        status: 'POSTED',
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.customerId ? { customerId: query.customerId } : {}),
+        ...(Object.keys(invoiceDate).length ? { invoiceDate } : {}),
+      },
+      include: {
+        branch: true,
+        customer: true,
+        serviceJob: {
+          include: {
+            technician: {
+              select: {
+                id: true,
+                username: true,
+                email: true,
+                fullName: true,
+                role: true,
+                status: true,
+                branchId: true,
+              },
+            },
+          },
+        },
+        items: true,
+      },
+      orderBy: {
+        invoiceDate: 'asc',
+      },
+    });
+
+    const totalRevenue = invoices.reduce(
+      (sum, invoice) => sum.add(invoice.total),
+      new Prisma.Decimal(0),
+    );
+
+    const laborRevenue = invoices
+      .flatMap((invoice) => invoice.items)
+      .filter((item) => item.itemType === 'LABOR')
+      .reduce((sum, item) => sum.add(item.subtotal), new Prisma.Decimal(0));
+
+    const partsRevenue = invoices
+      .flatMap((invoice) => invoice.items)
+      .filter((item) => item.itemType === 'PART')
+      .reduce((sum, item) => sum.add(item.subtotal), new Prisma.Decimal(0));
+
+    const otherRevenue = invoices
+      .flatMap((invoice) => invoice.items)
+      .filter((item) => item.itemType === 'OTHER')
+      .reduce((sum, item) => sum.add(item.subtotal), new Prisma.Decimal(0));
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      invoiceCount: invoices.length,
+      totalRevenue: totalRevenue.toDecimalPlaces(2),
+      laborRevenue: laborRevenue.toDecimalPlaces(2),
+      partsRevenue: partsRevenue.toDecimalPlaces(2),
+      otherRevenue: otherRevenue.toDecimalPlaces(2),
+      invoices,
+    };
+  }
+
+  async technicianPerformance(query: ServiceReportQueryDto) {
+    const createdAt = this.getServiceDateRange(query);
+
+    const jobs = await this.prisma.serviceJob.findMany({
+      where: {
+        technicianId: {
+          not: null,
+        },
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+        ...(Object.keys(createdAt).length ? { createdAt } : {}),
+      },
+      include: {
+        technician: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            fullName: true,
+            role: true,
+            status: true,
+            branchId: true,
+          },
+        },
+        invoice: {
+          select: {
+            status: true,
+            total: true,
+          },
+        },
+      },
+    });
+
+    const grouped = new Map<
+      string,
+      {
+        technician: NonNullable<(typeof jobs)[number]['technician']>;
+        totalJobs: number;
+        completedJobs: number;
+        activeJobs: number;
+        cancelledJobs: number;
+        serviceRevenue: Prisma.Decimal;
+      }
+    >();
+
+    for (const job of jobs) {
+      if (!job.technician) {
+        continue;
+      }
+
+      const existing = grouped.get(job.technician.id);
+
+      const revenue =
+        job.invoice?.status === 'POSTED'
+          ? job.invoice.total
+          : new Prisma.Decimal(0);
+
+      if (!existing) {
+        grouped.set(job.technician.id, {
+          technician: job.technician,
+          totalJobs: 1,
+          completedJobs: job.status === 'COMPLETED' ? 1 : 0,
+          activeJobs:
+            job.status !== 'COMPLETED' && job.status !== 'CANCELLED' ? 1 : 0,
+          cancelledJobs: job.status === 'CANCELLED' ? 1 : 0,
+          serviceRevenue: revenue,
+        });
+
+        continue;
+      }
+
+      existing.totalJobs += 1;
+
+      if (job.status === 'COMPLETED') {
+        existing.completedJobs += 1;
+      }
+
+      if (job.status !== 'COMPLETED' && job.status !== 'CANCELLED') {
+        existing.activeJobs += 1;
+      }
+
+      if (job.status === 'CANCELLED') {
+        existing.cancelledJobs += 1;
+      }
+
+      existing.serviceRevenue = existing.serviceRevenue.add(revenue);
+    }
+
+    const technicians = Array.from(grouped.values()).map((item) => ({
+      technician: item.technician,
+      totalJobs: item.totalJobs,
+      completedJobs: item.completedJobs,
+      activeJobs: item.activeJobs,
+      cancelledJobs: item.cancelledJobs,
+      completionRate:
+        item.totalJobs > 0
+          ? Number(((item.completedJobs / item.totalJobs) * 100).toFixed(2))
+          : 0,
+      serviceRevenue: item.serviceRevenue.toDecimalPlaces(2),
+    }));
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count: technicians.length,
+      technicians,
     };
   }
 }
