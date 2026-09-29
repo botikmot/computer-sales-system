@@ -14,6 +14,10 @@ import { PettyCashModule } from './petty-cash/petty-cash.module.js';
 import { ReportsModule } from './reports/reports.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { UsersModule } from './users/users.module.js';
+import { BranchesModule } from './branches/branches.module.js';
+import { CategoriesModule } from './categories/categories.module.js';
+import { ProductsModule } from './products/products.module.js';
+import { SuppliersModule } from './suppliers/suppliers.module.js';
 
 @Module({
   imports: [
@@ -31,6 +35,10 @@ import { UsersModule } from './users/users.module.js';
     ReportsModule,
     AuthModule,
     UsersModule,
+    BranchesModule,
+    CategoriesModule,
+    ProductsModule,
+    SuppliersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
