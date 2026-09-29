@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreateCustomerPaymentDto } from './dto/create-customer-payment.dto.js';
 
@@ -17,21 +20,21 @@ export class CustomerPaymentController {
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Post()
   create(
-    @Body()
-    dto: CreateCustomerPaymentDto,
+    @Body() dto: CreateCustomerPaymentDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.customerPaymentService.create(dto);
+    return this.customerPaymentService.create(dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get()
-  findAll() {
-    return this.customerPaymentService.findAll();
+  findAll(@CurrentUser() user: AuthenticatedUser) {
+    return this.customerPaymentService.findAll(user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customerPaymentService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.customerPaymentService.findOne(id, user);
   }
 }

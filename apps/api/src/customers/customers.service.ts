@@ -4,12 +4,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
+
 import { CreateCustomerDto } from './dto/create-customer.dto.js';
 
 @Injectable()
 export class CustomersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   async create(dto: CreateCustomerDto) {
     const existing = await this.prisma.customer.findUnique({
@@ -43,14 +51,56 @@ export class CustomersService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
+    /*
+     * Customer is global master data.
+     *
+     * We therefore allow the customer record itself to be read
+     * without branch filtering.
+     *
+     * However, branch-specific transactions attached to the
+     * customer must be restricted to the user's branch.
+     */
+
+    const transactionWhere =
+      user.role === UserRole.ADMIN
+        ? undefined
+        : {
+            branchId: user.branchId!,
+          };
+
+    if (user.role !== UserRole.ADMIN) {
+      this.branchAccessService.assertCanAccessOptionalBranch(
+        user,
+        user.branchId,
+      );
+    }
+
     const customer = await this.prisma.customer.findUnique({
       where: {
         id,
       },
+
       include: {
-        salesInquiries: true,
-        salesQuotations: true,
+        salesInquiries:
+          transactionWhere !== undefined
+            ? {
+                where: transactionWhere,
+                orderBy: {
+                  createdAt: 'desc',
+                },
+              }
+            : true,
+
+        salesQuotations:
+          transactionWhere !== undefined
+            ? {
+                where: transactionWhere,
+                orderBy: {
+                  createdAt: 'desc',
+                },
+              }
+            : true,
       },
     });
 

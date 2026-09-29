@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,12 +21,23 @@ import { AddServiceJobPartDto } from './dto/add-service-job-part.dto.js';
 import { CreateServiceJobDto } from './dto/create-service-job.dto.js';
 import { DiagnoseServiceJobDto } from './dto/diagnose-service-job.dto.js';
 import { IssueServicePartsDto } from './dto/issue-service-parts.dto.js';
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 @Injectable()
 export class ServiceRepairService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async create(dto: CreateServiceJobDto) {
+  private assertJobAccess(user: AuthenticatedUser, branchId: string): void {
+    this.branchAccessService.assertCanAccessBranch(user, branchId);
+  }
+
+  async create(dto: CreateServiceJobDto, currentUser: AuthenticatedUser) {
+    this.branchAccessService.assertCanAccessBranch(currentUser, dto.branchId);
+
     const branch = await this.prisma.branch.findUnique({
       where: {
         id: dto.branchId,
@@ -114,8 +126,21 @@ export class ServiceRepairService {
     });
   }
 
-  async findAll() {
+  async findAll(currentUser: AuthenticatedUser) {
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      currentUser,
+      currentUser.branchId,
+    );
+
+    const where: Prisma.ServiceJobWhereInput =
+      currentUser.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: currentUser.branchId!,
+          };
+
     return this.prisma.serviceJob.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -143,7 +168,7 @@ export class ServiceRepairService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, currentUser: AuthenticatedUser) {
     const job = await this.prisma.serviceJob.findUnique({
       where: {
         id,
@@ -180,10 +205,16 @@ export class ServiceRepairService {
       throw new NotFoundException('Service job not found.');
     }
 
+    this.assertJobAccess(currentUser, job.branchId);
+
     return job;
   }
 
-  async diagnose(id: string, dto: DiagnoseServiceJobDto) {
+  async diagnose(
+    id: string,
+    dto: DiagnoseServiceJobDto,
+    user: AuthenticatedUser,
+  ) {
     const job = await this.prisma.serviceJob.findUnique({
       where: {
         id,
@@ -193,6 +224,8 @@ export class ServiceRepairService {
     if (!job) {
       throw new NotFoundException('Service job not found.');
     }
+
+    this.assertJobAccess(user, job.branchId);
 
     if (
       job.status !== ServiceJobStatus.DRAFT &&
@@ -236,7 +269,11 @@ export class ServiceRepairService {
     });
   }
 
-  async addPart(id: string, dto: AddServiceJobPartDto) {
+  async addPart(
+    id: string,
+    dto: AddServiceJobPartDto,
+    user: AuthenticatedUser,
+  ) {
     const job = await this.prisma.serviceJob.findUnique({
       where: {
         id,
@@ -246,6 +283,8 @@ export class ServiceRepairService {
     if (!job) {
       throw new NotFoundException('Service job not found.');
     }
+
+    this.assertJobAccess(user, job.branchId);
 
     if (
       job.status !== ServiceJobStatus.DRAFT &&
@@ -308,7 +347,7 @@ export class ServiceRepairService {
     });
   }
 
-  async approve(id: string) {
+  async approve(id: string, user: AuthenticatedUser) {
     const job = await this.prisma.serviceJob.findUnique({
       where: {
         id,
@@ -318,6 +357,8 @@ export class ServiceRepairService {
     if (!job) {
       throw new NotFoundException('Service job not found.');
     }
+
+    this.assertJobAccess(user, job.branchId);
 
     if (job.status !== ServiceJobStatus.AWAITING_APPROVAL) {
       throw new BadRequestException(
@@ -363,7 +404,7 @@ export class ServiceRepairService {
     });
   }
 
-  async start(id: string) {
+  async start(id: string, user: AuthenticatedUser) {
     const job = await this.prisma.serviceJob.findUnique({
       where: {
         id,
@@ -373,6 +414,8 @@ export class ServiceRepairService {
     if (!job) {
       throw new NotFoundException('Service job not found.');
     }
+
+    this.assertJobAccess(user, job.branchId);
 
     if (job.status !== ServiceJobStatus.APPROVED) {
       throw new BadRequestException(
@@ -411,7 +454,11 @@ export class ServiceRepairService {
     });
   }
 
-  async issueParts(id: string, dto: IssueServicePartsDto) {
+  async issueParts(
+    id: string,
+    dto: IssueServicePartsDto,
+    user: AuthenticatedUser,
+  ) {
     return this.prisma.$transaction(
       async (tx) => {
         const job = await tx.serviceJob.findUnique({
@@ -426,6 +473,8 @@ export class ServiceRepairService {
         if (!job) {
           throw new NotFoundException('Service job not found.');
         }
+
+        this.assertJobAccess(user, job.branchId);
 
         if (job.status !== ServiceJobStatus.IN_PROGRESS) {
           throw new BadRequestException(
@@ -594,7 +643,7 @@ export class ServiceRepairService {
     );
   }
 
-  async complete(id: string) {
+  async complete(id: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const job = await tx.serviceJob.findUnique({
         where: {
@@ -608,6 +657,8 @@ export class ServiceRepairService {
       if (!job) {
         throw new NotFoundException('Service job not found.');
       }
+
+      this.assertJobAccess(user, job.branchId);
 
       if (job.status !== ServiceJobStatus.IN_PROGRESS) {
         throw new BadRequestException(
@@ -657,7 +708,7 @@ export class ServiceRepairService {
     });
   }
 
-  async cancel(id: string) {
+  async cancel(id: string, user: AuthenticatedUser) {
     const job = await this.prisma.serviceJob.findUnique({
       where: {
         id,
@@ -667,6 +718,8 @@ export class ServiceRepairService {
     if (!job) {
       throw new NotFoundException('Service job not found.');
     }
+
+    this.assertJobAccess(user, job.branchId);
 
     if (
       job.status === ServiceJobStatus.COMPLETED ||
@@ -714,7 +767,11 @@ export class ServiceRepairService {
       .toUpperCase()}`;
   }
 
-  async assignTechnician(id: string, technicianId: string) {
+  async assignTechnician(
+    id: string,
+    technicianId: string,
+    user: AuthenticatedUser,
+  ) {
     const job = await this.prisma.serviceJob.findUnique({
       where: {
         id,
@@ -724,6 +781,8 @@ export class ServiceRepairService {
     if (!job) {
       throw new NotFoundException('Service job not found.');
     }
+
+    this.assertJobAccess(user, job.branchId);
 
     if (
       job.status !== ServiceJobStatus.DRAFT &&

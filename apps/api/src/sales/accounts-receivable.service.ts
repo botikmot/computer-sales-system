@@ -5,15 +5,36 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import type { AccountsReceivableWithRelations } from './accounts-receivable.types.js';
 
 @Injectable()
 export class AccountsReceivableService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async findAll(): Promise<AccountsReceivableWithRelations[]> {
+  async findAll(
+    user: AuthenticatedUser,
+  ): Promise<AccountsReceivableWithRelations[]> {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.accountsReceivable.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -25,7 +46,10 @@ export class AccountsReceivableService {
     });
   }
 
-  async findOne(id: string): Promise<AccountsReceivableWithRelations> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<AccountsReceivableWithRelations> {
     const record = await this.prisma.accountsReceivable.findUnique({
       where: {
         id,
@@ -41,10 +65,12 @@ export class AccountsReceivableService {
       throw new NotFoundException('Accounts receivable not found.');
     }
 
+    this.branchAccessService.assertCanAccessBranch(user, record.branchId);
+
     return record;
   }
 
-  async createFromInvoice(salesInvoiceId: string) {
+  async createFromInvoice(salesInvoiceId: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const invoice = await tx.salesInvoice.findUnique({
         where: {
@@ -58,6 +84,9 @@ export class AccountsReceivableService {
       if (!invoice) {
         throw new NotFoundException('Sales invoice not found.');
       }
+
+      // The invoice branch must be accessible before creating A/R.
+      this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
 
       if (invoice.status !== 'POSTED') {
         throw new BadRequestException(

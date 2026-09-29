@@ -25,9 +25,10 @@ import { AccountsReceivableService } from './accounts-receivable.service.js';
 
 import { SalesReturnController } from './sales-return.controller.js';
 import { SalesReturnService } from './sales-return.service.js';
+import { AuthModule } from '../auth/auth.module.js';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   controllers: [
     SalesInquiryController,
     SalesQuotationController,

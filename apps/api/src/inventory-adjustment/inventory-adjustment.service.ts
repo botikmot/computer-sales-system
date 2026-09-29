@@ -9,8 +9,11 @@ import {
   InventoryAdjustmentStatus,
   InventoryMovementType,
   Prisma,
+  UserRole,
 } from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateInventoryAdjustmentDto } from './dto/create-inventory-adjustment.dto.js';
@@ -19,9 +22,15 @@ import { RejectInventoryAdjustmentDto } from './dto/reject-inventory-adjustment.
 
 @Injectable()
 export class InventoryAdjustmentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async create(dto: CreateInventoryAdjustmentDto) {
+  async create(dto: CreateInventoryAdjustmentDto, user: AuthenticatedUser) {
+    // User can only create an adjustment for an accessible branch.
+    this.branchAccessService.assertCanAccessBranch(user, dto.branchId);
+
     const branch = await this.prisma.branch.findUnique({
       where: {
         id: dto.branchId,
@@ -45,6 +54,7 @@ export class InventoryAdjustmentService {
         notes: dto.notes,
         status: InventoryAdjustmentStatus.DRAFT,
       },
+
       include: {
         branch: true,
         items: {
@@ -56,36 +66,53 @@ export class InventoryAdjustmentService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.inventoryAdjustment.findMany({
+      where,
+
       orderBy: {
         createdAt: 'desc',
       },
+
       include: {
         branch: true,
+
         items: {
           include: {
             product: true,
           },
         },
+
         createdBy: true,
         approvedBy: true,
       },
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const adjustment = await this.prisma.inventoryAdjustment.findUnique({
       where: {
         id,
       },
+
       include: {
         branch: true,
+
         items: {
           include: {
             product: true,
           },
         },
+
         createdBy: true,
         approvedBy: true,
       },
@@ -95,10 +122,17 @@ export class InventoryAdjustmentService {
       throw new NotFoundException('Inventory adjustment not found.');
     }
 
+    // Always authorize against the actual record branch.
+    this.branchAccessService.assertCanAccessBranch(user, adjustment.branchId);
+
     return adjustment;
   }
 
-  async count(id: string, dto: CountInventoryAdjustmentDto) {
+  async count(
+    id: string,
+    dto: CountInventoryAdjustmentDto,
+    user: AuthenticatedUser,
+  ) {
     return this.prisma.$transaction(
       async (tx) => {
         const adjustment = await tx.inventoryAdjustment.findUnique({
@@ -110,6 +144,12 @@ export class InventoryAdjustmentService {
         if (!adjustment) {
           throw new NotFoundException('Inventory adjustment not found.');
         }
+
+        // Defense-in-depth branch authorization inside transaction.
+        this.branchAccessService.assertCanAccessBranch(
+          user,
+          adjustment.branchId,
+        );
 
         if (adjustment.status !== InventoryAdjustmentStatus.DRAFT) {
           throw new BadRequestException(
@@ -172,9 +212,11 @@ export class InventoryAdjustmentService {
 
         const items = dto.items.map((item) => {
           const balance = balanceMap.get(item.productId);
+
           const product = productMap.get(item.productId)!;
 
           const systemQuantity = balance?.quantity ?? 0;
+
           const averageCost =
             balance?.averageCost ??
             product.defaultCostPrice ??
@@ -226,11 +268,14 @@ export class InventoryAdjustmentService {
           where: {
             id,
           },
+
           data: {
             status: nextStatus,
           },
+
           include: {
             branch: true,
+
             items: {
               include: {
                 product: true,
@@ -239,18 +284,20 @@ export class InventoryAdjustmentService {
           },
         });
       },
+
       {
         isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
       },
     );
   }
 
-  async confirm(id: string) {
+  async confirm(id: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const adjustment = await tx.inventoryAdjustment.findUnique({
         where: {
           id,
         },
+
         include: {
           items: true,
         },
@@ -259,6 +306,8 @@ export class InventoryAdjustmentService {
       if (!adjustment) {
         throw new NotFoundException('Inventory adjustment not found.');
       }
+
+      this.branchAccessService.assertCanAccessBranch(user, adjustment.branchId);
 
       if (adjustment.status !== InventoryAdjustmentStatus.COUNTED) {
         throw new BadRequestException(
@@ -284,11 +333,14 @@ export class InventoryAdjustmentService {
         where: {
           id,
         },
+
         data: {
           status: InventoryAdjustmentStatus.CONFIRMED,
         },
+
         include: {
           branch: true,
+
           items: {
             include: {
               product: true,
@@ -299,12 +351,13 @@ export class InventoryAdjustmentService {
     });
   }
 
-  async submitForApproval(id: string) {
+  async submitForApproval(id: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const adjustment = await tx.inventoryAdjustment.findUnique({
         where: {
           id,
         },
+
         include: {
           items: true,
         },
@@ -313,6 +366,8 @@ export class InventoryAdjustmentService {
       if (!adjustment) {
         throw new NotFoundException('Inventory adjustment not found.');
       }
+
+      this.branchAccessService.assertCanAccessBranch(user, adjustment.branchId);
 
       if (adjustment.status !== InventoryAdjustmentStatus.COUNTED) {
         throw new BadRequestException(
@@ -338,11 +393,14 @@ export class InventoryAdjustmentService {
         where: {
           id,
         },
+
         data: {
           status: InventoryAdjustmentStatus.FOR_APPROVAL,
         },
+
         include: {
           branch: true,
+
           items: {
             include: {
               product: true,
@@ -353,7 +411,7 @@ export class InventoryAdjustmentService {
     });
   }
 
-  async approve(id: string) {
+  async approve(id: string, user: AuthenticatedUser) {
     const adjustment = await this.prisma.inventoryAdjustment.findUnique({
       where: {
         id,
@@ -363,6 +421,8 @@ export class InventoryAdjustmentService {
     if (!adjustment) {
       throw new NotFoundException('Inventory adjustment not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, adjustment.branchId);
 
     if (adjustment.status !== InventoryAdjustmentStatus.FOR_APPROVAL) {
       throw new BadRequestException(
@@ -374,12 +434,15 @@ export class InventoryAdjustmentService {
       where: {
         id,
       },
+
       data: {
         status: InventoryAdjustmentStatus.APPROVED,
         approvedAt: new Date(),
       },
+
       include: {
         branch: true,
+
         items: {
           include: {
             product: true,
@@ -389,7 +452,11 @@ export class InventoryAdjustmentService {
     });
   }
 
-  async reject(id: string, dto: RejectInventoryAdjustmentDto) {
+  async reject(
+    id: string,
+    dto: RejectInventoryAdjustmentDto,
+    user: AuthenticatedUser,
+  ) {
     const adjustment = await this.prisma.inventoryAdjustment.findUnique({
       where: {
         id,
@@ -399,6 +466,8 @@ export class InventoryAdjustmentService {
     if (!adjustment) {
       throw new NotFoundException('Inventory adjustment not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, adjustment.branchId);
 
     if (adjustment.status !== InventoryAdjustmentStatus.FOR_APPROVAL) {
       throw new BadRequestException(
@@ -410,13 +479,16 @@ export class InventoryAdjustmentService {
       where: {
         id,
       },
+
       data: {
         status: InventoryAdjustmentStatus.REJECTED,
         rejectedAt: new Date(),
         rejectionReason: dto.rejectionReason,
       },
+
       include: {
         branch: true,
+
         items: {
           include: {
             product: true,
@@ -426,13 +498,14 @@ export class InventoryAdjustmentService {
     });
   }
 
-  async post(id: string) {
+  async post(id: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(
       async (tx) => {
         const adjustment = await tx.inventoryAdjustment.findUnique({
           where: {
             id,
           },
+
           include: {
             items: true,
           },
@@ -441,6 +514,12 @@ export class InventoryAdjustmentService {
         if (!adjustment) {
           throw new NotFoundException('Inventory adjustment not found.');
         }
+
+        // Critical: branch check immediately before inventory mutation.
+        this.branchAccessService.assertCanAccessBranch(
+          user,
+          adjustment.branchId,
+        );
 
         const canPost =
           adjustment.status === InventoryAdjustmentStatus.CONFIRMED ||
@@ -506,6 +585,7 @@ export class InventoryAdjustmentService {
               where: {
                 id: balance.id,
               },
+
               data: {
                 quantity: newQuantity,
                 averageCost,
@@ -547,11 +627,14 @@ export class InventoryAdjustmentService {
           where: {
             id,
           },
+
           data: {
             status: InventoryAdjustmentStatus.POSTED,
           },
+
           include: {
             branch: true,
+
             items: {
               include: {
                 product: true,
@@ -560,13 +643,14 @@ export class InventoryAdjustmentService {
           },
         });
       },
+
       {
         isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
       },
     );
   }
 
-  async cancel(id: string) {
+  async cancel(id: string, user: AuthenticatedUser) {
     const adjustment = await this.prisma.inventoryAdjustment.findUnique({
       where: {
         id,
@@ -576,6 +660,8 @@ export class InventoryAdjustmentService {
     if (!adjustment) {
       throw new NotFoundException('Inventory adjustment not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, adjustment.branchId);
 
     if (
       adjustment.status === InventoryAdjustmentStatus.POSTED ||
@@ -590,11 +676,14 @@ export class InventoryAdjustmentService {
       where: {
         id,
       },
+
       data: {
         status: InventoryAdjustmentStatus.CANCELLED,
       },
+
       include: {
         branch: true,
+
         items: {
           include: {
             product: true,

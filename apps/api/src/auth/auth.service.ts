@@ -41,17 +41,6 @@ export class AuthService {
       }
     }
 
-    if (dto.branchId) {
-      const branch = await this.prisma.branch.findUnique({
-        where: { id: dto.branchId },
-        select: { id: true },
-      });
-
-      if (!branch) {
-        throw new ConflictException('Branch not found');
-      }
-    }
-
     const passwordHash = await bcrypt.hash(dto.password, 12);
 
     const user = await this.prisma.user.create({
@@ -60,8 +49,6 @@ export class AuthService {
         email,
         fullName: dto.fullName.trim(),
         passwordHash,
-        role: dto.role,
-        branchId: dto.branchId,
       },
       select: {
         id: true,

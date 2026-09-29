@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@computer-sales/database';
+import { Prisma, UserRole } from '@computer-sales/database';
 import { PrismaService } from '../database/prisma.service.js';
 import { CashBankReportQueryDto } from './dto/cash-bank-report-query.dto.js';
 import { PettyCashReportQueryDto } from './dto/petty-cash-report-query.dto.js';
@@ -11,9 +11,47 @@ import { ManagementReportQueryDto } from './dto/management-report-query.dto.js';
 import { PurchasingReportQueryDto } from './dto/purchasing-report-query.dto.js';
 import { InventoryReportQueryDto } from './dto/inventory-report-query.dto.js';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+
 @Injectable()
 export class ReportsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
+
+  private scopeReportQuery<T extends { branchId?: string }>(
+    query: T,
+    user: AuthenticatedUser,
+  ): T {
+    /*
+     * ADMIN may optionally request a specific branch or all branches.
+     */
+    if (user.role === UserRole.ADMIN) {
+      if (query.branchId) {
+        this.branchAccessService.assertCanAccessBranch(user, query.branchId);
+      }
+
+      return query;
+    }
+
+    /*
+     * Non-admin users must have an assigned branch.
+     */
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      user,
+      query.branchId,
+    );
+
+    /*
+     * Force every report query to the user's actual branch.
+     */
+    return {
+      ...query,
+      branchId: user.branchId!,
+    };
+  }
 
   private getRequiredManagementPeriod(query: ManagementReportQueryDto) {
     if (!query.from || !query.to) {
@@ -39,7 +77,11 @@ export class ReportsService {
     return date;
   }
 
-  async incomeStatement(query: ManagementReportQueryDto) {
+  async incomeStatement(
+    query: ManagementReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
     const dateRange = this.getRequiredManagementPeriod(query);
 
     const [
@@ -341,7 +383,12 @@ export class ReportsService {
     };
   }
 
-  async dailyCashReport(query: CashBankReportQueryDto) {
+  async dailyCashReport(
+    query: CashBankReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const { start, end } = this.getDayRange(query.date);
 
     const accounts = await this.prisma.cashBankAccount.findMany({
@@ -444,7 +491,9 @@ export class ReportsService {
     };
   }
 
-  async cashReceipts(query: CashBankReportQueryDto) {
+  async cashReceipts(query: CashBankReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const { start, end } = this.getDateRange(query);
 
     const transactions = await this.prisma.cashBankTransaction.findMany({
@@ -472,7 +521,12 @@ export class ReportsService {
     };
   }
 
-  async cashDisbursements(query: CashBankReportQueryDto) {
+  async cashDisbursements(
+    query: CashBankReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const { start, end } = this.getDateRange(query);
 
     const transactions = await this.prisma.cashBankTransaction.findMany({
@@ -500,7 +554,12 @@ export class ReportsService {
     };
   }
 
-  async bankTransactions(query: CashBankReportQueryDto) {
+  async bankTransactions(
+    query: CashBankReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const { start, end } = this.getDateRange(query);
 
     const transactions = await this.prisma.cashBankTransaction.findMany({
@@ -539,7 +598,12 @@ export class ReportsService {
     };
   }
 
-  async bankReconciliation(query: CashBankReportQueryDto) {
+  async bankReconciliation(
+    query: CashBankReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const where: Prisma.BankReconciliationWhereInput = {
       ...(query.branchId ? { branchId: query.branchId } : {}),
       ...(query.accountId ? { accountId: query.accountId } : {}),
@@ -575,7 +639,12 @@ export class ReportsService {
     });
   }
 
-  async pettyCashVouchers(query: PettyCashReportQueryDto) {
+  async pettyCashVouchers(
+    query: PettyCashReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const expenseDate = this.getOptionalDateRange(query.from, query.to);
 
     const vouchers = await this.prisma.pettyCashVoucher.findMany({
@@ -618,7 +687,12 @@ export class ReportsService {
     };
   }
 
-  async pettyCashReplenishments(query: PettyCashReportQueryDto) {
+  async pettyCashReplenishments(
+    query: PettyCashReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const replenishmentDate = this.getOptionalDateRange(query.from, query.to);
 
     const replenishments = await this.prisma.pettyCashReplenishment.findMany({
@@ -663,7 +737,12 @@ export class ReportsService {
     };
   }
 
-  async pettyCashTransactions(query: PettyCashReportQueryDto) {
+  async pettyCashTransactions(
+    query: PettyCashReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const expenseDate = this.getOptionalDateRange(query.from, query.to);
 
     const replenishmentDate = this.getOptionalDateRange(query.from, query.to);
@@ -785,7 +864,12 @@ export class ReportsService {
     };
   }
 
-  async pettyCashBalance(query: PettyCashReportQueryDto) {
+  async pettyCashBalance(
+    query: PettyCashReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const funds = await this.prisma.pettyCashFund.findMany({
       where: {
         ...(query.fundId ? { id: query.fundId } : {}),
@@ -848,7 +932,9 @@ export class ReportsService {
 
   async accountsReceivableCustomerBalances(
     query: AccountsReceivableReportQueryDto,
+    user: AuthenticatedUser,
   ) {
+    query = this.scopeReportQuery(query, user);
     const records = await this.prisma.accountsReceivable.findMany({
       where: {
         ...(query.branchId ? { branchId: query.branchId } : {}),
@@ -915,7 +1001,11 @@ export class ReportsService {
     };
   }
 
-  async outstandingReceivables(query: AccountsReceivableReportQueryDto) {
+  async outstandingReceivables(
+    query: AccountsReceivableReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
     const records = await this.prisma.accountsReceivable.findMany({
       where: {
         ...(query.branchId ? { branchId: query.branchId } : {}),
@@ -959,7 +1049,12 @@ export class ReportsService {
     };
   }
 
-  async agingOfReceivables(query: AccountsReceivableReportQueryDto) {
+  async agingOfReceivables(
+    query: AccountsReceivableReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const asOfDate = query.asOfDate
       ? new Date(`${query.asOfDate}T23:59:59.999Z`)
       : new Date();
@@ -1066,7 +1161,12 @@ export class ReportsService {
     };
   }
 
-  async accountsReceivableCollections(query: AccountsReceivableReportQueryDto) {
+  async accountsReceivableCollections(
+    query: AccountsReceivableReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const paymentDate =
       query.from || query.to
         ? {
@@ -1139,7 +1239,12 @@ export class ReportsService {
     };
   }
 
-  async accountsPayableSupplierBalances(query: AccountsPayableReportQueryDto) {
+  async accountsPayableSupplierBalances(
+    query: AccountsPayableReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const records = await this.prisma.accountsPayable.findMany({
       where: {
         ...(query.branchId ? { branchId: query.branchId } : {}),
@@ -1204,7 +1309,11 @@ export class ReportsService {
     };
   }
 
-  async outstandingPayables(query: AccountsPayableReportQueryDto) {
+  async outstandingPayables(
+    query: AccountsPayableReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
     const records = await this.prisma.accountsPayable.findMany({
       where: {
         ...(query.branchId ? { branchId: query.branchId } : {}),
@@ -1255,7 +1364,11 @@ export class ReportsService {
     };
   }
 
-  async dueOverduePayables(query: AccountsPayableReportQueryDto) {
+  async dueOverduePayables(
+    query: AccountsPayableReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
     const asOfDate = query.asOfDate
       ? new Date(`${query.asOfDate}T23:59:59.999Z`)
       : new Date();
@@ -1349,7 +1462,12 @@ export class ReportsService {
     };
   }
 
-  async accountsPayablePaymentHistory(query: AccountsPayableReportQueryDto) {
+  async accountsPayablePaymentHistory(
+    query: AccountsPayableReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const paymentDate =
       query.from || query.to
         ? {
@@ -1405,7 +1523,8 @@ export class ReportsService {
     };
   }
 
-  async dailySales(query: SalesReportQueryDto) {
+  async dailySales(query: SalesReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
     if (!query.date) {
       throw new BadRequestException('date is required.');
     }
@@ -1466,7 +1585,9 @@ export class ReportsService {
     };
   }
 
-  async monthlySales(query: SalesReportQueryDto) {
+  async monthlySales(query: SalesReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     if (!query.year || !query.month) {
       throw new BadRequestException('year and month are required.');
     }
@@ -1530,7 +1651,9 @@ export class ReportsService {
     };
   }
 
-  async salesByCustomer(query: SalesReportQueryDto) {
+  async salesByCustomer(query: SalesReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const { start, end } = this.getSalesDateRange(query);
 
     const invoices = await this.prisma.salesInvoice.findMany({
@@ -1599,7 +1722,9 @@ export class ReportsService {
     };
   }
 
-  async salesByProduct(query: SalesReportQueryDto) {
+  async salesByProduct(query: SalesReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const { start, end } = this.getSalesDateRange(query);
 
     const invoices = await this.prisma.salesInvoice.findMany({
@@ -1673,7 +1798,12 @@ export class ReportsService {
     };
   }
 
-  async salesBySalesperson(query: SalesReportQueryDto) {
+  async salesBySalesperson(
+    query: SalesReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const { start, end } = this.getSalesDateRange(query);
 
     const invoices = await this.prisma.salesInvoice.findMany({
@@ -1756,7 +1886,9 @@ export class ReportsService {
     };
   }
 
-  async salesReturns(query: SalesReportQueryDto) {
+  async salesReturns(query: SalesReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const returnDate =
       query.from || query.to
         ? {
@@ -1907,7 +2039,8 @@ export class ReportsService {
     };
   }
 
-  async openServiceJobs(query: ServiceReportQueryDto) {
+  async openServiceJobs(query: ServiceReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
     const createdAt = this.getServiceDateRange(query);
 
     const jobs = await this.prisma.serviceJob.findMany({
@@ -1954,7 +2087,12 @@ export class ReportsService {
     };
   }
 
-  async completedRepairs(query: ServiceReportQueryDto) {
+  async completedRepairs(
+    query: ServiceReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const completedAt = this.getServiceDateRange(query);
 
     const jobs = await this.prisma.serviceJob.findMany({
@@ -2003,7 +2141,9 @@ export class ReportsService {
     };
   }
 
-  async pendingRepairs(query: ServiceReportQueryDto) {
+  async pendingRepairs(query: ServiceReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const createdAt = this.getServiceDateRange(query);
 
     const jobs = await this.prisma.serviceJob.findMany({
@@ -2055,7 +2195,12 @@ export class ReportsService {
     };
   }
 
-  async servicePartsUsed(query: ServiceReportQueryDto) {
+  async servicePartsUsed(
+    query: ServiceReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const createdAt = this.getServiceDateRange(query);
 
     const parts = await this.prisma.serviceJobPart.findMany({
@@ -2139,7 +2284,9 @@ export class ReportsService {
     };
   }
 
-  async serviceRevenue(query: ServiceReportQueryDto) {
+  async serviceRevenue(query: ServiceReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const invoiceDate = this.getServiceDateRange(query);
 
     const invoices = await this.prisma.serviceInvoice.findMany({
@@ -2206,7 +2353,12 @@ export class ReportsService {
     };
   }
 
-  async technicianPerformance(query: ServiceReportQueryDto) {
+  async technicianPerformance(
+    query: ServiceReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const createdAt = this.getServiceDateRange(query);
 
     const jobs = await this.prisma.serviceJob.findMany({
@@ -2315,7 +2467,9 @@ export class ReportsService {
     };
   }
 
-  async balanceSheet(query: ManagementReportQueryDto) {
+  async balanceSheet(query: ManagementReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const asOfDate = this.getManagementAsOfDate(query.asOfDate);
 
     const accounts = await this.prisma.cashBankAccount.findMany({
@@ -2467,7 +2621,9 @@ export class ReportsService {
     };
   }
 
-  async cashFlow(query: ManagementReportQueryDto) {
+  async cashFlow(query: ManagementReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const dateRange = this.getRequiredManagementPeriod(query);
 
     const [transactions, pettyCashExpenses] = await Promise.all([
@@ -2595,8 +2751,13 @@ export class ReportsService {
     };
   }
 
-  async salesProfitability(query: ManagementReportQueryDto) {
-    const statement = await this.incomeStatement(query);
+  async salesProfitability(
+    query: ManagementReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
+    const statement = await this.incomeStatement(query, user);
 
     return {
       from: statement.from,
@@ -2616,7 +2777,11 @@ export class ReportsService {
     };
   }
 
-  async inventoryValuation(query: ManagementReportQueryDto) {
+  async inventoryValuation(
+    query: ManagementReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
     const balances = await this.prisma.inventoryBalance.findMany({
       where: {
         ...(query.branchId ? { branchId: query.branchId } : {}),
@@ -2667,7 +2832,8 @@ export class ReportsService {
     };
   }
 
-  async arApAging(query: ManagementReportQueryDto) {
+  async arApAging(query: ManagementReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
     const asOfDate = this.getManagementAsOfDate(query.asOfDate);
 
     const [receivables, payables] = await Promise.all([
@@ -2798,7 +2964,12 @@ export class ReportsService {
     };
   }
 
-  async purchaseOrderReport(query: PurchasingReportQueryDto) {
+  async purchaseOrderReport(
+    query: PurchasingReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const orderDate = this.getOptionalDateRange(query.from, query.to);
 
     const purchaseOrders = await this.prisma.purchaseOrder.findMany({
@@ -2838,7 +3009,12 @@ export class ReportsService {
     };
   }
 
-  async purchasesBySupplier(query: PurchasingReportQueryDto) {
+  async purchasesBySupplier(
+    query: PurchasingReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const invoiceDate = this.getOptionalDateRange(query.from, query.to);
 
     const invoices = await this.prisma.purchaseInvoice.findMany({
@@ -2916,7 +3092,12 @@ export class ReportsService {
     };
   }
 
-  async purchasesByDate(query: PurchasingReportQueryDto) {
+  async purchasesByDate(
+    query: PurchasingReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const invoiceDate = this.getOptionalDateRange(query.from, query.to);
 
     const invoices = await this.prisma.purchaseInvoice.findMany({
@@ -2986,7 +3167,12 @@ export class ReportsService {
     };
   }
 
-  async outstandingPurchaseOrders(query: PurchasingReportQueryDto) {
+  async outstandingPurchaseOrders(
+    query: PurchasingReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const orderDate = this.getOptionalDateRange(query.from, query.to);
 
     const purchaseOrders = await this.prisma.purchaseOrder.findMany({
@@ -3055,7 +3241,12 @@ export class ReportsService {
     };
   }
 
-  async inventoryStock(query: InventoryReportQueryDto) {
+  async inventoryStock(
+    query: InventoryReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const balances = await this.prisma.inventoryBalance.findMany({
       where: {
         ...(query.branchId ? { branchId: query.branchId } : {}),
@@ -3111,7 +3302,9 @@ export class ReportsService {
     };
   }
 
-  async stockCard(query: InventoryReportQueryDto) {
+  async stockCard(query: InventoryReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const createdAt = this.getOptionalDateRange(query.from, query.to);
 
     const movements = await this.prisma.inventoryMovement.findMany({
@@ -3166,7 +3359,12 @@ export class ReportsService {
     };
   }
 
-  async inventoryValuationReport(query: InventoryReportQueryDto) {
+  async inventoryValuationReport(
+    query: InventoryReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
+
     const balances = await this.prisma.inventoryBalance.findMany({
       where: {
         ...(query.branchId ? { branchId: query.branchId } : {}),
@@ -3212,7 +3410,9 @@ export class ReportsService {
     };
   }
 
-  async lowStock(query: InventoryReportQueryDto) {
+  async lowStock(query: InventoryReportQueryDto, user: AuthenticatedUser) {
+    query = this.scopeReportQuery(query, user);
+
     const threshold = query.threshold ?? 5;
 
     const balances = await this.prisma.inventoryBalance.findMany({
@@ -3257,7 +3457,11 @@ export class ReportsService {
     };
   }
 
-  async inventoryMovement(query: InventoryReportQueryDto) {
+  async inventoryMovement(
+    query: InventoryReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
     const createdAt = this.getOptionalDateRange(query.from, query.to);
 
     const movements = await this.prisma.inventoryMovement.findMany({
@@ -3303,7 +3507,11 @@ export class ReportsService {
     };
   }
 
-  async physicalCountAdjustments(query: InventoryReportQueryDto) {
+  async physicalCountAdjustments(
+    query: InventoryReportQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    query = this.scopeReportQuery(query, user);
     const adjustmentDate = this.getOptionalDateRange(query.from, query.to);
 
     const adjustments = await this.prisma.inventoryAdjustment.findMany({

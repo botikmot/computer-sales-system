@@ -7,6 +7,12 @@ import {
   Post,
 } from '@nestjs/common';
 
+import { UserRole } from '@computer-sales/database';
+
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+
 import { InventoryAdjustmentService } from './inventory-adjustment.service.js';
 
 import { CreateInventoryAdjustmentDto } from './dto/create-inventory-adjustment.dto.js';
@@ -19,59 +25,92 @@ export class InventoryAdjustmentController {
     private readonly inventoryAdjustmentService: InventoryAdjustmentService,
   ) {}
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Post()
-  create(@Body() dto: CreateInventoryAdjustmentDto) {
-    return this.inventoryAdjustmentService.create(dto);
+  create(
+    @Body() dto: CreateInventoryAdjustmentDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.create(dto, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get()
-  findAll() {
-    return this.inventoryAdjustmentService.findAll();
+  findAll(@CurrentUser() user: AuthenticatedUser) {
+    return this.inventoryAdjustmentService.findAll(user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.inventoryAdjustmentService.findOne(id);
+  findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.findOne(id, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Post(':id/count')
   count(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: CountInventoryAdjustmentDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.inventoryAdjustmentService.count(id, dto);
+    return this.inventoryAdjustmentService.count(id, dto, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Post(':id/confirm')
-  confirm(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.inventoryAdjustmentService.confirm(id);
+  confirm(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.confirm(id, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Post(':id/submit')
-  submitForApproval(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.inventoryAdjustmentService.submitForApproval(id);
+  submitForApproval(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.submitForApproval(id, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post(':id/approve')
-  approve(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.inventoryAdjustmentService.approve(id);
+  approve(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.approve(id, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post(':id/reject')
   reject(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: RejectInventoryAdjustmentDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.inventoryAdjustmentService.reject(id, dto);
+    return this.inventoryAdjustmentService.reject(id, dto, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Post(':id/post')
-  post(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.inventoryAdjustmentService.post(id);
+  post(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.post(id, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Post(':id/cancel')
-  cancel(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.inventoryAdjustmentService.cancel(id);
+  cancel(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.cancel(id, user);
   }
 }

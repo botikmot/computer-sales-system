@@ -6,6 +6,9 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import {
@@ -13,14 +16,15 @@ import {
   PaymentModeDto,
 } from './dto/create-purchase-invoice.dto.js';
 
-import type {
-  PurchaseInvoiceRecord,
-  PurchaseInvoiceWithRelations,
-} from './purchase-invoice.types.js';
+import type { PurchaseInvoiceWithRelations } from './purchase-invoice.types.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 @Injectable()
 export class PurchaseInvoiceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   private generateInvoiceNo(): string {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -32,6 +36,7 @@ export class PurchaseInvoiceService {
 
   async create(
     dto: CreatePurchaseInvoiceDto,
+    user: AuthenticatedUser,
   ): Promise<PurchaseInvoiceWithRelations> {
     const receiving = await this.prisma.receiving.findUnique({
       where: {
@@ -59,6 +64,10 @@ export class PurchaseInvoiceService {
     if (!receiving) {
       throw new NotFoundException('Receiving report not found.');
     }
+
+    // The receiving report branch must be accessible
+    // to the authenticated user.
+    this.branchAccessService.assertCanAccessBranch(user, receiving.branchId);
 
     if (receiving.status !== 'POSTED') {
       throw new BadRequestException(
@@ -210,7 +219,10 @@ export class PurchaseInvoiceService {
     }
   }
 
-  async findOne(id: string): Promise<PurchaseInvoiceWithRelations> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<PurchaseInvoiceWithRelations> {
     const invoice = await this.prisma.purchaseInvoice.findUnique({
       where: {
         id,
@@ -234,11 +246,27 @@ export class PurchaseInvoiceService {
       throw new NotFoundException('Purchase invoice not found.');
     }
 
+    this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
+
     return invoice;
   }
 
-  async findAll(): Promise<PurchaseInvoiceWithRelations[]> {
+  async findAll(
+    user: AuthenticatedUser,
+  ): Promise<PurchaseInvoiceWithRelations[]> {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.purchaseInvoice.findMany({
+      where,
+
       orderBy: {
         createdAt: 'desc',
       },

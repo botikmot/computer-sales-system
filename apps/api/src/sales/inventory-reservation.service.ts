@@ -7,14 +7,20 @@ import {
 
 import { Prisma } from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
-import { ReleaseSalesOrderDto } from './dto/release-sales-order.dto.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import type { ReleaseSalesOrderDto } from './dto/release-sales-order.dto.js';
 
 @Injectable()
 export class InventoryReservationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async checkAvailability(salesOrderId: string) {
+  async checkAvailability(salesOrderId: string, user: AuthenticatedUser) {
     const order = await this.prisma.salesOrder.findUnique({
       where: {
         id: salesOrderId,
@@ -31,6 +37,8 @@ export class InventoryReservationService {
     if (!order) {
       throw new NotFoundException('Sales order not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, order.branchId);
 
     const results = [];
 
@@ -101,7 +109,7 @@ export class InventoryReservationService {
     };
   }
 
-  async reserve(salesOrderId: string) {
+  async reserve(salesOrderId: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(
       async (tx) => {
         const order = await tx.salesOrder.findUnique({
@@ -121,6 +129,8 @@ export class InventoryReservationService {
         if (!order) {
           throw new NotFoundException('Sales order not found.');
         }
+
+        this.branchAccessService.assertCanAccessBranch(user, order.branchId);
 
         if (order.status !== 'CONFIRMED') {
           throw new BadRequestException(
@@ -231,7 +241,7 @@ export class InventoryReservationService {
     );
   }
 
-  async prepare(salesOrderId: string) {
+  async prepare(salesOrderId: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const order = await tx.salesOrder.findUnique({
         where: {
@@ -250,6 +260,8 @@ export class InventoryReservationService {
       if (!order) {
         throw new NotFoundException('Sales order not found.');
       }
+
+      this.branchAccessService.assertCanAccessBranch(user, order.branchId);
 
       if (order.status !== 'RESERVED') {
         throw new BadRequestException(
@@ -302,7 +314,11 @@ export class InventoryReservationService {
     });
   }
 
-  async release(salesOrderId: string, dto: ReleaseSalesOrderDto) {
+  async release(
+    salesOrderId: string,
+    dto: ReleaseSalesOrderDto,
+    user: AuthenticatedUser,
+  ) {
     return this.prisma.$transaction(
       async (tx) => {
         const order = await tx.salesOrder.findUnique({
@@ -322,6 +338,8 @@ export class InventoryReservationService {
         if (!order) {
           throw new NotFoundException('Sales order not found.');
         }
+
+        this.branchAccessService.assertCanAccessBranch(user, order.branchId);
 
         if (order.status !== 'READY') {
           throw new BadRequestException(

@@ -2,6 +2,8 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 
 import { CreateReceivingDto } from './dto/create-receiving.dto.js';
@@ -22,8 +24,11 @@ export class ReceivingController {
     UserRole.INVENTORY,
   )
   @Post()
-  create(@Body() dto: CreateReceivingDto): Promise<ReceivingWithRelations> {
-    return this.receivingService.create(dto);
+  create(
+    @Body() dto: CreateReceivingDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ReceivingWithRelations> {
+    return this.receivingService.create(dto, user);
   }
 
   @Roles(
@@ -33,8 +38,10 @@ export class ReceivingController {
     UserRole.INVENTORY,
   )
   @Get()
-  findAll(): Promise<ReceivingWithRelations[]> {
-    return this.receivingService.findAll();
+  findAll(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ReceivingWithRelations[]> {
+    return this.receivingService.findAll(user);
   }
 
   @Roles(
@@ -44,8 +51,11 @@ export class ReceivingController {
     UserRole.INVENTORY,
   )
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<ReceivingWithRelations> {
-    return this.receivingService.findOne(id);
+  findOne(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ReceivingWithRelations> {
+    return this.receivingService.findOne(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
@@ -53,13 +63,17 @@ export class ReceivingController {
   verify(
     @Param('id') id: string,
     @Body() dto: VerifyReceivingDto,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ReceivingWithRelations> {
-    return this.receivingService.verify(id, dto);
+    return this.receivingService.verify(id, dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Post(':id/post')
-  post(@Param('id') id: string): Promise<ReceivingWithRelations> {
-    return this.receivingService.post(id);
+  post(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ReceivingWithRelations> {
+    return this.receivingService.post(id, user);
   }
 }

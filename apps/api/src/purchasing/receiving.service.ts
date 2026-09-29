@@ -7,9 +7,12 @@ import {
 import { randomUUID } from 'node:crypto';
 
 import { PrismaService } from '../database/prisma.service.js';
+import { BranchAccessService } from '../auth/branch-access.service.js';
 
 import { CreateReceivingDto } from './dto/create-receiving.dto.js';
 import { VerifyReceivingDto } from './dto/verify-receiving.dto.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import type {
   ReceivingRecord,
@@ -18,7 +21,10 @@ import type {
 
 @Injectable()
 export class ReceivingService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   private generateReceivingNo(): string {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -38,7 +44,10 @@ export class ReceivingService {
     }
   }
 
-  async create(dto: CreateReceivingDto): Promise<ReceivingWithRelations> {
+  async create(
+    dto: CreateReceivingDto,
+    user: AuthenticatedUser,
+  ): Promise<ReceivingWithRelations> {
     this.validateUniqueItems(dto.items.map((item) => item.purchaseOrderItemId));
 
     const purchaseOrder = await this.prisma.purchaseOrder.findUnique({
@@ -54,6 +63,12 @@ export class ReceivingService {
     if (!purchaseOrder) {
       throw new NotFoundException('Purchase order not found.');
     }
+
+    // Branch isolation
+    this.branchAccessService.assertCanAccessBranch(
+      user,
+      purchaseOrder.branchId,
+    );
 
     if (
       purchaseOrder.status !== 'SENT' &&
@@ -137,7 +152,10 @@ export class ReceivingService {
     }
   }
 
-  async findOne(id: string): Promise<ReceivingWithRelations> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<ReceivingWithRelations> {
     const receiving = await this.prisma.receiving.findUnique({
       where: {
         id,
@@ -165,11 +183,24 @@ export class ReceivingService {
       throw new NotFoundException('Receiving report not found.');
     }
 
+    // Branch isolation
+    this.branchAccessService.assertCanAccessBranch(user, receiving.branchId);
+
     return receiving;
   }
 
-  async findAll(): Promise<ReceivingWithRelations[]> {
+  async findAll(user: AuthenticatedUser): Promise<ReceivingWithRelations[]> {
+    const where =
+      user.role === 'ADMIN'
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
     return this.prisma.receiving.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -196,8 +227,9 @@ export class ReceivingService {
   async verify(
     id: string,
     dto: VerifyReceivingDto,
+    user: AuthenticatedUser,
   ): Promise<ReceivingWithRelations> {
-    const receiving = await this.findOne(id);
+    const receiving = await this.findOne(id, user);
 
     if (receiving.status !== 'DRAFT') {
       throw new BadRequestException(
@@ -280,11 +312,14 @@ export class ReceivingService {
       });
     });
 
-    return this.findOne(id);
+    return this.findOne(id, user);
   }
 
-  async post(id: string): Promise<ReceivingWithRelations> {
-    const receiving = await this.findOne(id);
+  async post(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<ReceivingWithRelations> {
+    const receiving = await this.findOne(id, user);
 
     if (receiving.status !== 'DRAFT') {
       throw new BadRequestException(
@@ -322,6 +357,12 @@ export class ReceivingService {
       if (!currentReceiving) {
         throw new NotFoundException('Receiving report not found.');
       }
+
+      // Defense-in-depth inside the transaction
+      this.branchAccessService.assertCanAccessBranch(
+        user,
+        currentReceiving.branchId,
+      );
 
       const acceptedByPoItem = new Map<string, number>();
 

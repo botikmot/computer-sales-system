@@ -2,7 +2,10 @@ import { Controller, Get, Param, Post } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { PaymentVoucherService } from './payment-voucher.service.js';
 
@@ -15,9 +18,11 @@ export class PaymentVoucherController {
   createFromPayment(
     @Param('supplierPaymentId')
     supplierPaymentId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.paymentVoucherService.createFromSupplierPayment(
       supplierPaymentId,
+      user,
     );
   }
 
@@ -28,8 +33,8 @@ export class PaymentVoucherController {
     UserRole.PURCHASING,
   )
   @Get()
-  findAll() {
-    return this.paymentVoucherService.findAll();
+  findAll(@CurrentUser() user: AuthenticatedUser) {
+    return this.paymentVoucherService.findAll(user);
   }
 
   @Roles(
@@ -39,7 +44,7 @@ export class PaymentVoucherController {
     UserRole.PURCHASING,
   )
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentVoucherService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.paymentVoucherService.findOne(id, user);
   }
 }

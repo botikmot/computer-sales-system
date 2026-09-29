@@ -4,7 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma } from '@computer-sales/database';
+import { Prisma, UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreatePettyCashFundDto } from './dto/create-petty-cash-fund.dto.js';
@@ -13,9 +16,15 @@ import { CreatePettyCashReplenishmentDto } from './dto/create-petty-cash-repleni
 
 @Injectable()
 export class PettyCashService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async createFund(dto: CreatePettyCashFundDto) {
+  async createFund(dto: CreatePettyCashFundDto, user: AuthenticatedUser) {
+    // User can only create a petty cash fund for an accessible branch.
+    this.branchAccessService.assertCanAccessBranch(user, dto.branchId);
+
     const openingBalance = new Prisma.Decimal(dto.openingBalance);
 
     if (openingBalance.lessThanOrEqualTo(0)) {
@@ -28,6 +37,7 @@ export class PettyCashService {
       where: {
         id: dto.branchId,
       },
+
       select: {
         id: true,
       },
@@ -42,9 +52,11 @@ export class PettyCashService {
         where: {
           id: dto.custodianId,
         },
+
         select: {
           id: true,
           status: true,
+          branchId: true,
         },
       });
 
@@ -54,6 +66,13 @@ export class PettyCashService {
 
       if (custodian.status !== 'ACTIVE') {
         throw new BadRequestException('Petty cash custodian is inactive.');
+      }
+
+      // A petty cash custodian should belong to the same branch.
+      if (custodian.branchId !== dto.branchId) {
+        throw new BadRequestException(
+          'Petty cash custodian does not belong to this branch.',
+        );
       }
     }
 
@@ -74,11 +93,25 @@ export class PettyCashService {
     });
   }
 
-  async findFunds(branchId?: string) {
+  async findFunds(branchId: string | undefined, user: AuthenticatedUser) {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {
+            ...(branchId
+              ? {
+                  branchId,
+                }
+              : {}),
+          }
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.pettyCashFund.findMany({
-      where: {
-        ...(branchId ? { branchId } : {}),
-      },
+      where,
+
       include: {
         custodian: {
           select: {
@@ -92,17 +125,19 @@ export class PettyCashService {
           },
         },
       },
+
       orderBy: {
         createdAt: 'desc',
       },
     });
   }
 
-  async findFund(id: string) {
+  async findFund(id: string, user: AuthenticatedUser) {
     const fund = await this.prisma.pettyCashFund.findUnique({
       where: {
         id,
       },
+
       include: {
         custodian: {
           select: {
@@ -115,11 +150,13 @@ export class PettyCashService {
             branchId: true,
           },
         },
+
         vouchers: {
           orderBy: {
             expenseDate: 'desc',
           },
         },
+
         replenishments: {
           orderBy: {
             replenishmentDate: 'desc',
@@ -132,16 +169,25 @@ export class PettyCashService {
       throw new NotFoundException('Petty cash fund not found.');
     }
 
+    // Authorize against the actual fund branch.
+    this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
+
     return fund;
   }
 
-  async createVoucher(fundId: string, dto: CreatePettyCashVoucherDto) {
+  async createVoucher(
+    fundId: string,
+    dto: CreatePettyCashVoucherDto,
+    user: AuthenticatedUser,
+  ) {
     const fund = await this.prisma.pettyCashFund.findUnique({
       where: {
         id: fundId,
       },
+
       select: {
         id: true,
+        branchId: true,
         status: true,
       },
     });
@@ -149,6 +195,9 @@ export class PettyCashService {
     if (!fund) {
       throw new NotFoundException('Petty cash fund not found.');
     }
+
+    // Actual fund branch authorization.
+    this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
 
     if (fund.status !== 'ACTIVE') {
       throw new BadRequestException('Petty cash fund is inactive.');
@@ -181,12 +230,13 @@ export class PettyCashService {
     });
   }
 
-  async postVoucher(id: string) {
+  async postVoucher(id: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const voucher = await tx.pettyCashVoucher.findUnique({
         where: {
           id,
         },
+
         select: {
           id: true,
           fundId: true,
@@ -207,8 +257,10 @@ export class PettyCashService {
         where: {
           id: voucher.fundId,
         },
+
         select: {
           id: true,
+          branchId: true,
           currentBalance: true,
           status: true,
         },
@@ -217,6 +269,9 @@ export class PettyCashService {
       if (!fund) {
         throw new NotFoundException('Petty cash fund not found.');
       }
+
+      // Critical branch check before financial mutation.
+      this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
 
       if (fund.status !== 'ACTIVE') {
         throw new BadRequestException('Petty cash fund is inactive.');
@@ -238,6 +293,7 @@ export class PettyCashService {
         where: {
           id: fund.id,
         },
+
         data: {
           currentBalance: newBalance,
         },
@@ -247,6 +303,7 @@ export class PettyCashService {
         where: {
           id: voucher.id,
         },
+
         data: {
           status: 'POSTED',
         },
@@ -254,12 +311,13 @@ export class PettyCashService {
     });
   }
 
-  async voidVoucher(id: string) {
+  async voidVoucher(id: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const voucher = await tx.pettyCashVoucher.findUnique({
         where: {
           id,
         },
+
         select: {
           id: true,
           fundId: true,
@@ -280,8 +338,10 @@ export class PettyCashService {
         where: {
           id: voucher.fundId,
         },
+
         select: {
           id: true,
+          branchId: true,
           currentBalance: true,
         },
       });
@@ -289,6 +349,9 @@ export class PettyCashService {
       if (!fund) {
         throw new NotFoundException('Petty cash fund not found.');
       }
+
+      // Branch authorization before restoring balance.
+      this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
 
       const newBalance = fund.currentBalance
         .add(voucher.amount)
@@ -298,6 +361,7 @@ export class PettyCashService {
         where: {
           id: fund.id,
         },
+
         data: {
           currentBalance: newBalance,
         },
@@ -307,6 +371,7 @@ export class PettyCashService {
         where: {
           id: voucher.id,
         },
+
         data: {
           status: 'VOIDED',
         },
@@ -317,11 +382,13 @@ export class PettyCashService {
   async createReplenishment(
     fundId: string,
     dto: CreatePettyCashReplenishmentDto,
+    user: AuthenticatedUser,
   ) {
     const fund = await this.prisma.pettyCashFund.findUnique({
       where: {
         id: fundId,
       },
+
       select: {
         id: true,
         branchId: true,
@@ -334,6 +401,9 @@ export class PettyCashService {
     if (!fund) {
       throw new NotFoundException('Petty cash fund not found.');
     }
+
+    // Actual petty cash fund controls the branch.
+    this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
 
     if (fund.status !== 'ACTIVE') {
       throw new BadRequestException('Petty cash fund is inactive.');
@@ -351,6 +421,7 @@ export class PettyCashService {
       where: {
         id: dto.accountId,
       },
+
       select: {
         id: true,
         branchId: true,
@@ -363,6 +434,9 @@ export class PettyCashService {
     if (!account) {
       throw new NotFoundException('Cash/Bank account not found.');
     }
+
+    // Defense-in-depth: actual account branch must also be accessible.
+    this.branchAccessService.assertCanAccessBranch(user, account.branchId);
 
     if (account.branchId !== fund.branchId) {
       throw new BadRequestException(
@@ -404,12 +478,13 @@ export class PettyCashService {
     });
   }
 
-  async postReplenishment(id: string) {
+  async postReplenishment(id: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const replenishment = await tx.pettyCashReplenishment.findUnique({
         where: {
           id,
         },
+
         select: {
           id: true,
           replenishmentNo: true,
@@ -437,6 +512,7 @@ export class PettyCashService {
         where: {
           id: replenishment.fundId,
         },
+
         select: {
           id: true,
           branchId: true,
@@ -450,6 +526,9 @@ export class PettyCashService {
         throw new NotFoundException('Petty cash fund not found.');
       }
 
+      // Critical branch check before financial mutation.
+      this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
+
       if (fund.status !== 'ACTIVE') {
         throw new BadRequestException('Petty cash fund is inactive.');
       }
@@ -458,6 +537,7 @@ export class PettyCashService {
         where: {
           id: replenishment.accountId,
         },
+
         select: {
           id: true,
           branchId: true,
@@ -470,6 +550,8 @@ export class PettyCashService {
       if (!account) {
         throw new NotFoundException('Cash/Bank account not found.');
       }
+
+      this.branchAccessService.assertCanAccessBranch(user, account.branchId);
 
       if (account.branchId !== fund.branchId) {
         throw new BadRequestException(
@@ -495,6 +577,7 @@ export class PettyCashService {
         where: {
           id: fund.id,
         },
+
         data: {
           currentBalance: newBalance,
         },
@@ -503,18 +586,28 @@ export class PettyCashService {
       await tx.cashBankTransaction.create({
         data: {
           branchId: fund.branchId,
+
           accountId: account.id,
+
           accountType: account.accountType,
+
           accountName: account.name,
+
           transactionType: 'PETTY_CASH_REPLENISHMENT',
+
           direction: 'OUT',
+
           amount: replenishment.amount,
+
           transactionDate: replenishment.replenishmentDate,
+
           referenceNo:
             replenishment.referenceNo ?? replenishment.replenishmentNo,
+
           notes:
             replenishment.notes ??
             `Petty cash replenishment ${replenishment.replenishmentNo}`,
+
           pettyCashReplenishmentId: replenishment.id,
         },
       });
@@ -523,6 +616,7 @@ export class PettyCashService {
         where: {
           id: replenishment.id,
         },
+
         data: {
           status: 'POSTED',
         },
@@ -530,25 +624,62 @@ export class PettyCashService {
     });
   }
 
-  async findVouchers(fundId: string) {
+  async findVouchers(fundId: string, user: AuthenticatedUser) {
+    const fund = await this.prisma.pettyCashFund.findUnique({
+      where: {
+        id: fundId,
+      },
+
+      select: {
+        id: true,
+        branchId: true,
+      },
+    });
+
+    if (!fund) {
+      throw new NotFoundException('Petty cash fund not found.');
+    }
+
+    this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
+
     return this.prisma.pettyCashVoucher.findMany({
       where: {
         fundId,
       },
+
       orderBy: {
         expenseDate: 'desc',
       },
     });
   }
 
-  async findReplenishments(fundId: string) {
+  async findReplenishments(fundId: string, user: AuthenticatedUser) {
+    const fund = await this.prisma.pettyCashFund.findUnique({
+      where: {
+        id: fundId,
+      },
+
+      select: {
+        id: true,
+        branchId: true,
+      },
+    });
+
+    if (!fund) {
+      throw new NotFoundException('Petty cash fund not found.');
+    }
+
+    this.branchAccessService.assertCanAccessBranch(user, fund.branchId);
+
     return this.prisma.pettyCashReplenishment.findMany({
       where: {
         fundId,
       },
+
       include: {
         account: true,
       },
+
       orderBy: {
         replenishmentDate: 'desc',
       },

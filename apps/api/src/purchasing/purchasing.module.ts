@@ -27,7 +27,10 @@ import { CashBankAccountService } from './cash-bank-account.service.js';
 import { PaymentVoucherController } from './payment-voucher.controller.js';
 import { PaymentVoucherService } from './payment-voucher.service.js';
 
+import { AuthModule } from '../auth/auth.module.js';
+
 @Module({
+  imports: [AuthModule],
   controllers: [
     PurchaseRequestController,
     SupplierQuotationController,

@@ -4,16 +4,22 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma } from '@computer-sales/database';
+import { Prisma, UserRole } from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
-import { CreateCustomerPaymentDto } from './dto/create-customer-payment.dto.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import type { CreateCustomerPaymentDto } from './dto/create-customer-payment.dto.js';
 
 @Injectable()
 export class CustomerPaymentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async create(dto: CreateCustomerPaymentDto) {
+  async create(dto: CreateCustomerPaymentDto, user: AuthenticatedUser) {
     const amount = new Prisma.Decimal(dto.amount);
 
     if (amount.lte(0)) {
@@ -74,6 +80,9 @@ export class CustomerPaymentService {
             : 'Service invoice not found.',
         );
       }
+
+      // Payment is only allowed within the user's accessible branch.
+      this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
 
       if (invoice.status !== 'POSTED') {
         throw new BadRequestException(
@@ -172,7 +181,6 @@ export class CustomerPaymentService {
           serviceInvoiceId: invoiceType === 'SERVICE' ? invoice.id : null,
 
           accountId: account.id,
-
           amount,
           paymentDate,
 
@@ -258,8 +266,19 @@ export class CustomerPaymentService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.customerPayment.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -274,7 +293,7 @@ export class CustomerPaymentService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const payment = await this.prisma.customerPayment.findUnique({
       where: {
         id,
@@ -292,6 +311,8 @@ export class CustomerPaymentService {
     if (!payment) {
       throw new NotFoundException('Customer payment not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, payment.branchId);
 
     return payment;
   }

@@ -6,6 +6,10 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreatePurchaseOrderDto } from './dto/create-purchase-order.dto.js';
@@ -17,7 +21,10 @@ import type {
 
 @Injectable()
 export class PurchaseOrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   private generatePoNumber(): string {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -29,6 +36,7 @@ export class PurchaseOrderService {
 
   async createFromQuotation(
     dto: CreatePurchaseOrderDto,
+    user: AuthenticatedUser,
   ): Promise<PurchaseOrderWithRelations> {
     const quotation = await this.prisma.supplierQuotation.findUnique({
       where: {
@@ -45,6 +53,9 @@ export class PurchaseOrderService {
     if (!quotation) {
       throw new NotFoundException('Supplier quotation not found.');
     }
+
+    // Branch isolation
+    this.branchAccessService.assertCanAccessBranch(user, quotation.branchId);
 
     if (quotation.status !== 'ACCEPTED') {
       throw new BadRequestException(
@@ -132,7 +143,10 @@ export class PurchaseOrderService {
     }
   }
 
-  async findOne(id: string): Promise<PurchaseOrderWithRelations> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<PurchaseOrderWithRelations> {
     const order = await this.prisma.purchaseOrder.findUnique({
       where: {
         id,
@@ -155,16 +169,26 @@ export class PurchaseOrderService {
       throw new NotFoundException('Purchase order not found.');
     }
 
+    // Branch isolation
+    this.branchAccessService.assertCanAccessBranch(user, order.branchId);
+
     return order;
   }
 
-  async findAll(branchId?: string): Promise<PurchaseOrderWithRelations[]> {
+  async findAll(
+    user: AuthenticatedUser,
+  ): Promise<PurchaseOrderWithRelations[]> {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.purchaseOrder.findMany({
-      where: branchId
-        ? {
-            branchId,
-          }
-        : {},
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -183,8 +207,11 @@ export class PurchaseOrderService {
     });
   }
 
-  async approve(id: string): Promise<PurchaseOrderRecord> {
-    const order = await this.findOne(id);
+  async approve(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<PurchaseOrderRecord> {
+    const order = await this.findOne(id, user);
 
     if (order.status !== 'DRAFT') {
       throw new BadRequestException(
@@ -202,8 +229,11 @@ export class PurchaseOrderService {
     });
   }
 
-  async markSent(id: string): Promise<PurchaseOrderRecord> {
-    const order = await this.findOne(id);
+  async markSent(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<PurchaseOrderRecord> {
+    const order = await this.findOne(id, user);
 
     if (order.status !== 'APPROVED') {
       throw new BadRequestException(
@@ -221,8 +251,11 @@ export class PurchaseOrderService {
     });
   }
 
-  async cancel(id: string): Promise<PurchaseOrderRecord> {
-    const order = await this.findOne(id);
+  async cancel(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<PurchaseOrderRecord> {
+    const order = await this.findOne(id, user);
 
     if (order.status !== 'DRAFT' && order.status !== 'APPROVED') {
       throw new BadRequestException(

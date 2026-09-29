@@ -15,6 +15,10 @@ import { CreateServiceInvoiceDto } from './dto/create-service-invoice.dto.js';
 
 import { ServiceInvoiceService } from './service-invoice.service.js';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+
 @Controller('service-repair/invoices')
 export class ServiceInvoiceController {
   constructor(private readonly serviceInvoiceService: ServiceInvoiceService) {}
@@ -25,19 +29,27 @@ export class ServiceInvoiceController {
     @Param('serviceJobId', new ParseUUIDPipe())
     serviceJobId: string,
     @Body() dto: CreateServiceInvoiceDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.serviceInvoiceService.createFromServiceJob(serviceJobId, dto);
+    return this.serviceInvoiceService.createFromServiceJob(
+      serviceJobId,
+      dto,
+      user,
+    );
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
   @Get()
-  findAll() {
-    return this.serviceInvoiceService.findAll();
+  findAll(@CurrentUser() user: AuthenticatedUser) {
+    return this.serviceInvoiceService.findAll(user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.serviceInvoiceService.findOne(id);
+  findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.serviceInvoiceService.findOne(id, user);
   }
 }

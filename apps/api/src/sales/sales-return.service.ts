@@ -4,16 +4,26 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma, SalesReturnSettlementMode } from '@computer-sales/database';
+import {
+  Prisma,
+  SalesReturnSettlementMode,
+  UserRole,
+} from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
-import { CreateSalesReturnDto } from './dto/create-sales-return.dto.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import type { CreateSalesReturnDto } from './dto/create-sales-return.dto.js';
 
 @Injectable()
 export class SalesReturnService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async create(dto: CreateSalesReturnDto) {
+  async create(dto: CreateSalesReturnDto, user: AuthenticatedUser) {
     if (dto.items.length === 0) {
       throw new BadRequestException(
         'Sales return must contain at least one item.',
@@ -40,6 +50,9 @@ export class SalesReturnService {
       if (!invoice) {
         throw new NotFoundException('Sales invoice not found.');
       }
+
+      // The sales invoice branch must be accessible to the current user.
+      this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
 
       if (invoice.status !== 'POSTED') {
         throw new BadRequestException(
@@ -396,8 +409,19 @@ export class SalesReturnService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.salesReturn.findMany({
+      where,
       orderBy: {
         returnDate: 'desc',
       },
@@ -417,7 +441,7 @@ export class SalesReturnService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const salesReturn = await this.prisma.salesReturn.findUnique({
       where: {
         id,
@@ -440,6 +464,8 @@ export class SalesReturnService {
     if (!salesReturn) {
       throw new NotFoundException('Sales return not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, salesReturn.branchId);
 
     return salesReturn;
   }

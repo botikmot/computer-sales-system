@@ -5,13 +5,21 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 @Injectable()
 export class SalesOrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async createFromQuotation(quotationId: string) {
+  async createFromQuotation(quotationId: string, user: AuthenticatedUser) {
     return this.prisma.$transaction(async (tx) => {
       const quotation = await tx.salesQuotation.findUnique({
         where: {
@@ -26,6 +34,9 @@ export class SalesOrderService {
       if (!quotation) {
         throw new NotFoundException('Sales quotation not found.');
       }
+
+      // The quotation branch must be accessible to the current user.
+      this.branchAccessService.assertCanAccessBranch(user, quotation.branchId);
 
       if (quotation.status !== 'ACCEPTED') {
         throw new BadRequestException(
@@ -108,8 +119,19 @@ export class SalesOrderService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.salesOrder.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -126,7 +148,7 @@ export class SalesOrderService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const order = await this.prisma.salesOrder.findUnique({
       where: {
         id,
@@ -146,6 +168,8 @@ export class SalesOrderService {
     if (!order) {
       throw new NotFoundException('Sales order not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, order.branchId);
 
     return order;
   }

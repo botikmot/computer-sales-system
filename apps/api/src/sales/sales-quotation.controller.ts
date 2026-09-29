@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreateSalesQuotationDto } from './dto/create-sales-quotation.dto.js';
 
@@ -14,31 +17,34 @@ export class SalesQuotationController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
   @Post()
-  create(@Body() dto: CreateSalesQuotationDto) {
-    return this.salesQuotationService.create(dto);
+  create(
+    @Body() dto: CreateSalesQuotationDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.salesQuotationService.create(dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
   @Get()
-  findAll() {
-    return this.salesQuotationService.findAll();
+  findAll(@CurrentUser() user: AuthenticatedUser) {
+    return this.salesQuotationService.findAll(user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.salesQuotationService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.salesQuotationService.findOne(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
   @Post(':id/send')
-  send(@Param('id') id: string) {
-    return this.salesQuotationService.send(id);
+  send(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.salesQuotationService.send(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
   @Post(':id/accept')
-  accept(@Param('id') id: string) {
-    return this.salesQuotationService.accept(id);
+  accept(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.salesQuotationService.accept(id, user);
   }
 }

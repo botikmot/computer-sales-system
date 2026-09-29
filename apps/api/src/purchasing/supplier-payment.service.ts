@@ -3,15 +3,24 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '@computer-sales/database';
+
+import { Prisma, UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+
 import { CreateSupplierPaymentDto } from './dto/create-supplier-payment.dto.js';
 
 @Injectable()
 export class SupplierPaymentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async create(dto: CreateSupplierPaymentDto) {
+  async create(dto: CreateSupplierPaymentDto, user: AuthenticatedUser) {
     const amount = new Prisma.Decimal(dto.amount);
 
     if (amount.lte(0)) {
@@ -32,6 +41,13 @@ export class SupplierPaymentService {
         },
       });
 
+      if (!ap) {
+        throw new NotFoundException('Accounts payable record not found.');
+      }
+
+      // The A/P branch must be accessible to the current user.
+      this.branchAccessService.assertCanAccessBranch(user, ap.branchId);
+
       const account = await tx.cashBankAccount.findUnique({
         where: {
           id: dto.accountId,
@@ -46,14 +62,10 @@ export class SupplierPaymentService {
         throw new BadRequestException('Cash/Bank account is inactive.');
       }
 
-      if (account.branchId !== ap?.branchId) {
+      if (account.branchId !== ap.branchId) {
         throw new BadRequestException(
           'Cash/Bank account does not belong to the same branch.',
         );
-      }
-
-      if (!ap) {
-        throw new NotFoundException('Accounts payable record not found.');
       }
 
       if (ap.status === 'CANCELLED') {
@@ -68,6 +80,10 @@ export class SupplierPaymentService {
         );
       }
 
+      const paymentDate = dto.paymentDate
+        ? new Date(dto.paymentDate)
+        : new Date();
+
       const newAmountPaid = ap.amountPaid.plus(amount);
       const newBalanceDue = ap.balanceDue.minus(amount);
 
@@ -78,6 +94,7 @@ export class SupplierPaymentService {
       const payment = await tx.supplierPayment.create({
         data: {
           paymentNo,
+
           branchId: ap.branchId,
           supplierId: ap.supplierId,
           accountsPayableId: ap.id,
@@ -87,7 +104,7 @@ export class SupplierPaymentService {
 
           amount,
 
-          paymentDate: dto.paymentDate ? new Date(dto.paymentDate) : new Date(),
+          paymentDate,
 
           referenceNo: dto.referenceNo,
           notes: dto.notes,
@@ -119,6 +136,7 @@ export class SupplierPaymentService {
       await tx.cashBankTransaction.create({
         data: {
           branchId: ap.branchId,
+
           supplierPaymentId: payment.id,
 
           accountId: account.id,
@@ -130,9 +148,7 @@ export class SupplierPaymentService {
 
           amount,
 
-          transactionDate: dto.paymentDate
-            ? new Date(dto.paymentDate)
-            : new Date(),
+          transactionDate: paymentDate,
 
           referenceNo: dto.referenceNo,
           notes: dto.notes,
@@ -153,18 +169,24 @@ export class SupplierPaymentService {
     });
   }
 
-  private generateReference(): string {
-    return `${Date.now()}-${Math.random()
-      .toString(36)
-      .slice(2, 8)
-      .toUpperCase()}`;
-  }
+  async findAll(user: AuthenticatedUser) {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-  async findAll() {
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.supplierPayment.findMany({
+      where,
+
       orderBy: {
         createdAt: 'desc',
       },
+
       include: {
         branch: true,
         supplier: true,
@@ -174,7 +196,7 @@ export class SupplierPaymentService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const payment = await this.prisma.supplierPayment.findUnique({
       where: {
         id,
@@ -191,6 +213,15 @@ export class SupplierPaymentService {
       throw new NotFoundException('Supplier payment not found.');
     }
 
+    this.branchAccessService.assertCanAccessBranch(user, payment.branchId);
+
     return payment;
+  }
+
+  private generateReference(): string {
+    return `${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 8)
+      .toUpperCase()}`;
   }
 }

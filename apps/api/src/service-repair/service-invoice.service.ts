@@ -12,17 +12,25 @@ import {
   ServicePaymentMode,
 } from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateServiceInvoiceDto } from './dto/create-service-invoice.dto.js';
 
 @Injectable()
 export class ServiceInvoiceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   async createFromServiceJob(
     serviceJobId: string,
     dto: CreateServiceInvoiceDto,
+    user: AuthenticatedUser,
   ) {
     return this.prisma.$transaction(async (tx) => {
       const job = await tx.serviceJob.findUnique({
@@ -44,6 +52,8 @@ export class ServiceInvoiceService {
       if (!job) {
         throw new NotFoundException('Service job not found.');
       }
+
+      this.branchAccessService.assertCanAccessBranch(user, job.branchId);
 
       if (job.status !== 'COMPLETED') {
         throw new BadRequestException(
@@ -202,8 +212,15 @@ export class ServiceInvoiceService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    const where =
+      user.role === 'ADMIN'
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
     return this.prisma.serviceInvoice.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -221,7 +238,7 @@ export class ServiceInvoiceService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const invoice = await this.prisma.serviceInvoice.findUnique({
       where: {
         id,
@@ -242,6 +259,7 @@ export class ServiceInvoiceService {
     if (!invoice) {
       throw new NotFoundException('Service invoice not found.');
     }
+    this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
 
     return invoice;
   }

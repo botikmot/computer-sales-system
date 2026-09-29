@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CashBankService } from './cash-bank.service.js';
 
@@ -16,46 +19,57 @@ export class CashBankController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Post('reconciliations')
-  create(@Body() dto: CreateBankReconciliationDto) {
-    return this.cashBankService.createReconciliation(dto);
+  create(
+    @Body() dto: CreateBankReconciliationDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.cashBankService.createReconciliation(dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get('reconciliations')
   findAll(
-    @Query('branchId') branchId?: string,
-    @Query('accountId') accountId?: string,
+    @Query('branchId') branchId: string | undefined,
+    @Query('accountId') accountId: string | undefined,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.cashBankService.findAll(branchId, accountId);
+    return this.cashBankService.findAll(branchId, accountId, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Post('transactions')
-  createTransaction(@Body() dto: CreateCashBankTransactionDto) {
-    return this.cashBankService.createManualTransaction(dto);
+  createTransaction(
+    @Body() dto: CreateCashBankTransactionDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.cashBankService.createManualTransaction(dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get('reconciliations/:id')
-  findOne(@Param('id') id: string) {
-    return this.cashBankService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.cashBankService.findOne(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Post('reconciliations/:id/items')
-  addItem(@Param('id') id: string, @Body() dto: AddBankReconciliationItemDto) {
-    return this.cashBankService.addItem(id, dto);
+  addItem(
+    @Param('id') id: string,
+    @Body() dto: AddBankReconciliationItemDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.cashBankService.addItem(id, dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post('reconciliations/:id/complete')
-  complete(@Param('id') id: string) {
-    return this.cashBankService.complete(id);
+  complete(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.cashBankService.complete(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post('reconciliations/:id/cancel')
-  cancel(@Param('id') id: string) {
-    return this.cashBankService.cancel(id);
+  cancel(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.cashBankService.cancel(id, user);
   }
 }

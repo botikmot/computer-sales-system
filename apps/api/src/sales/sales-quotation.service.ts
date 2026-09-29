@@ -4,21 +4,30 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma } from '@computer-sales/database';
+import { Prisma, UserRole } from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
-import { CreateSalesQuotationDto } from './dto/create-sales-quotation.dto.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import type { CreateSalesQuotationDto } from './dto/create-sales-quotation.dto.js';
 
 @Injectable()
 export class SalesQuotationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async create(dto: CreateSalesQuotationDto) {
+  async create(dto: CreateSalesQuotationDto, user: AuthenticatedUser) {
     if (dto.items.length === 0) {
       throw new BadRequestException(
         'Sales quotation must contain at least one item.',
       );
     }
+
+    // Prevent creating a quotation for another branch.
+    this.branchAccessService.assertCanAccessBranch(user, dto.branchId);
 
     const inquiry = await this.prisma.salesInquiry.findUnique({
       where: {
@@ -172,8 +181,19 @@ export class SalesQuotationService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.salesQuotation.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -190,7 +210,7 @@ export class SalesQuotationService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const quotation = await this.prisma.salesQuotation.findUnique({
       where: {
         id,
@@ -211,24 +231,12 @@ export class SalesQuotationService {
       throw new NotFoundException('Sales quotation not found.');
     }
 
+    this.branchAccessService.assertCanAccessBranch(user, quotation.branchId);
+
     return quotation;
   }
 
-  private formatDate(): string {
-    const date = new Date();
-
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-
-    return `${y}${m}${d}`;
-  }
-
-  private randomCode(): string {
-    return Math.random().toString(36).slice(2, 8).toUpperCase();
-  }
-
-  async accept(id: string) {
+  async send(id: string, user: AuthenticatedUser) {
     const quotation = await this.prisma.salesQuotation.findUnique({
       where: {
         id,
@@ -238,6 +246,35 @@ export class SalesQuotationService {
     if (!quotation) {
       throw new NotFoundException('Sales quotation not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, quotation.branchId);
+
+    if (quotation.status !== 'DRAFT') {
+      throw new BadRequestException('Only draft quotations can be sent.');
+    }
+
+    return this.prisma.salesQuotation.update({
+      where: {
+        id,
+      },
+      data: {
+        status: 'SENT',
+      },
+    });
+  }
+
+  async accept(id: string, user: AuthenticatedUser) {
+    const quotation = await this.prisma.salesQuotation.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!quotation) {
+      throw new NotFoundException('Sales quotation not found.');
+    }
+
+    this.branchAccessService.assertCanAccessBranch(user, quotation.branchId);
 
     if (quotation.status !== 'SENT') {
       throw new BadRequestException('Only sent quotations can be accepted.');
@@ -253,28 +290,17 @@ export class SalesQuotationService {
     });
   }
 
-  async send(id: string) {
-    const quotation = await this.prisma.salesQuotation.findUnique({
-      where: {
-        id,
-      },
-    });
+  private formatDate(): string {
+    const date = new Date();
 
-    if (!quotation) {
-      throw new NotFoundException('Sales quotation not found.');
-    }
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
 
-    if (quotation.status !== 'DRAFT') {
-      throw new BadRequestException('Only draft quotations can be sent.');
-    }
+    return `${y}${m}${d}`;
+  }
 
-    return this.prisma.salesQuotation.update({
-      where: {
-        id,
-      },
-      data: {
-        status: 'SENT',
-      },
-    });
+  private randomCode(): string {
+    return Math.random().toString(36).slice(2, 8).toUpperCase();
   }
 }

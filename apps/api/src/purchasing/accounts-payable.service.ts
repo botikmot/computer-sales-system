@@ -5,7 +5,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreateAccountsPayableDto } from './dto/create-accounts-payable.dto.js';
 
@@ -16,10 +21,14 @@ import type {
 
 @Injectable()
 export class AccountsPayableService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   async createFromInvoice(
     dto: CreateAccountsPayableDto,
+    user: AuthenticatedUser,
   ): Promise<AccountsPayableWithRelations> {
     const invoice = await this.prisma.purchaseInvoice.findUnique({
       where: {
@@ -30,6 +39,9 @@ export class AccountsPayableService {
     if (!invoice) {
       throw new NotFoundException('Purchase invoice not found.');
     }
+
+    // The purchase invoice branch must be accessible to the current user.
+    this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
 
     if (invoice.status !== 'POSTED') {
       throw new BadRequestException(
@@ -88,7 +100,10 @@ export class AccountsPayableService {
     }
   }
 
-  async findOne(id: string): Promise<AccountsPayableWithRelations> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<AccountsPayableWithRelations> {
     const payable = await this.prisma.accountsPayable.findUnique({
       where: {
         id,
@@ -105,11 +120,27 @@ export class AccountsPayableService {
       throw new NotFoundException('Accounts payable not found.');
     }
 
+    this.branchAccessService.assertCanAccessBranch(user, payable.branchId);
+
     return payable;
   }
 
-  async findAll(): Promise<AccountsPayableWithRelations[]> {
+  async findAll(
+    user: AuthenticatedUser,
+  ): Promise<AccountsPayableWithRelations[]> {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.accountsPayable.findMany({
+      where,
+
       orderBy: {
         createdAt: 'desc',
       },

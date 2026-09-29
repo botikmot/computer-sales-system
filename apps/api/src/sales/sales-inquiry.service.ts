@@ -4,19 +4,30 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import type { CreateSalesInquiryDto } from './dto/create-sales-inquiry.dto.js';
 
 @Injectable()
 export class SalesInquiryService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async create(dto: CreateSalesInquiryDto) {
+  async create(dto: CreateSalesInquiryDto, user: AuthenticatedUser) {
     if (dto.items.length === 0) {
       throw new BadRequestException(
         'Sales inquiry must contain at least one item.',
       );
     }
+
+    // The submitted branch must be accessible to the current user.
+    this.branchAccessService.assertCanAccessBranch(user, dto.branchId);
 
     const branch = await this.prisma.branch.findUnique({
       where: {
@@ -81,8 +92,19 @@ export class SalesInquiryService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    // Non-admin users must have a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.salesInquiry.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -99,7 +121,7 @@ export class SalesInquiryService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const inquiry = await this.prisma.salesInquiry.findUnique({
       where: {
         id,
@@ -119,6 +141,9 @@ export class SalesInquiryService {
     if (!inquiry) {
       throw new NotFoundException('Sales inquiry not found.');
     }
+
+    // Protect access to the actual inquiry branch.
+    this.branchAccessService.assertCanAccessBranch(user, inquiry.branchId);
 
     return inquiry;
   }

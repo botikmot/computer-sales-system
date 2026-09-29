@@ -5,17 +5,24 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma, SalesPaymentMode } from '@computer-sales/database';
+import { Prisma, SalesPaymentMode, UserRole } from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 @Injectable()
 export class SalesInvoiceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   async createFromSalesOrder(
     salesOrderId: string,
     paymentMode: SalesPaymentMode,
+    user: AuthenticatedUser,
   ) {
     return this.prisma.$transaction(async (tx) => {
       const order = await tx.salesOrder.findUnique({
@@ -31,6 +38,9 @@ export class SalesInvoiceService {
       if (!order) {
         throw new NotFoundException('Sales order not found.');
       }
+
+      // The Sales Order branch must be accessible to the current user.
+      this.branchAccessService.assertCanAccessBranch(user, order.branchId);
 
       if (order.status !== 'DELIVERED') {
         throw new BadRequestException(
@@ -130,8 +140,19 @@ export class SalesInvoiceService {
     });
   }
 
-  async findAll() {
+  async findAll(user: AuthenticatedUser) {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.salesInvoice.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -148,7 +169,7 @@ export class SalesInvoiceService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const invoice = await this.prisma.salesInvoice.findUnique({
       where: {
         id,
@@ -168,6 +189,8 @@ export class SalesInvoiceService {
     if (!invoice) {
       throw new NotFoundException('Sales invoice not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
 
     return invoice;
   }

@@ -6,6 +6,10 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateSupplierQuotationDto } from './dto/create-supplier-quotation.dto.js';
@@ -17,7 +21,10 @@ import type {
 
 @Injectable()
 export class SupplierQuotationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   private generateQuotationNo(): string {
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -39,8 +46,12 @@ export class SupplierQuotationService {
 
   async create(
     dto: CreateSupplierQuotationDto,
+    user: AuthenticatedUser,
   ): Promise<SupplierQuotationWithRelations> {
     this.validateUniqueProducts(dto.items.map((item) => item.productId));
+
+    // Branch isolation must be checked against the actual requested branch.
+    this.branchAccessService.assertCanAccessBranch(user, dto.branchId);
 
     const [branch, supplier, purchaseRequest] = await Promise.all([
       this.prisma.branch.findUnique({
@@ -48,11 +59,13 @@ export class SupplierQuotationService {
           id: dto.branchId,
         },
       }),
+
       this.prisma.supplier.findUnique({
         where: {
           id: dto.supplierId,
         },
       }),
+
       this.prisma.purchaseRequest.findUnique({
         where: {
           id: dto.purchaseRequestId,
@@ -80,6 +93,13 @@ export class SupplierQuotationService {
         'Purchase request does not belong to the selected branch.',
       );
     }
+
+    // Defense-in-depth: also verify the referenced purchase request
+    // against the authenticated user's branch.
+    this.branchAccessService.assertCanAccessBranch(
+      user,
+      purchaseRequest.branchId,
+    );
 
     if (purchaseRequest.status !== 'APPROVED') {
       throw new BadRequestException(
@@ -134,19 +154,26 @@ export class SupplierQuotationService {
       return await this.prisma.supplierQuotation.create({
         data: {
           quotationNo: this.generateQuotationNo(),
+
           branchId: dto.branchId,
           supplierId: dto.supplierId,
           purchaseRequestId: dto.purchaseRequestId,
+
           status: 'DRAFT',
+
           quotationDate: dto.quotationDate
             ? new Date(dto.quotationDate)
             : new Date(),
+
           validUntil: dto.validUntil ? new Date(dto.validUntil) : undefined,
+
           notes: dto.notes,
+
           subtotal,
           discount: 0,
           tax: 0,
           total: subtotal,
+
           items: {
             create: dto.items.map((item) => ({
               productId: item.productId,
@@ -156,10 +183,12 @@ export class SupplierQuotationService {
             })),
           },
         },
+
         include: {
           branch: true,
           supplier: true,
           purchaseRequest: true,
+
           items: {
             include: {
               product: true,
@@ -172,7 +201,10 @@ export class SupplierQuotationService {
     }
   }
 
-  async findOne(id: string): Promise<SupplierQuotationWithRelations> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<SupplierQuotationWithRelations> {
     const quotation = await this.prisma.supplierQuotation.findUnique({
       where: {
         id,
@@ -181,6 +213,7 @@ export class SupplierQuotationService {
         branch: true,
         supplier: true,
         purchaseRequest: true,
+
         items: {
           include: {
             product: true,
@@ -193,25 +226,45 @@ export class SupplierQuotationService {
       throw new NotFoundException('Supplier quotation not found.');
     }
 
+    this.branchAccessService.assertCanAccessBranch(user, quotation.branchId);
+
     return quotation;
   }
 
   async findAll(
-    purchaseRequestId?: string,
+    purchaseRequestId: string | undefined,
+    user: AuthenticatedUser,
   ): Promise<SupplierQuotationWithRelations[]> {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? purchaseRequestId
+          ? {
+              purchaseRequestId,
+            }
+          : {}
+        : {
+            branchId: user.branchId!,
+            ...(purchaseRequestId
+              ? {
+                  purchaseRequestId,
+                }
+              : {}),
+          };
+
     return this.prisma.supplierQuotation.findMany({
-      where: purchaseRequestId
-        ? {
-            purchaseRequestId,
-          }
-        : {},
+      where,
+
       orderBy: {
         createdAt: 'desc',
       },
+
       include: {
         branch: true,
         supplier: true,
         purchaseRequest: true,
+
         items: {
           include: {
             product: true,
@@ -221,8 +274,11 @@ export class SupplierQuotationService {
     });
   }
 
-  async receive(id: string): Promise<SupplierQuotationRecord> {
-    const quotation = await this.findOne(id);
+  async receive(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<SupplierQuotationRecord> {
+    const quotation = await this.findOne(id, user);
 
     if (quotation.status !== 'DRAFT') {
       throw new BadRequestException(
@@ -234,14 +290,18 @@ export class SupplierQuotationService {
       where: {
         id,
       },
+
       data: {
         status: 'RECEIVED',
       },
     });
   }
 
-  async accept(id: string): Promise<SupplierQuotationRecord> {
-    const quotation = await this.findOne(id);
+  async accept(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<SupplierQuotationRecord> {
+    const quotation = await this.findOne(id, user);
 
     if (quotation.status !== 'RECEIVED') {
       throw new BadRequestException(
@@ -253,14 +313,18 @@ export class SupplierQuotationService {
       where: {
         id,
       },
+
       data: {
         status: 'ACCEPTED',
       },
     });
   }
 
-  async reject(id: string): Promise<SupplierQuotationRecord> {
-    const quotation = await this.findOne(id);
+  async reject(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<SupplierQuotationRecord> {
+    const quotation = await this.findOne(id, user);
 
     if (quotation.status !== 'RECEIVED') {
       throw new BadRequestException(
@@ -272,14 +336,18 @@ export class SupplierQuotationService {
       where: {
         id,
       },
+
       data: {
         status: 'REJECTED',
       },
     });
   }
 
-  async cancel(id: string): Promise<SupplierQuotationRecord> {
-    const quotation = await this.findOne(id);
+  async cancel(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<SupplierQuotationRecord> {
+    const quotation = await this.findOne(id, user);
 
     if (quotation.status !== 'DRAFT' && quotation.status !== 'RECEIVED') {
       throw new BadRequestException(
@@ -291,6 +359,7 @@ export class SupplierQuotationService {
       where: {
         id,
       },
+
       data: {
         status: 'CANCELLED',
       },

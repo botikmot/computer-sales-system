@@ -5,8 +5,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma } from '@computer-sales/database';
+import { Prisma, UserRole } from '@computer-sales/database';
 
+import { BranchAccessService } from '../auth/branch-access.service.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateBankReconciliationDto } from './dto/create-bank-reconciliation.dto.js';
@@ -15,10 +17,20 @@ import { CreateCashBankTransactionDto } from './dto/create-cash-bank-transaction
 
 @Injectable()
 export class CashBankService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
-  async createReconciliation(dto: CreateBankReconciliationDto) {
+  async createReconciliation(
+    dto: CreateBankReconciliationDto,
+    user: AuthenticatedUser,
+  ) {
+    // The requested branch must be accessible to the current user.
+    this.branchAccessService.assertCanAccessBranch(user, dto.branchId);
+
     const statementDate = new Date(dto.statementDate);
+
     const statementEndingBalance = new Prisma.Decimal(
       dto.statementEndingBalance,
     );
@@ -28,6 +40,7 @@ export class CashBankService {
         where: {
           id: dto.branchId,
         },
+
         select: {
           id: true,
         },
@@ -37,6 +50,7 @@ export class CashBankService {
         where: {
           id: dto.accountId,
         },
+
         select: {
           id: true,
           branchId: true,
@@ -54,11 +68,15 @@ export class CashBankService {
       throw new NotFoundException('Cash/Bank account not found.');
     }
 
+    // The account must belong to the requested branch.
     if (account.branchId !== dto.branchId) {
       throw new BadRequestException(
         'Cash/Bank account does not belong to this branch.',
       );
     }
+
+    // Defense-in-depth: verify actual account branch.
+    this.branchAccessService.assertCanAccessBranch(user, account.branchId);
 
     if (!account.isActive) {
       throw new BadRequestException('Cash/Bank account is inactive.');
@@ -68,11 +86,14 @@ export class CashBankService {
       this.prisma.cashBankTransaction.aggregate({
         where: {
           accountId: dto.accountId,
+
           transactionDate: {
             lte: statementDate,
           },
+
           direction: 'IN',
         },
+
         _sum: {
           amount: true,
         },
@@ -81,11 +102,14 @@ export class CashBankService {
       this.prisma.cashBankTransaction.aggregate({
         where: {
           accountId: dto.accountId,
+
           transactionDate: {
             lte: statementDate,
           },
+
           direction: 'OUT',
         },
+
         _sum: {
           amount: true,
         },
@@ -109,14 +133,22 @@ export class CashBankService {
     return this.prisma.bankReconciliation.create({
       data: {
         reconciliationNo,
+
         branchId: dto.branchId,
         accountId: dto.accountId,
+
         statementDate,
+
         statementEndingBalance,
+
         bookBalance,
+
         adjustedBankBalance: statementEndingBalance,
+
         adjustedBookBalance: bookBalance,
+
         difference: statementEndingBalance.sub(bookBalance).toDecimalPlaces(2),
+
         notes: dto.notes?.trim() || null,
       },
 
@@ -127,11 +159,16 @@ export class CashBankService {
     });
   }
 
-  async addItem(reconciliationId: string, dto: AddBankReconciliationItemDto) {
+  async addItem(
+    reconciliationId: string,
+    dto: AddBankReconciliationItemDto,
+    user: AuthenticatedUser,
+  ) {
     const reconciliation = await this.prisma.bankReconciliation.findUnique({
       where: {
         id: reconciliationId,
       },
+
       include: {
         items: true,
       },
@@ -140,6 +177,12 @@ export class CashBankService {
     if (!reconciliation) {
       throw new NotFoundException('Bank reconciliation not found.');
     }
+
+    // Actual reconciliation branch authorization.
+    this.branchAccessService.assertCanAccessBranch(
+      user,
+      reconciliation.branchId,
+    );
 
     if (reconciliation.status !== 'DRAFT') {
       throw new BadRequestException(
@@ -167,6 +210,7 @@ export class CashBankService {
         where: {
           id: dto.cashBankTransactionId,
         },
+
         select: {
           id: true,
           accountId: true,
@@ -235,9 +279,11 @@ export class CashBankService {
       const existing = await this.prisma.bankReconciliationItem.findFirst({
         where: {
           cashBankTransactionId: transaction.id,
+
           reconciliationId: {
             not: reconciliationId,
           },
+
           reconciliation: {
             status: {
               in: ['DRAFT', 'COMPLETED'],
@@ -253,13 +299,18 @@ export class CashBankService {
       }
     }
 
-    const item = await this.prisma.bankReconciliationItem.create({
+    await this.prisma.bankReconciliationItem.create({
       data: {
         reconciliationId,
+
         type: dto.type,
+
         amount,
+
         cashBankTransactionId: dto.cashBankTransactionId ?? null,
+
         referenceNo: dto.referenceNo?.trim() || null,
+
         notes: dto.notes?.trim() || null,
       },
     });
@@ -267,28 +318,63 @@ export class CashBankService {
     return this.recalculateReconciliation(reconciliationId);
   }
 
-  async findAll(branchId?: string, accountId?: string) {
+  async findAll(
+    branchId: string | undefined,
+    accountId: string | undefined,
+    user: AuthenticatedUser,
+  ) {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {
+            ...(branchId
+              ? {
+                  branchId,
+                }
+              : {}),
+
+            ...(accountId
+              ? {
+                  accountId,
+                }
+              : {}),
+          }
+        : {
+            branchId: user.branchId!,
+
+            ...(accountId
+              ? {
+                  accountId,
+                }
+              : {}),
+          };
+
     return this.prisma.bankReconciliation.findMany({
-      where: {
-        ...(branchId ? { branchId } : {}),
-        ...(accountId ? { accountId } : {}),
-      },
+      where,
+
       include: {
         account: true,
         items: true,
       },
+
       orderBy: {
         statementDate: 'desc',
       },
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: AuthenticatedUser) {
     const reconciliation = await this.prisma.bankReconciliation.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
+
       include: {
         account: true,
+
         branch: true,
+
         items: {
           include: {
             cashBankTransaction: true,
@@ -301,10 +387,34 @@ export class CashBankService {
       throw new NotFoundException('Bank reconciliation not found.');
     }
 
+    // Actual record branch authorization.
+    this.branchAccessService.assertCanAccessBranch(
+      user,
+      reconciliation.branchId,
+    );
+
     return reconciliation;
   }
 
-  async complete(id: string) {
+  async complete(id: string, user: AuthenticatedUser) {
+    // Check ownership/access before recalculating.
+    const existing = await this.prisma.bankReconciliation.findUnique({
+      where: {
+        id,
+      },
+
+      select: {
+        id: true,
+        branchId: true,
+      },
+    });
+
+    if (!existing) {
+      throw new NotFoundException('Bank reconciliation not found.');
+    }
+
+    this.branchAccessService.assertCanAccessBranch(user, existing.branchId);
+
     const reconciliation = await this.recalculateReconciliation(id);
 
     if (reconciliation.status !== 'DRAFT') {
@@ -322,10 +432,14 @@ export class CashBankService {
     }
 
     return this.prisma.bankReconciliation.update({
-      where: { id },
+      where: {
+        id,
+      },
+
       data: {
         status: 'COMPLETED',
       },
+
       include: {
         account: true,
         items: true,
@@ -333,14 +447,21 @@ export class CashBankService {
     });
   }
 
-  async cancel(id: string) {
+  async cancel(id: string, user: AuthenticatedUser) {
     const reconciliation = await this.prisma.bankReconciliation.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
     });
 
     if (!reconciliation) {
       throw new NotFoundException('Bank reconciliation not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(
+      user,
+      reconciliation.branchId,
+    );
 
     if (reconciliation.status !== 'DRAFT') {
       throw new BadRequestException(
@@ -349,7 +470,10 @@ export class CashBankService {
     }
 
     return this.prisma.bankReconciliation.update({
-      where: { id },
+      where: {
+        id,
+      },
+
       data: {
         status: 'CANCELLED',
       },
@@ -358,7 +482,10 @@ export class CashBankService {
 
   private async recalculateReconciliation(id: string) {
     const reconciliation = await this.prisma.bankReconciliation.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
+
       include: {
         items: true,
       },
@@ -399,12 +526,16 @@ export class CashBankService {
       .toDecimalPlaces(2);
 
     return this.prisma.bankReconciliation.update({
-      where: { id },
+      where: {
+        id,
+      },
+
       data: {
         adjustedBankBalance,
         adjustedBookBalance,
         difference,
       },
+
       include: {
         items: true,
         account: true,
@@ -412,11 +543,15 @@ export class CashBankService {
     });
   }
 
-  async createManualTransaction(dto: CreateCashBankTransactionDto) {
+  async createManualTransaction(
+    dto: CreateCashBankTransactionDto,
+    user: AuthenticatedUser,
+  ) {
     const account = await this.prisma.cashBankAccount.findUnique({
       where: {
         id: dto.accountId,
       },
+
       select: {
         id: true,
         branchId: true,
@@ -429,6 +564,9 @@ export class CashBankService {
     if (!account) {
       throw new NotFoundException('Cash/Bank account not found.');
     }
+
+    // Authorize against the actual account branch.
+    this.branchAccessService.assertCanAccessBranch(user, account.branchId);
 
     if (account.branchId !== dto.branchId) {
       throw new BadRequestException(
@@ -450,19 +588,29 @@ export class CashBankService {
 
     return this.prisma.cashBankTransaction.create({
       data: {
-        branchId: dto.branchId,
+        branchId: account.branchId,
+
         accountId: account.id,
+
         accountType: account.accountType,
+
         accountName: account.name,
+
         transactionType: dto.transactionType,
+
         direction,
+
         amount,
+
         transactionDate: dto.transactionDate
           ? new Date(dto.transactionDate)
           : new Date(),
+
         referenceNo: dto.referenceNo?.trim() || null,
+
         notes: dto.notes?.trim() || null,
       },
+
       include: {
         account: true,
         branch: true,

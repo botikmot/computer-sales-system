@@ -1,13 +1,10 @@
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
   MinLength,
 } from 'class-validator';
-import { UserRole } from '@computer-sales/database';
 
 export class RegisterDto {
   @IsString()
@@ -27,12 +24,4 @@ export class RegisterDto {
   @IsString()
   @MinLength(8)
   password: string;
-
-  @IsOptional()
-  @IsEnum(UserRole)
-  role?: UserRole;
-
-  @IsOptional()
-  @IsUUID()
-  branchId?: string;
 }

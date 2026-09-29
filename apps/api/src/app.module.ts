@@ -13,6 +13,7 @@ import { CashBankModule } from './cash-bank/cash-bank.module.js';
 import { PettyCashModule } from './petty-cash/petty-cash.module.js';
 import { ReportsModule } from './reports/reports.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuthModule } from './auth/auth.module.js';
     PettyCashModule,
     ReportsModule,
     AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

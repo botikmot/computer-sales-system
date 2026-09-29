@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { ReleaseSalesOrderDto } from './dto/release-sales-order.dto.js';
 
@@ -16,20 +19,32 @@ export class InventoryReservationController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.INVENTORY)
   @Get(':salesOrderId/inventory-check')
-  checkAvailability(@Param('salesOrderId') salesOrderId: string) {
-    return this.inventoryReservationService.checkAvailability(salesOrderId);
+  checkAvailability(
+    @Param('salesOrderId') salesOrderId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryReservationService.checkAvailability(
+      salesOrderId,
+      user,
+    );
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.INVENTORY)
   @Post(':salesOrderId/reserve')
-  reserve(@Param('salesOrderId') salesOrderId: string) {
-    return this.inventoryReservationService.reserve(salesOrderId);
+  reserve(
+    @Param('salesOrderId') salesOrderId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryReservationService.reserve(salesOrderId, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.INVENTORY)
   @Post(':salesOrderId/prepare')
-  prepare(@Param('salesOrderId') salesOrderId: string) {
-    return this.inventoryReservationService.prepare(salesOrderId);
+  prepare(
+    @Param('salesOrderId') salesOrderId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryReservationService.prepare(salesOrderId, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.INVENTORY)
@@ -37,7 +52,8 @@ export class InventoryReservationController {
   release(
     @Param('salesOrderId') salesOrderId: string,
     @Body() dto: ReleaseSalesOrderDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.inventoryReservationService.release(salesOrderId, dto);
+    return this.inventoryReservationService.release(salesOrderId, dto, user);
   }
 }

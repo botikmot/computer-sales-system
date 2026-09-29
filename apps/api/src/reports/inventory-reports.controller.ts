@@ -2,7 +2,10 @@ import { Controller, Get, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { ReportsService } from './reports.service.js';
 
@@ -14,37 +17,55 @@ export class InventoryReportsController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get('stock')
-  inventoryStock(@Query() query: InventoryReportQueryDto) {
-    return this.reportsService.inventoryStock(query);
+  inventoryStock(
+    @Query() query: InventoryReportQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.reportsService.inventoryStock(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get('stock-card')
-  stockCard(@Query() query: InventoryReportQueryDto) {
-    return this.reportsService.stockCard(query);
+  stockCard(
+    @Query() query: InventoryReportQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.reportsService.stockCard(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get('valuation')
-  inventoryValuation(@Query() query: InventoryReportQueryDto) {
-    return this.reportsService.inventoryValuationReport(query);
+  inventoryValuation(
+    @Query() query: InventoryReportQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.reportsService.inventoryValuationReport(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get('low-stock')
-  lowStock(@Query() query: InventoryReportQueryDto) {
-    return this.reportsService.lowStock(query);
+  lowStock(
+    @Query() query: InventoryReportQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.reportsService.lowStock(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get('movement')
-  inventoryMovement(@Query() query: InventoryReportQueryDto) {
-    return this.reportsService.inventoryMovement(query);
+  inventoryMovement(
+    @Query() query: InventoryReportQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.reportsService.inventoryMovement(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get('adjustments')
-  physicalCountAdjustments(@Query() query: InventoryReportQueryDto) {
-    return this.reportsService.physicalCountAdjustments(query);
+  physicalCountAdjustments(
+    @Query() query: InventoryReportQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.reportsService.physicalCountAdjustments(query, user);
   }
 }

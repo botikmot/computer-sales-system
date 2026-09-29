@@ -3,15 +3,25 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+
+import { UserRole } from '@computer-sales/database';
+
+import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import type { PaymentVoucherWithRelations } from './payment-voucher.types.js';
 
 @Injectable()
 export class PaymentVoucherService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly branchAccessService: BranchAccessService,
+  ) {}
 
   async createFromSupplierPayment(
     supplierPaymentId: string,
+    user: AuthenticatedUser,
   ): Promise<PaymentVoucherWithRelations> {
     const payment = await this.prisma.supplierPayment.findUnique({
       where: {
@@ -27,6 +37,10 @@ export class PaymentVoucherService {
     if (!payment) {
       throw new NotFoundException('Supplier payment not found.');
     }
+
+    // The supplier payment branch must be accessible
+    // to the authenticated user.
+    this.branchAccessService.assertCanAccessBranch(user, payment.branchId);
 
     const existing = await this.prisma.paymentVoucher.findUnique({
       where: {
@@ -69,8 +83,21 @@ export class PaymentVoucherService {
     });
   }
 
-  async findAll(): Promise<PaymentVoucherWithRelations[]> {
+  async findAll(
+    user: AuthenticatedUser,
+  ): Promise<PaymentVoucherWithRelations[]> {
+    // Non-admin users must belong to a branch.
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
     return this.prisma.paymentVoucher.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -87,7 +114,10 @@ export class PaymentVoucherService {
     });
   }
 
-  async findOne(id: string): Promise<PaymentVoucherWithRelations> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<PaymentVoucherWithRelations> {
     const voucher = await this.prisma.paymentVoucher.findUnique({
       where: {
         id,
@@ -107,6 +137,8 @@ export class PaymentVoucherService {
     if (!voucher) {
       throw new NotFoundException('Payment voucher not found.');
     }
+
+    this.branchAccessService.assertCanAccessBranch(user, voucher.branchId);
 
     return voucher;
   }

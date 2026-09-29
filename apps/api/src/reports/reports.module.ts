@@ -10,8 +10,10 @@ import { ServiceReportsController } from './service-reports.controller.js';
 import { ManagementReportsController } from './management-reports.controller.js';
 import { PurchasingReportsController } from './purchasing-reports.controller.js';
 import { InventoryReportsController } from './inventory-reports.controller.js';
+import { AuthModule } from '../auth/auth.module.js';
 
 @Module({
+  imports: [AuthModule],
   controllers: [
     CashBankReportsController,
     PettyCashReportsController,

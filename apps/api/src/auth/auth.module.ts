@@ -11,6 +11,7 @@ import { DatabaseModule } from '../database/database.module.js';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 import { RolesGuard } from './guards/roles.guard.js';
+import { BranchAccessService } from './branch-access.service.js';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { RolesGuard } from './guards/roles.guard.js';
   providers: [
     AuthService,
     JwtStrategy,
+    BranchAccessService,
 
     {
       provide: APP_GUARD,
@@ -55,6 +57,6 @@ import { RolesGuard } from './guards/roles.guard.js';
     },
   ],
 
-  exports: [AuthService, JwtModule, PassportModule],
+  exports: [AuthService, JwtModule, PassportModule, BranchAccessService],
 })
 export class AuthModule {}

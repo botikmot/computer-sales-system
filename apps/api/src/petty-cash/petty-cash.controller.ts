@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { PettyCashService } from './petty-cash.service.js';
 
@@ -16,20 +19,26 @@ export class PettyCashController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post('funds')
-  createFund(@Body() dto: CreatePettyCashFundDto) {
-    return this.pettyCashService.createFund(dto);
+  createFund(
+    @Body() dto: CreatePettyCashFundDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.pettyCashService.createFund(dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get('funds')
-  findFunds(@Query('branchId') branchId?: string) {
-    return this.pettyCashService.findFunds(branchId);
+  findFunds(
+    @Query('branchId') branchId: string | undefined,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.pettyCashService.findFunds(branchId, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get('funds/:id')
-  findFund(@Param('id') id: string) {
-    return this.pettyCashService.findFund(id);
+  findFund(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.pettyCashService.findFund(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
@@ -37,26 +46,30 @@ export class PettyCashController {
   createVoucher(
     @Param('fundId') fundId: string,
     @Body() dto: CreatePettyCashVoucherDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.pettyCashService.createVoucher(fundId, dto);
+    return this.pettyCashService.createVoucher(fundId, dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Post('vouchers/:id/post')
-  postVoucher(@Param('id') id: string) {
-    return this.pettyCashService.postVoucher(id);
+  postVoucher(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.pettyCashService.postVoucher(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post('vouchers/:id/void')
-  voidVoucher(@Param('id') id: string) {
-    return this.pettyCashService.voidVoucher(id);
+  voidVoucher(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.pettyCashService.voidVoucher(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get('funds/:fundId/vouchers')
-  findVouchers(@Param('fundId') fundId: string) {
-    return this.pettyCashService.findVouchers(fundId);
+  findVouchers(
+    @Param('fundId') fundId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.pettyCashService.findVouchers(fundId, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
@@ -64,19 +77,26 @@ export class PettyCashController {
   createReplenishment(
     @Param('fundId') fundId: string,
     @Body() dto: CreatePettyCashReplenishmentDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.pettyCashService.createReplenishment(fundId, dto);
+    return this.pettyCashService.createReplenishment(fundId, dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post('replenishments/:id/post')
-  postReplenishment(@Param('id') id: string) {
-    return this.pettyCashService.postReplenishment(id);
+  postReplenishment(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.pettyCashService.postReplenishment(id, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Get('funds/:fundId/replenishments')
-  findReplenishments(@Param('fundId') fundId: string) {
-    return this.pettyCashService.findReplenishments(fundId);
+  findReplenishments(
+    @Param('fundId') fundId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.pettyCashService.findReplenishments(fundId, user);
   }
 }
