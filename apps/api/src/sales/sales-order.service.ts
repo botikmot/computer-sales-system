@@ -11,6 +11,7 @@ import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import { ReleaseSalesOrderDto } from './dto/release-sales-order.dto.js';
 
 @Injectable()
 export class SalesOrderService {
@@ -117,6 +118,55 @@ export class SalesOrderService {
         },
       });
     });
+  }
+
+  async release(
+    id: string,
+    dto: ReleaseSalesOrderDto,
+    user: AuthenticatedUser,
+  ) {
+    const order = await this.prisma.salesOrder.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Sales order not found.');
+    }
+
+    this.branchAccessService.assertCanAccessBranch(user, order.branchId);
+
+    if (order.status !== 'CONFIRMED') {
+      throw new BadRequestException(
+        'Only confirmed sales orders can be released.',
+      );
+    }
+
+    const updatedOrder = await this.prisma.salesOrder.update({
+      where: {
+        id,
+      },
+      data: {
+        status: 'DELIVERED',
+        deliveryMode: dto.deliveryMode,
+        deliveryDate: dto.deliveryDate
+          ? new Date(dto.deliveryDate)
+          : new Date(),
+      },
+      include: {
+        branch: true,
+        customer: true,
+        quotation: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    return updatedOrder;
   }
 
   async findAll(user: AuthenticatedUser) {

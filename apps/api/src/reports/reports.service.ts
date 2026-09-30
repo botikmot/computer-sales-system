@@ -89,6 +89,7 @@ export class ReportsService {
       returnsAggregate,
       serviceAggregate,
       saleCogsAggregate,
+      salesReturnCogsAggregate,
       repairPartsAggregate,
       expenseAggregate,
       pettyExpenseAggregate,
@@ -129,6 +130,17 @@ export class ReportsService {
       this.prisma.inventoryMovement.aggregate({
         where: {
           type: 'SALE_OUT',
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+          createdAt: dateRange,
+        },
+        _sum: {
+          totalCost: true,
+        },
+      }),
+
+      this.prisma.inventoryMovement.aggregate({
+        where: {
+          type: 'SALES_RETURN',
           ...(query.branchId ? { branchId: query.branchId } : {}),
           createdAt: dateRange,
         },
@@ -195,7 +207,13 @@ export class ReportsService {
 
     const totalRevenue = netSalesRevenue.add(serviceRevenue);
 
-    const salesCogs = saleCogsAggregate._sum.totalCost ?? new Prisma.Decimal(0);
+    const saleOutCogs =
+      saleCogsAggregate._sum.totalCost ?? new Prisma.Decimal(0);
+
+    const salesReturnCogs =
+      salesReturnCogsAggregate._sum.totalCost ?? new Prisma.Decimal(0);
+
+    const salesCogs = saleOutCogs.sub(salesReturnCogs);
 
     const repairPartsCost =
       repairPartsAggregate._sum.totalCost ?? new Prisma.Decimal(0);

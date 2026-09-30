@@ -342,7 +342,6 @@ export class SalesReturnService {
         const ar = invoice.accountsReceivable!;
 
         const newOriginalAmount = ar.originalAmount.sub(total);
-
         const newBalanceDue = ar.balanceDue.sub(total);
 
         const newStatus = newBalanceDue.eq(0) ? 'PAID' : 'PARTIALLY_PAID';
@@ -355,6 +354,18 @@ export class SalesReturnService {
             originalAmount: newOriginalAmount,
             balanceDue: newBalanceDue,
             status: newStatus,
+          },
+        });
+
+        // Keep the Sales Invoice balance synchronized with A/R.
+        // amountPaid represents actual customer payments and must not
+        // be changed by an AR adjustment.
+        await tx.salesInvoice.update({
+          where: {
+            id: invoice.id,
+          },
+          data: {
+            balanceDue: newBalanceDue,
           },
         });
       }

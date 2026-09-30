@@ -18,6 +18,7 @@ import { BranchesModule } from './branches/branches.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
 import { ProductsModule } from './products/products.module.js';
 import { SuppliersModule } from './suppliers/suppliers.module.js';
+import { AssemblyModule } from './assembly/assembly.module.js';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { SuppliersModule } from './suppliers/suppliers.module.js';
     CategoriesModule,
     ProductsModule,
     SuppliersModule,
+    AssemblyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
