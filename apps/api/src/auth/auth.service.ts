@@ -85,6 +85,14 @@ export class AuthService {
           },
         ],
       },
+      include: {
+        branch: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -162,6 +170,12 @@ export class AuthService {
       role: user.role,
       status: user.status,
       branchId: user.branchId,
+      branch: user.branch
+        ? {
+            id: user.branch.id,
+            name: user.branch.name,
+          }
+        : null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
