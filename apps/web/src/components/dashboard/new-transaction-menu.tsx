@@ -29,6 +29,7 @@ const actions: TransactionAction[] = [
     label: "New Quotation",
     description: "Prepare a customer quotation",
     icon: ClipboardList,
+    href: "/sales/inquiries",
   },
   {
     label: "New Sales Order",

@@ -48,7 +48,7 @@ export class InventoryReservationController {
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.INVENTORY)
-  @Post(':salesOrderId/release')
+  @Post(':salesOrderId/fulfillment-release')
   release(
     @Param('salesOrderId') salesOrderId: string,
     @Body() dto: ReleaseSalesOrderDto,

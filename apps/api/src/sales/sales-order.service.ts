@@ -207,6 +207,7 @@ export class SalesOrderService {
         branch: true,
         customer: true,
         quotation: true,
+        salesInvoice: true,
         items: {
           include: {
             product: true,

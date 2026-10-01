@@ -61,10 +61,14 @@ const sections: {
         icon: FileText,
         href: "/sales/quotations",
       },
-      { label: "Sales Orders", icon: ShoppingCart },
-      { label: "Invoices", icon: Receipt },
-      { label: "Payments", icon: CreditCard },
-      { label: "Returns", icon: Truck },
+      {
+        label: "Sales Orders",
+        icon: ShoppingCart,
+        href: "/sales/orders",
+      },
+      { label: "Invoices", icon: Receipt, href: "/sales/invoices" },
+      { label: "Payments", icon: CreditCard, href: "/sales/payments" },
+      { label: "Returns", icon: Truck, href: "/sales/returns" },
     ],
   },
   {
