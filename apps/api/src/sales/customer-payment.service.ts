@@ -4,13 +4,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma, UserRole } from '@computer-sales/database';
+import {
+  CustomerPaymentStatus,
+  Prisma,
+  UserRole,
+} from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import type { CreateCustomerPaymentDto } from './dto/create-customer-payment.dto.js';
+
+import { SalesListQueryDto } from './dto/sales-list-query.dto.js';
 
 @Injectable()
 export class CustomerPaymentService {
@@ -266,31 +272,156 @@ export class CustomerPaymentService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
+  async findAll(user: AuthenticatedUser, query: SalesListQueryDto) {
     // Non-admin users must belong to a branch.
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const search = query.search?.trim();
+
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const allowedSortFields = [
+      'paymentNo',
+      'paymentDate',
+      'amount',
+      'status',
+      'createdAt',
+    ] as const;
+
+    const sortField = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const where: Prisma.CustomerPaymentWhereInput =
       user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.customerPayment.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
+    const normalizedSearch = search?.toUpperCase();
+
+    const matchingStatus =
+      normalizedSearch &&
+      Object.values(CustomerPaymentStatus).includes(
+        normalizedSearch as CustomerPaymentStatus,
+      )
+        ? (normalizedSearch as CustomerPaymentStatus)
+        : undefined;
+
+    if (search) {
+      where.OR = [
+        {
+          paymentNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          referenceNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          customer: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          customer: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          salesInvoice: {
+            invoiceNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          serviceInvoice: {
+            invoiceNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          account: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          account: {
+            accountNumber: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+
+        ...(matchingStatus ? [{ status: matchingStatus }] : []),
+      ];
+    }
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.customerPayment.findMany({
+        where,
+
+        skip: (page - 1) * limit,
+        take: limit,
+
+        orderBy: {
+          [sortField]: sortOrder,
+        } as Prisma.CustomerPaymentOrderByWithRelationInput,
+
+        include: {
+          branch: true,
+          customer: true,
+          salesInvoice: true,
+          serviceInvoice: true,
+          account: true,
+          cashBankTransaction: true,
+        },
+      }),
+
+      this.prisma.customerPayment.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-      include: {
-        branch: true,
-        customer: true,
-        salesInvoice: true,
-        serviceInvoice: true,
-        account: true,
-        cashBankTransaction: true,
-      },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

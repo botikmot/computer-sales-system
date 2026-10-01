@@ -74,7 +74,7 @@ const sections: {
   {
     label: "Inventory",
     items: [
-      { label: "Products", icon: Package },
+      { label: "Products", icon: Package, href: "/products" },
       { label: "Stock", icon: Boxes },
       { label: "Receiving", icon: Truck },
       { label: "Assembly", icon: Settings },

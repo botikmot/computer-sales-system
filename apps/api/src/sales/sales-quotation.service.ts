@@ -4,13 +4,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma, UserRole } from '@computer-sales/database';
+import {
+  Prisma,
+  SalesQuotationStatus,
+  UserRole,
+} from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import type { CreateSalesQuotationDto } from './dto/create-sales-quotation.dto.js';
+
+import type { SalesListQueryDto } from './dto/sales-list-query.dto.js';
 
 @Injectable()
 export class SalesQuotationService {
@@ -181,33 +187,154 @@ export class SalesQuotationService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
+  async findAll(user: AuthenticatedUser, query: SalesListQueryDto) {
     // Non-admin users must belong to a branch.
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = query.page;
+    const limit = query.limit;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+    const normalizedSearch = search?.toUpperCase();
+
+    const matchingStatus =
+      normalizedSearch &&
+      Object.values(SalesQuotationStatus).includes(
+        normalizedSearch as SalesQuotationStatus,
+      )
+        ? (normalizedSearch as SalesQuotationStatus)
+        : undefined;
+
+    const allowedSortFields = [
+      'quotationNo',
+      'quotationDate',
+      'status',
+      'total',
+      'createdAt',
+    ] as const;
+
+    type SortField = (typeof allowedSortFields)[number];
+
+    const requestedSort = query.sortBy as SortField | undefined;
+
+    const sortBy: SortField = allowedSortFields.includes(
+      requestedSort as SortField,
+    )
+      ? (requestedSort as SortField)
+      : 'createdAt';
+
+    const sortOrder: 'asc' | 'desc' =
+      query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const where: Prisma.SalesQuotationWhereInput =
       user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.salesQuotation.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        branch: true,
-        customer: true,
-        inquiry: true,
-        items: {
-          include: {
-            product: true,
+    if (search) {
+      where.OR = [
+        {
+          quotationNo: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          customer: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          inquiry: {
+            inquiryNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                sku: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+
+        ...(matchingStatus
+          ? [
+              {
+                status: matchingStatus,
+              },
+            ]
+          : []),
+      ];
+    }
+
+    const orderBy = {
+      [sortBy]: sortOrder,
+    } as Prisma.SalesQuotationOrderByWithRelationInput;
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.salesQuotation.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          branch: true,
+          customer: true,
+          inquiry: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.salesQuotation.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

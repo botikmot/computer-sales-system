@@ -15,6 +15,7 @@ import { PrismaService } from '../database/prisma.service.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import type { CreateSalesReturnDto } from './dto/create-sales-return.dto.js';
+import type { SalesListQueryDto } from './dto/sales-list-query.dto.js';
 
 @Injectable()
 export class SalesReturnService {
@@ -420,36 +421,201 @@ export class SalesReturnService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
-    // Non-admin users must belong to a branch.
+  async findAll(user: AuthenticatedUser, query: SalesListQueryDto) {
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+
+    const search = query.search?.trim();
+    const normalizedSearch = search?.toUpperCase();
+
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const allowedSortFields = [
+      'returnNo',
+      'returnDate',
+      'total',
+      'status',
+      'settlementMode',
+      'createdAt',
+    ] as const;
+
+    const sortField = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const where: Prisma.SalesReturnWhereInput =
       user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.salesReturn.findMany({
-      where,
-      orderBy: {
-        returnDate: 'desc',
-      },
-      include: {
-        branch: true,
-        customer: true,
-        salesInvoice: true,
-        items: {
-          include: {
-            product: true,
-            salesInvoiceItem: true,
+    const matchingStatus =
+      normalizedSearch &&
+      ['DRAFT', 'POSTED', 'CANCELLED'].includes(normalizedSearch)
+        ? normalizedSearch
+        : undefined;
+
+    const matchingSettlementMode =
+      normalizedSearch &&
+      ['CASH_REFUND', 'AR_ADJUSTMENT', 'NO_REFUND'].includes(normalizedSearch)
+        ? normalizedSearch
+        : undefined;
+
+    if (search) {
+      where.OR = [
+        {
+          returnNo: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
-        refundAccount: true,
-        cashBankTransaction: true,
+        {
+          reason: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          customer: {
+            is: {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+        {
+          customer: {
+            is: {
+              code: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+        {
+          salesInvoice: {
+            invoiceNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          refundAccount: {
+            is: {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+        {
+          refundAccount: {
+            is: {
+              accountNumber: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                sku: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+        ...(matchingStatus
+          ? [
+              {
+                status:
+                  matchingStatus as Prisma.SalesReturnWhereInput['status'],
+              },
+            ]
+          : []),
+        ...(matchingSettlementMode
+          ? [
+              {
+                settlementMode:
+                  matchingSettlementMode as Prisma.SalesReturnWhereInput['settlementMode'],
+              },
+            ]
+          : []),
+      ];
+    }
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.salesReturn.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+
+        orderBy: {
+          [sortField]: sortOrder,
+        } as Prisma.SalesReturnOrderByWithRelationInput,
+
+        include: {
+          branch: true,
+          customer: true,
+          salesInvoice: true,
+          items: {
+            include: {
+              product: true,
+              salesInvoiceItem: true,
+            },
+          },
+          refundAccount: true,
+          cashBankTransaction: true,
+        },
+      }),
+
+      this.prisma.salesReturn.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

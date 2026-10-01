@@ -1,18 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import {
   AlertCircle,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Eye,
   FileText,
   Loader2,
   Plus,
   RotateCcw,
+  Search,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { getSalesReturns, type SalesReturn } from "@/features/sales/sales-api";
+import {
+  getSalesReturns,
+  type SalesReturn,
+  type SalesReturnListResponse,
+} from "@/features/sales/sales-api";
+
+type SalesReturnSortField =
+  | "returnNo"
+  | "returnDate"
+  | "total"
+  | "status"
+  | "settlementMode"
+  | "createdAt";
 
 function formatCurrency(value: string | number) {
   const amount = Number(value);
@@ -83,8 +99,55 @@ function getStatusClass(status: string) {
   }
 }
 
+const sortOptions: {
+  value: SalesReturnSortField;
+  label: string;
+}[] = [
+  {
+    value: "createdAt",
+    label: "Created Date",
+  },
+  {
+    value: "returnDate",
+    label: "Return Date",
+  },
+  {
+    value: "returnNo",
+    label: "Return No.",
+  },
+  {
+    value: "total",
+    label: "Total",
+  },
+  {
+    value: "status",
+    label: "Status",
+  },
+  {
+    value: "settlementMode",
+    label: "Settlement",
+  },
+];
+
 export default function SalesReturnsPage() {
   const [returns, setReturns] = useState<SalesReturn[]>([]);
+
+  const [pagination, setPagination] = useState<
+    SalesReturnListResponse["pagination"]
+  >({
+    page: 1,
+    limit: 10,
+    total: 0,
+    pages: 0,
+  });
+
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+
+  const [sortBy, setSortBy] = useState<SalesReturnSortField>("createdAt");
+
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -93,13 +156,19 @@ export default function SalesReturnsPage() {
 
     async function loadReturns() {
       try {
-        setLoading(true);
         setError("");
 
-        const result = await getSalesReturns();
+        const result = await getSalesReturns({
+          page: pagination.page,
+          limit: pagination.limit,
+          search: search || undefined,
+          sortBy,
+          sortOrder,
+        });
 
         if (!cancelled) {
-          setReturns(result);
+          setReturns(result.items);
+          setPagination(result.pagination);
         }
       } catch (err) {
         if (!cancelled) {
@@ -121,11 +190,86 @@ export default function SalesReturnsPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [pagination.page, pagination.limit, search, sortBy, sortOrder]);
+
+  function submitSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const nextSearch = searchInput.trim();
+
+    if (nextSearch === search) {
+      return;
+    }
+
+    setLoading(true);
+
+    setPagination((current) => ({
+      ...current,
+      page: 1,
+    }));
+
+    setSearch(nextSearch);
+  }
+
+  function clearSearch() {
+    setLoading(true);
+
+    setSearchInput("");
+    setSearch("");
+
+    setPagination((current) => ({
+      ...current,
+      page: 1,
+    }));
+  }
+
+  function handleSortChange(value: SalesReturnSortField) {
+    setLoading(true);
+
+    setPagination((current) => ({
+      ...current,
+      page: 1,
+    }));
+
+    setSortBy(value);
+  }
+
+  function toggleSortOrder() {
+    setLoading(true);
+
+    setPagination((current) => ({
+      ...current,
+      page: 1,
+    }));
+
+    setSortOrder((current) => (current === "asc" ? "desc" : "asc"));
+  }
+
+  function goToPage(page: number) {
+    if (page < 1 || page > pagination.pages || page === pagination.page) {
+      return;
+    }
+
+    setLoading(true);
+
+    setPagination((current) => ({
+      ...current,
+      page,
+    }));
+  }
+
+  const rangeStart =
+    pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.limit + 1;
+
+  const rangeEnd =
+    pagination.total === 0
+      ? 0
+      : Math.min(pagination.page * pagination.limit, pagination.total);
 
   return (
     <AppShell>
       <div className="space-y-6 pb-8">
+        {/* PAGE HEADER */}
         <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-primary">Sales</p>
@@ -148,6 +292,7 @@ export default function SalesReturnsPage() {
           </Link>
         </section>
 
+        {/* ERROR */}
         {error && (
           <div className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
@@ -160,17 +305,112 @@ export default function SalesReturnsPage() {
           </div>
         )}
 
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-          <div className="border-b border-slate-100 px-5 py-4">
-            <div className="flex items-center gap-2">
-              <RotateCcw className="h-4 w-4 text-primary" />
+        {/* TOOLBAR */}
+        <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            {/* SEARCH */}
+            <form
+              onSubmit={submitSearch}
+              className="flex w-full gap-2 xl:max-w-[720px]"
+            >
+              <div className="relative min-w-0 flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 
-              <h2 className="font-semibold text-slate-950">Return Records</h2>
+                <input
+                  type="search"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  placeholder="Search return, invoice, customer..."
+                  className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="h-11 shrink-0 rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-slate-800"
+              >
+                Search
+              </button>
+
+              {search && (
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="h-11 shrink-0 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  Clear
+                </button>
+              )}
+            </form>
+
+            {/* SORT */}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(event) =>
+                    handleSortChange(event.target.value as SalesReturnSortField)
+                  }
+                  aria-label="Sort field"
+                  className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white pl-4 pr-10 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-50 sm:w-[180px]"
+                >
+                  {sortOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              </div>
+
+              <button
+                type="button"
+                onClick={toggleSortOrder}
+                className="h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                {sortOrder === "asc" ? "Ascending" : "Descending"}
+              </button>
+            </div>
+          </div>
+
+          {search && (
+            <p className="mt-3 text-xs text-slate-400">
+              Showing results for{" "}
+              <span className="font-semibold text-slate-600">{search}</span>
+            </p>
+          )}
+        </section>
+
+        {/* RECORDS */}
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+          <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <RotateCcw className="h-4 w-4 text-primary" />
+
+                <h2 className="font-semibold text-slate-950">Return Records</h2>
+              </div>
+
+              <p className="mt-0.5 text-xs text-slate-500">
+                Posted sales returns and their settlement details
+              </p>
             </div>
 
-            <p className="mt-0.5 text-xs text-slate-500">
-              Posted sales returns and their settlement details
-            </p>
+            {!loading && (
+              <p className="text-xs text-slate-500">
+                Showing{" "}
+                <span className="font-semibold text-slate-700">
+                  {rangeStart}
+                </span>
+                –
+                <span className="font-semibold text-slate-700">{rangeEnd}</span>{" "}
+                of{" "}
+                <span className="font-semibold text-slate-700">
+                  {pagination.total}
+                </span>
+              </p>
+            )}
           </div>
 
           {loading ? (
@@ -180,131 +420,201 @@ export default function SalesReturnsPage() {
           ) : returns.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-5 py-16 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
-                <FileText className="h-6 w-6" />
+                {search ? (
+                  <Search className="h-6 w-6" />
+                ) : (
+                  <FileText className="h-6 w-6" />
+                )}
               </div>
 
               <h3 className="mt-4 text-sm font-semibold text-slate-800">
-                No sales returns yet
+                {search ? "No sales returns found" : "No sales returns yet"}
               </h3>
 
               <p className="mt-1 max-w-sm text-sm text-slate-400">
-                Customer returns will appear here after they are posted.
+                {search
+                  ? "Try a different search term."
+                  : "Customer returns will appear here after they are posted."}
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1100px] border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/70">
-                    <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Return
-                    </th>
+            <>
+              {/* TABLE */}
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[1100px] border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-100 bg-slate-50/70">
+                      <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Return
+                      </th>
 
-                    <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Invoice
-                    </th>
+                      <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Invoice
+                      </th>
 
-                    <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Customer
-                    </th>
+                      <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Customer
+                      </th>
 
-                    <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Date
-                    </th>
+                      <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Date
+                      </th>
 
-                    <th className="px-5 py-3 text-center text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Settlement
-                    </th>
+                      <th className="px-5 py-3 text-center text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Settlement
+                      </th>
 
-                    <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Total
-                    </th>
+                      <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Total
+                      </th>
 
-                    <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Status
-                    </th>
+                      <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Status
+                      </th>
 
-                    <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody className="divide-y divide-slate-100">
-                  {returns.map((salesReturn) => (
-                    <tr
-                      key={salesReturn.id}
-                      className="transition hover:bg-slate-50"
-                    >
-                      <td className="px-5 py-4">
-                        <p className="font-mono text-sm font-semibold text-slate-900">
-                          {salesReturn.returnNo}
-                        </p>
-                      </td>
-
-                      <td className="px-5 py-4">
-                        <Link
-                          href={`/sales/invoices/${salesReturn.salesInvoiceId}`}
-                          className="font-mono text-xs font-semibold text-primary hover:underline"
-                        >
-                          {salesReturn.salesInvoice.invoiceNo}
-                        </Link>
-                      </td>
-
-                      <td className="px-5 py-4">
-                        <p className="text-sm font-semibold text-slate-800">
-                          {salesReturn.customer.name}
-                        </p>
-
-                        <p className="mt-0.5 text-xs text-slate-400">
-                          {salesReturn.customer.code}
-                        </p>
-                      </td>
-
-                      <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
-                        {formatDate(salesReturn.returnDate)}
-                      </td>
-
-                      <td className="px-5 py-4 text-center">
-                        <span
-                          className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${getSettlementClass(
-                            salesReturn.settlementMode,
-                          )}`}
-                        >
-                          {formatSettlementMode(salesReturn.settlementMode)}
-                        </span>
-                      </td>
-
-                      <td className="whitespace-nowrap px-5 py-4 text-right">
-                        <span className="font-mono text-sm font-bold text-slate-900">
-                          {formatCurrency(salesReturn.total)}
-                        </span>
-                      </td>
-
-                      <td className="px-5 py-4">
-                        <span
-                          className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${getStatusClass(
-                            salesReturn.status,
-                          )}`}
-                        >
-                          {salesReturn.status}
-                        </span>
-                      </td>
-
-                      <td className="px-5 py-4 text-right">
-                        <Link
-                          href={`/sales/returns/${salesReturn.id}`}
-                          className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-primary"
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          View
-                        </Link>
-                      </td>
+                      <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Action
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+
+                  <tbody className="divide-y divide-slate-100">
+                    {returns.map((salesReturn) => (
+                      <tr
+                        key={salesReturn.id}
+                        className="transition hover:bg-slate-50"
+                      >
+                        {/* RETURN */}
+                        <td className="px-5 py-4">
+                          <p className="font-mono text-sm font-semibold text-slate-900">
+                            {salesReturn.returnNo}
+                          </p>
+
+                          {salesReturn.reason && (
+                            <p className="mt-1 max-w-[220px] truncate text-xs text-slate-400">
+                              {salesReturn.reason}
+                            </p>
+                          )}
+                        </td>
+
+                        {/* INVOICE */}
+                        <td className="px-5 py-4">
+                          <Link
+                            href={`/sales/invoices/${salesReturn.salesInvoiceId}`}
+                            className="font-mono text-xs font-semibold text-primary hover:underline"
+                          >
+                            {salesReturn.salesInvoice.invoiceNo}
+                          </Link>
+                        </td>
+
+                        {/* CUSTOMER */}
+                        <td className="px-5 py-4">
+                          <p className="text-sm font-semibold text-slate-800">
+                            {salesReturn.customer.name}
+                          </p>
+
+                          <p className="mt-0.5 text-xs text-slate-400">
+                            {salesReturn.customer.code}
+                          </p>
+                        </td>
+
+                        {/* DATE */}
+                        <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
+                          {formatDate(salesReturn.returnDate)}
+                        </td>
+
+                        {/* SETTLEMENT */}
+                        <td className="px-5 py-4 text-center">
+                          <span
+                            className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${getSettlementClass(
+                              salesReturn.settlementMode,
+                            )}`}
+                          >
+                            {formatSettlementMode(salesReturn.settlementMode)}
+                          </span>
+                        </td>
+
+                        {/* TOTAL */}
+                        <td className="whitespace-nowrap px-5 py-4 text-right">
+                          <span className="font-mono text-sm font-bold text-slate-900">
+                            {formatCurrency(salesReturn.total)}
+                          </span>
+                        </td>
+
+                        {/* STATUS */}
+                        <td className="px-5 py-4">
+                          <span
+                            className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${getStatusClass(
+                              salesReturn.status,
+                            )}`}
+                          >
+                            {salesReturn.status}
+                          </span>
+                        </td>
+
+                        {/* ACTION */}
+                        <td className="px-5 py-4 text-right">
+                          <Link
+                            href={`/sales/returns/${salesReturn.id}`}
+                            className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-primary"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                            View
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* PAGINATION */}
+              <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs text-slate-500">
+                  Page{" "}
+                  <span className="font-semibold text-slate-700">
+                    {pagination.page}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-semibold text-slate-700">
+                    {pagination.pages}
+                  </span>
+                </p>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => goToPage(pagination.page - 1)}
+                    disabled={pagination.page <= 1}
+                    className="inline-flex h-10 items-center gap-1 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </button>
+
+                  <button
+                    type="button"
+                    aria-current="page"
+                    className="inline-flex h-10 min-w-10 items-center justify-center rounded-xl bg-primary px-3 text-sm font-semibold text-white"
+                  >
+                    {pagination.page}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => goToPage(pagination.page + 1)}
+                    disabled={
+                      pagination.pages === 0 ||
+                      pagination.page >= pagination.pages
+                    }
+                    className="inline-flex h-10 items-center gap-1 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </>
           )}
         </section>
       </div>

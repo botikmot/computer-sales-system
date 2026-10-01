@@ -4,13 +4,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { UserRole } from '@computer-sales/database';
+import { Prisma, SalesInquiryStatus, UserRole } from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import type { CreateSalesInquiryDto } from './dto/create-sales-inquiry.dto.js';
+import type { SalesListQueryDto } from './dto/sales-list-query.dto.js';
 
 @Injectable()
 export class SalesInquiryService {
@@ -92,33 +93,146 @@ export class SalesInquiryService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
+  async findAll(user: AuthenticatedUser, query: SalesListQueryDto) {
     // Non-admin users must have a branch.
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = query.page;
+    const limit = query.limit;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const allowedSortFields = [
+      'inquiryNo',
+      'inquiryDate',
+      'status',
+      'createdAt',
+    ] as const;
+
+    type SortField = (typeof allowedSortFields)[number];
+
+    const requestedSort = query.sortBy as SortField | undefined;
+
+    const sortBy: SortField = allowedSortFields.includes(
+      requestedSort as SortField,
+    )
+      ? (requestedSort as SortField)
+      : 'createdAt';
+
+    const sortOrder: 'asc' | 'desc' =
+      query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const where: Prisma.SalesInquiryWhereInput =
       user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.salesInquiry.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        branch: true,
-        customer: true,
-        items: {
-          include: {
-            product: true,
+    const normalizedSearch = search?.toUpperCase();
+
+    const matchingStatus =
+      normalizedSearch &&
+      Object.values(SalesInquiryStatus).includes(
+        normalizedSearch as SalesInquiryStatus,
+      )
+        ? (normalizedSearch as SalesInquiryStatus)
+        : undefined;
+
+    if (search) {
+      where.OR = [
+        {
+          inquiryNo: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
-        quotations: true,
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          customer: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                sku: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+
+        ...(matchingStatus
+          ? [
+              {
+                status: matchingStatus,
+              },
+            ]
+          : []),
+      ];
+    }
+
+    const orderBy = {
+      [sortBy]: sortOrder,
+    } as Prisma.SalesInquiryOrderByWithRelationInput;
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.salesInquiry.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          branch: true,
+          customer: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
+          quotations: true,
+        },
+      }),
+
+      this.prisma.salesInquiry.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

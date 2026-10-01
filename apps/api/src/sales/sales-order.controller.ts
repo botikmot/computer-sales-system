@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -9,6 +9,8 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { SalesOrderService } from './sales-order.service.js';
 import { ReleaseSalesOrderDto } from './dto/release-sales-order.dto.js';
+
+import { SalesListQueryDto } from './dto/sales-list-query.dto.js';
 
 @Controller('sales/orders')
 export class SalesOrderController {
@@ -25,8 +27,11 @@ export class SalesOrderController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
   @Get()
-  findAll(@CurrentUser() user: AuthenticatedUser) {
-    return this.salesOrderService.findAll(user);
+  findAll(
+    @Query() query: SalesListQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.salesOrderService.findAll(user, query);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)

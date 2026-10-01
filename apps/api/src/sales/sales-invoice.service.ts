@@ -5,12 +5,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Prisma, SalesPaymentMode, UserRole } from '@computer-sales/database';
+import {
+  Prisma,
+  SalesInvoiceStatus,
+  SalesPaymentMode,
+  UserRole,
+} from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import { SalesListQueryDto } from './dto/sales-list-query.dto.js';
 
 @Injectable()
 export class SalesInvoiceService {
@@ -140,33 +146,167 @@ export class SalesInvoiceService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
+  async findAll(user: AuthenticatedUser, query: SalesListQueryDto) {
     // Non-admin users must belong to a branch.
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const search = query.search?.trim();
+
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const allowedSortFields = [
+      'invoiceNo',
+      'invoiceDate',
+      'status',
+      'paymentMode',
+      'total',
+      'balanceDue',
+      'createdAt',
+    ] as const;
+
+    const sortField = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const where: Prisma.SalesInvoiceWhereInput =
       user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.salesInvoice.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        branch: true,
-        customer: true,
-        salesOrder: true,
-        items: {
-          include: {
-            product: true,
+    const normalizedSearch = search?.toUpperCase();
+
+    const matchingStatus =
+      normalizedSearch &&
+      Object.values(SalesInvoiceStatus).includes(
+        normalizedSearch as SalesInvoiceStatus,
+      )
+        ? (normalizedSearch as SalesInvoiceStatus)
+        : undefined;
+
+    const matchingPaymentMode =
+      normalizedSearch &&
+      Object.values(SalesPaymentMode).includes(
+        normalizedSearch as SalesPaymentMode,
+      )
+        ? (normalizedSearch as SalesPaymentMode)
+        : undefined;
+
+    if (search) {
+      where.OR = [
+        {
+          invoiceNo: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          customer: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          customer: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          salesOrder: {
+            orderNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                sku: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+        {
+          items: {
+            some: {
+              product: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+
+        ...(matchingStatus ? [{ status: matchingStatus }] : []),
+
+        ...(matchingPaymentMode ? [{ paymentMode: matchingPaymentMode }] : []),
+      ];
+    }
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.salesInvoice.findMany({
+        where,
+
+        skip: (page - 1) * limit,
+        take: limit,
+
+        orderBy: {
+          [sortField]: sortOrder,
+        } as Prisma.SalesInvoiceOrderByWithRelationInput,
+
+        include: {
+          branch: true,
+
+          customer: true,
+
+          salesOrder: true,
+
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.salesInvoice.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

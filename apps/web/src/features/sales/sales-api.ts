@@ -440,8 +440,98 @@ export type CreateSalesReturnPayload = {
   items: CreateSalesReturnItemPayload[];
 };
 
-export async function getSalesReturns() {
-  return apiFetch<SalesReturn[]>("/sales/returns");
+export type PaginationMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+};
+
+export type SalesListQuery = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+};
+
+export type PaginatedResponse<T> = {
+  items: T[];
+  pagination: PaginationMeta;
+};
+
+export type CustomerPaymentListQuery = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: "paymentNo" | "paymentDate" | "amount" | "status" | "createdAt";
+  sortOrder?: "asc" | "desc";
+};
+
+export type CustomerPaymentListResponse = {
+  items: CustomerPayment[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type SalesReturnListQuery = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?:
+    | "returnNo"
+    | "returnDate"
+    | "total"
+    | "status"
+    | "settlementMode"
+    | "createdAt";
+  sortOrder?: "asc" | "desc";
+};
+
+export type SalesReturnListResponse = {
+  items: SalesReturn[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export async function getSalesReturns(
+  query: SalesReturnListQuery = {},
+): Promise<SalesReturnListResponse> {
+  const params = new URLSearchParams();
+
+  if (query.page !== undefined) {
+    params.set("page", String(query.page));
+  }
+
+  if (query.limit !== undefined) {
+    params.set("limit", String(query.limit));
+  }
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.sortBy) {
+    params.set("sortBy", query.sortBy);
+  }
+
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+
+  const queryString = params.toString();
+
+  return apiFetch<SalesReturnListResponse>(
+    queryString ? `/sales/returns?${queryString}` : "/sales/returns",
+  );
 }
 
 export async function getSalesReturn(id: string) {
@@ -474,8 +564,38 @@ export async function createCustomerPayment(
   });
 }
 
-export async function getCustomerPayments(): Promise<CustomerPayment[]> {
-  return apiFetch<CustomerPayment[]>("/sales/customer-payments");
+export async function getCustomerPayments(
+  query: CustomerPaymentListQuery = {},
+): Promise<CustomerPaymentListResponse> {
+  const params = new URLSearchParams();
+
+  if (query.page !== undefined) {
+    params.set("page", String(query.page));
+  }
+
+  if (query.limit !== undefined) {
+    params.set("limit", String(query.limit));
+  }
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.sortBy) {
+    params.set("sortBy", query.sortBy);
+  }
+
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+
+  const queryString = params.toString();
+
+  return apiFetch<CustomerPaymentListResponse>(
+    queryString
+      ? `/sales/customer-payments?${queryString}`
+      : "/sales/customer-payments",
+  );
 }
 
 export async function getCustomerPayment(id: string): Promise<CustomerPayment> {
@@ -490,8 +610,29 @@ export async function getProducts(): Promise<ProductRecord[]> {
   return apiFetch<ProductRecord[]>("/products");
 }
 
-export async function getSalesInquiries(): Promise<SalesInquiry[]> {
-  return apiFetch<SalesInquiry[]>("/sales/inquiries");
+export async function getSalesInquiries(
+  query: SalesListQuery = {},
+): Promise<PaginatedResponse<SalesInquiry>> {
+  const params = new URLSearchParams();
+
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 10));
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.sortBy) {
+    params.set("sortBy", query.sortBy);
+  }
+
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+
+  return apiFetch<PaginatedResponse<SalesInquiry>>(
+    `/sales/inquiries?${params.toString()}`,
+  );
 }
 
 export async function getSalesInquiry(id: string): Promise<SalesInquiry> {
@@ -507,8 +648,29 @@ export async function createSalesInquiry(
   });
 }
 
-export async function getSalesQuotations(): Promise<SalesQuotation[]> {
-  return apiFetch<SalesQuotation[]>("/sales/quotations");
+export async function getSalesQuotations(
+  query: SalesListQuery = {},
+): Promise<PaginatedResponse<SalesQuotation>> {
+  const params = new URLSearchParams();
+
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 10));
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.sortBy) {
+    params.set("sortBy", query.sortBy);
+  }
+
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+
+  return apiFetch<PaginatedResponse<SalesQuotation>>(
+    `/sales/quotations?${params.toString()}`,
+  );
 }
 
 export async function getSalesQuotation(id: string): Promise<SalesQuotation> {
@@ -549,8 +711,29 @@ export async function createSalesOrderFromQuotation(
   );
 }
 
-export async function getSalesOrders(): Promise<SalesOrder[]> {
-  return apiFetch<SalesOrder[]>("/sales/orders");
+export async function getSalesOrders(
+  query: SalesListQuery = {},
+): Promise<PaginatedResponse<SalesOrder>> {
+  const params = new URLSearchParams();
+
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 10));
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.sortBy) {
+    params.set("sortBy", query.sortBy);
+  }
+
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+
+  return apiFetch<PaginatedResponse<SalesOrder>>(
+    `/sales/orders?${params.toString()}`,
+  );
 }
 
 export async function getSalesOrder(id: string): Promise<SalesOrder> {
@@ -597,8 +780,29 @@ export async function releaseSalesOrder(
   );
 }
 
-export async function getSalesInvoices(): Promise<SalesInvoice[]> {
-  return apiFetch<SalesInvoice[]>("/sales/invoices");
+export async function getSalesInvoices(
+  query: SalesListQuery = {},
+): Promise<PaginatedResponse<SalesInvoice>> {
+  const params = new URLSearchParams();
+
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 10));
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.sortBy) {
+    params.set("sortBy", query.sortBy);
+  }
+
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+
+  return apiFetch<PaginatedResponse<SalesInvoice>>(
+    `/sales/invoices?${params.toString()}`,
+  );
 }
 
 export async function getSalesInvoice(id: string): Promise<SalesInvoice> {
