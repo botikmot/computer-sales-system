@@ -111,6 +111,12 @@ export class ProductsService {
   }
 
   async findAll(query: ProductQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
     const where: Prisma.ProductWhereInput = {};
 
     if (query.categoryId) {
@@ -121,9 +127,7 @@ export class ProductsService {
       where.isActive = query.isActive;
     }
 
-    if (query.search?.trim()) {
-      const search = query.search.trim();
-
+    if (search) {
       where.OR = [
         {
           sku: {
@@ -152,20 +156,78 @@ export class ProductsService {
       ];
     }
 
-    return this.prisma.product.findMany({
-      where,
-      include: {
-        category: true,
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const orderBy:
+      | Prisma.ProductOrderByWithRelationInput
+      | Prisma.ProductOrderByWithRelationInput[] = query.sortBy
+      ? ({
+          [query.sortBy]: sortOrder,
+        } as Prisma.ProductOrderByWithRelationInput)
+      : [
+          {
+            isActive: 'desc',
+          },
+          {
+            name: 'asc',
+          },
+        ];
+
+    const [items, total, active, inactive, tracked] =
+      await this.prisma.$transaction([
+        this.prisma.product.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy,
+          include: {
+            category: true,
+          },
+        }),
+
+        this.prisma.product.count({
+          where,
+        }),
+
+        this.prisma.product.count({
+          where: {
+            ...where,
+            isActive: true,
+          },
+        }),
+
+        this.prisma.product.count({
+          where: {
+            ...where,
+            isActive: false,
+          },
+        }),
+
+        this.prisma.product.count({
+          where: {
+            ...where,
+            trackInventory: true,
+          },
+        }),
+      ]);
+
+    return {
+      items,
+
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-      orderBy: [
-        {
-          isActive: 'desc',
-        },
-        {
-          name: 'asc',
-        },
-      ],
-    });
+
+      summary: {
+        total,
+        active,
+        inactive,
+        tracked,
+      },
+    };
   }
 
   async findOne(id: string) {

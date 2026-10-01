@@ -24,12 +24,6 @@ export type Product = {
   updatedAt?: string;
 };
 
-export type ProductQuery = {
-  search?: string;
-  categoryId?: string;
-  isActive?: boolean;
-};
-
 export type CreateProductPayload = {
   sku: string;
   name: string;
@@ -44,12 +38,57 @@ export type CreateProductPayload = {
   categoryId?: string;
 };
 
+export type ProductQuery = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  categoryId?: string;
+  isActive?: boolean;
+  sortBy?:
+    | "sku"
+    | "name"
+    | "brand"
+    | "model"
+    | "defaultSellingPrice"
+    | "defaultCostPrice"
+    | "isActive"
+    | "trackInventory"
+    | "createdAt";
+  sortOrder?: "asc" | "desc";
+};
+
+export type ProductListResponse = {
+  items: Product[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+
+  summary: {
+    total: number;
+    active: number;
+    inactive: number;
+    tracked: number;
+  };
+};
+
 export type UpdateProductPayload = Partial<CreateProductPayload>;
 
 export async function getProducts(
   query: ProductQuery = {},
-): Promise<Product[]> {
+): Promise<ProductListResponse> {
   const params = new URLSearchParams();
+
+  if (query.page !== undefined) {
+    params.set("page", String(query.page));
+  }
+
+  if (query.limit !== undefined) {
+    params.set("limit", String(query.limit));
+  }
 
   if (query.search?.trim()) {
     params.set("search", query.search.trim());
@@ -63,9 +102,17 @@ export async function getProducts(
     params.set("isActive", String(query.isActive));
   }
 
+  if (query.sortBy) {
+    params.set("sortBy", query.sortBy);
+  }
+
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+
   const queryString = params.toString();
 
-  return apiFetch<Product[]>(
+  return apiFetch<ProductListResponse>(
     `/products${queryString ? `?${queryString}` : ""}`,
   );
 }

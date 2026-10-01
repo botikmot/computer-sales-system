@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -8,6 +16,8 @@ import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
 
 import { CategoriesService } from './categories.service.js';
+
+import { CategoryQueryDto } from './dto/category-query.dto.js';
 
 @Controller('categories')
 export class CategoriesController {
@@ -20,8 +30,8 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll() {
-    return this.categoriesService.findAll();
+  findAll(@Query() query: CategoryQueryDto) {
+    return this.categoriesService.findAll(query);
   }
 
   @Get(':id')

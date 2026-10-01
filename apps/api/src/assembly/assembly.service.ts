@@ -18,6 +18,8 @@ import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateBomDto } from './dto/create-bom.dto.js';
 import { CreateAssemblyDto } from './dto/create-assembly.dto.js';
+import { AssemblyQueryDto } from './dto/assembly-query.dto.js';
+import { BomQueryDto } from './dto/bom-query.dto.js';
 
 @Injectable()
 export class AssemblyService {
@@ -136,6 +138,102 @@ export class AssemblyService {
     }
 
     return bom;
+  }
+
+  async findBoms(query: BomQueryDto, user: AuthenticatedUser) {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const where = {
+      isActive: true,
+
+      ...(search
+        ? {
+            OR: [
+              {
+                name: {
+                  contains: search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                product: {
+                  sku: {
+                    contains: search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+              {
+                product: {
+                  name: {
+                    contains: search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
+    const sortOrder = query.sortOrder ?? 'desc';
+
+    const orderBy =
+      query.sortBy === 'finishedProduct'
+        ? {
+            product: {
+              name: sortOrder,
+            },
+          }
+        : query.sortBy === 'status'
+          ? {
+              isActive: sortOrder,
+            }
+          : {
+              createdAt: sortOrder,
+            };
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.billOfMaterial.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          product: true,
+          items: {
+            include: {
+              componentProduct: true,
+            },
+          },
+          _count: {
+            select: {
+              items: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.billOfMaterial.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async createAssembly(dto: CreateAssemblyDto, user: AuthenticatedUser) {
@@ -420,37 +518,107 @@ export class AssemblyService {
     );
   }
 
-  async findAll(user: AuthenticatedUser) {
+  async findAll(query: AssemblyQueryDto, user: AuthenticatedUser) {
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
-      user.role === UserRole.ADMIN
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const where = {
+      ...(user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
-          };
+          }),
+      ...(search
+        ? {
+            OR: [
+              {
+                finishedProduct: {
+                  sku: {
+                    contains: search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+              {
+                finishedProduct: {
+                  name: {
+                    contains: search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+    };
 
-    return this.prisma.assembly.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        branch: true,
-        billOfMaterial: {
-          include: {
-            product: true,
+    const sortOrder = query.sortOrder ?? 'desc';
+
+    const orderBy =
+      query.sortBy === 'finishedProduct'
+        ? {
+            finishedProduct: {
+              name: sortOrder,
+            },
+          }
+        : query.sortBy === 'quantityProduced'
+          ? {
+              quantityProduced: sortOrder,
+            }
+          : query.sortBy === 'status'
+            ? {
+                status: sortOrder,
+              }
+            : {
+                createdAt: sortOrder,
+              };
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.assembly.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          branch: true,
+
+          billOfMaterial: {
+            include: {
+              product: true,
+            },
           },
-        },
-        finishedProduct: true,
-        components: {
-          include: {
-            componentProduct: true,
+
+          finishedProduct: true,
+
+          components: {
+            include: {
+              componentProduct: true,
+            },
           },
+
+          inventoryMovements: true,
         },
-        inventoryMovements: true,
+      }),
+
+      this.prisma.assembly.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

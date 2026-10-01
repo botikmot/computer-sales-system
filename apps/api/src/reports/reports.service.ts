@@ -3265,58 +3265,133 @@ export class ReportsService {
   ) {
     query = this.scopeReportQuery(query, user);
 
-    const balances = await this.prisma.inventoryBalance.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-        ...(query.productId ? { productId: query.productId } : {}),
-      },
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
 
-      include: {
-        branch: true,
-        product: {
-          include: {
-            category: true,
-          },
-        },
-      },
+    const where: Prisma.InventoryBalanceWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.productId ? { productId: query.productId } : {}),
+    };
 
-      orderBy: [
+    const search = query.search?.trim();
+
+    if (search) {
+      where.OR = [
         {
           product: {
-            name: 'asc',
+            sku: {
+              contains: search,
+              mode: 'insensitive',
+            },
           },
         },
-      ],
-    });
+        {
+          product: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          product: {
+            category: {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+      ];
+    }
 
-    const totalQuantity = balances.reduce(
+    const sortOrder = query.sortOrder ?? 'asc';
+
+    const orderBy =
+      query.sortBy === 'sku'
+        ? { product: { sku: sortOrder } }
+        : query.sortBy === 'quantity'
+          ? { quantity: sortOrder }
+          : query.sortBy === 'averageCost'
+            ? { averageCost: sortOrder }
+            : query.sortBy === 'updatedAt'
+              ? { updatedAt: sortOrder }
+              : { product: { name: sortOrder } };
+
+    const [balances, total, summaryBalances] = await this.prisma.$transaction([
+      this.prisma.inventoryBalance.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          branch: true,
+          product: {
+            include: {
+              category: true,
+            },
+          },
+        },
+        orderBy,
+      }),
+
+      this.prisma.inventoryBalance.count({
+        where,
+      }),
+
+      this.prisma.inventoryBalance.findMany({
+        where,
+        select: {
+          quantity: true,
+          averageCost: true,
+        },
+      }),
+    ]);
+
+    const totalQuantity = summaryBalances.reduce(
       (sum, balance) => sum + balance.quantity,
       0,
     );
 
-    const totalValue = balances.reduce(
+    const totalValue = summaryBalances.reduce(
       (sum, balance) => sum.add(balance.averageCost.mul(balance.quantity)),
       new Prisma.Decimal(0),
     );
 
     return {
-      count: balances.length,
+      // Backward-compatible fields for existing consumers
+      count: total,
       totalQuantity,
       totalValue: totalValue.toDecimalPlaces(2),
+
       items: balances.map((balance) => ({
         branchId: balance.branchId,
+        branchCode: balance.branch.code,
+        branchName: balance.branch.name,
+
         productId: balance.productId,
+
         sku: balance.product.sku,
         productName: balance.product.name,
         category: balance.product.category?.name ?? null,
         unit: balance.product.unit,
+
         quantity: balance.quantity,
         averageCost: balance.averageCost,
         inventoryValue: balance.averageCost
           .mul(balance.quantity)
           .toDecimalPlaces(2),
+
         updatedAt: balance.updatedAt,
       })),
+
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
     };
   }
 

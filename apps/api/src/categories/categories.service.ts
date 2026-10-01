@@ -8,6 +8,8 @@ import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
+import { CategoryQueryDto } from './dto/category-query.dto.js';
+import { Prisma } from '@computer-sales/database';
 
 @Injectable()
 export class CategoriesService {
@@ -41,17 +43,67 @@ export class CategoriesService {
     }
   }
 
-  async findAll() {
-    return this.prisma.productCategory.findMany({
-      orderBy: [
-        {
-          isActive: 'desc',
+  async findAll(query: CategoryQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.ProductCategoryWhereInput = {};
+
+    if (query.status === 'ACTIVE') {
+      where.isActive = true;
+    }
+
+    if (query.status === 'INACTIVE') {
+      where.isActive = false;
+    }
+
+    if (query.search?.trim()) {
+      where.name = {
+        contains: query.search.trim(),
+        mode: 'insensitive',
+      };
+    }
+
+    const sortOrder = query.sortOrder ?? 'asc';
+
+    const orderBy = query.sortBy
+      ? {
+          [query.sortBy]: sortOrder,
+        }
+      : {
+          name: 'asc' as const,
+        };
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.productCategory.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          _count: {
+            select: {
+              products: true,
+            },
+          },
         },
-        {
-          name: 'asc',
-        },
-      ],
-    });
+      }),
+
+      this.prisma.productCategory.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: string) {

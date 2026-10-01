@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 import {
   BarChart3,
@@ -32,6 +33,10 @@ type NavItem = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   href?: string;
+  children?: {
+    label: string;
+    href: string;
+  }[];
 };
 
 const sections: {
@@ -66,54 +71,134 @@ const sections: {
         icon: ShoppingCart,
         href: "/sales/orders",
       },
-      { label: "Invoices", icon: Receipt, href: "/sales/invoices" },
-      { label: "Payments", icon: CreditCard, href: "/sales/payments" },
-      { label: "Returns", icon: Truck, href: "/sales/returns" },
+      {
+        label: "Invoices",
+        icon: Receipt,
+        href: "/sales/invoices",
+      },
+      {
+        label: "Payments",
+        icon: CreditCard,
+        href: "/sales/payments",
+      },
+      {
+        label: "Returns",
+        icon: Truck,
+        href: "/sales/returns",
+      },
     ],
   },
   {
     label: "Inventory",
     items: [
-      { label: "Products", icon: Package, href: "/products" },
-      { label: "Stock", icon: Boxes },
-      { label: "Receiving", icon: Truck },
-      { label: "Assembly", icon: Settings },
-      { label: "Adjustments", icon: ClipboardList },
+      {
+        label: "Products",
+        icon: Package,
+        children: [
+          {
+            label: "All Products",
+            href: "/products",
+          },
+          {
+            label: "Categories",
+            href: "/products/categories",
+          },
+        ],
+      },
+      {
+        label: "Stock",
+        icon: Boxes,
+        href: "/stock",
+      },
+      {
+        label: "Receiving",
+        icon: Truck,
+        href: "/receiving",
+      },
+      {
+        label: "Assembly",
+        icon: Settings,
+        href: "/assembly",
+      },
+      {
+        label: "Adjustments",
+        icon: ClipboardList,
+        href: "/adjustments",
+      },
     ],
   },
   {
     label: "Purchasing",
     items: [
-      { label: "Suppliers", icon: Users },
-      { label: "Purchase Orders", icon: ShoppingCart },
-      { label: "Receiving", icon: Truck },
-      { label: "Supplier Payments", icon: CreditCard },
+      {
+        label: "Suppliers",
+        icon: Users,
+      },
+      {
+        label: "Purchase Orders",
+        icon: ShoppingCart,
+      },
+      {
+        label: "Receiving",
+        icon: Truck,
+      },
+      {
+        label: "Supplier Payments",
+        icon: CreditCard,
+      },
     ],
   },
   {
     label: "Services",
     items: [
-      { label: "Service Jobs", icon: Wrench },
-      { label: "Service Invoices", icon: Receipt },
+      {
+        label: "Service Jobs",
+        icon: Wrench,
+      },
+      {
+        label: "Service Invoices",
+        icon: Receipt,
+      },
     ],
   },
   {
     label: "Finance",
     items: [
-      { label: "Accounts Receivable", icon: UserRound },
-      { label: "Accounts Payable", icon: Building2 },
-      { label: "Cash & Bank", icon: CreditCard },
-      { label: "Petty Cash", icon: Receipt },
+      {
+        label: "Accounts Receivable",
+        icon: UserRound,
+      },
+      {
+        label: "Accounts Payable",
+        icon: Building2,
+      },
+      {
+        label: "Cash & Bank",
+        icon: CreditCard,
+      },
+      {
+        label: "Petty Cash",
+        icon: Receipt,
+      },
     ],
   },
   {
     label: "Reports",
-    items: [{ label: "Reports Center", icon: BarChart3 }],
+    items: [
+      {
+        label: "Reports Center",
+        icon: BarChart3,
+      },
+    ],
   },
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+
+  const [productsOpen, setProductsOpen] = useState(
+    pathname.startsWith("/products"),
+  );
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -142,6 +227,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
               <div className="space-y-0.5">
                 {section.items.map((item) => {
                   const Icon = item.icon;
+                  const hasChildren = Boolean(item.children?.length);
 
                   const active =
                     item.href === "/"
@@ -151,6 +237,110 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                           pathname.startsWith(`${item.href}/`)
                         : false;
 
+                  /*
+                   * Products parent
+                   */
+                  if (hasChildren) {
+                    const productsActive = pathname.startsWith("/products");
+
+                    const allProductsActive =
+                      pathname === "/products" ||
+                      (pathname.startsWith("/products/") &&
+                        !pathname.startsWith("/products/categories"));
+
+                    const categoriesActive =
+                      pathname === "/products/categories" ||
+                      pathname.startsWith("/products/categories/");
+
+                    return (
+                      <div key={item.label}>
+                        {/* Parent */}
+                        <button
+                          type="button"
+                          onClick={() => setProductsOpen((value) => !value)}
+                          aria-expanded={productsOpen}
+                          className={[
+                            "group relative flex min-h-10 w-full items-center gap-3 overflow-hidden rounded-xl px-3 text-left text-[13px] font-medium transition-all",
+                            productsActive
+                              ? "bg-blue-50 text-primary"
+                              : "text-slate-600 hover:bg-slate-50 hover:text-slate-950",
+                          ].join(" ")}
+                        >
+                          <span
+                            className={[
+                              "absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full transition-opacity",
+                              productsActive
+                                ? "bg-primary opacity-100"
+                                : "opacity-0",
+                            ].join(" ")}
+                          />
+
+                          <Icon
+                            className={[
+                              "h-[17px] w-[17px] shrink-0",
+                              productsActive
+                                ? "text-primary"
+                                : "text-slate-400 group-hover:text-slate-600",
+                            ].join(" ")}
+                          />
+
+                          <span className="min-w-0 flex-1 text-[13px] font-medium truncate">
+                            {item.label}
+                          </span>
+
+                          <ChevronDown
+                            className={[
+                              "h-4 w-4 shrink-0 text-slate-300 transition-transform duration-200",
+                              productsOpen ? "rotate-180" : "",
+                            ].join(" ")}
+                          />
+                        </button>
+
+                        {/* Submenu */}
+                        {productsOpen && (
+                          <div className="ml-5 mt-1 space-y-0.5 border-l border-slate-200 pl-3">
+                            {item.children?.map((child) => {
+                              const childActive =
+                                child.href === "/products"
+                                  ? allProductsActive
+                                  : categoriesActive;
+
+                              return (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  onClick={onNavigate}
+                                  className={[
+                                    "group relative flex min-h-9 items-center rounded-lg px-3 text-[12px] font-medium transition-all",
+                                    childActive
+                                      ? "bg-blue-50 text-primary"
+                                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
+                                  ].join(" ")}
+                                >
+                                  <span
+                                    className={[
+                                      "mr-2 h-1.5 w-1.5 shrink-0 rounded-full",
+                                      childActive
+                                        ? "bg-primary"
+                                        : "bg-slate-300 group-hover:bg-slate-400",
+                                    ].join(" ")}
+                                  />
+
+                                  <span className="min-w-0 truncate">
+                                    {child.label}
+                                  </span>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  /*
+                   * Soon / disabled item
+                   */
                   if (!item.href) {
                     return (
                       <button
@@ -172,6 +362,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                     );
                   }
 
+                  /*
+                   * Normal link
+                   */
                   return (
                     <Link
                       key={item.label}
@@ -221,7 +414,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
         >
           <Settings className="h-[17px] w-[17px] shrink-0 text-slate-400" />
+
           <span>Settings</span>
+
           <ChevronDown className="ml-auto h-4 w-4 text-slate-300" />
         </button>
       </div>

@@ -70,6 +70,12 @@ function getSettlementLabel(mode: SalesReturnSettlementMode) {
   }
 }
 
+type ListResult<T> = T[] | { items: T[] };
+
+function getListItems<T>(result: ListResult<T>): T[] {
+  return Array.isArray(result) ? result : result.items;
+}
+
 export default function NewSalesReturnPage() {
   const [invoices, setInvoices] = useState<SalesInvoice[]>([]);
   const [returns, setReturns] = useState<SalesReturn[]>([]);
@@ -118,9 +124,12 @@ export default function NewSalesReturnPage() {
 
         if (cancelled) return;
 
-        setInvoices(invoiceResult.filter((item) => item.status === "POSTED"));
+        const invoiceItems = getListItems(invoiceResult);
+        const returnItems = getListItems(returnResult);
 
-        setReturns(returnResult);
+        setInvoices(invoiceItems.filter((item) => item.status === "POSTED"));
+
+        setReturns(returnItems);
       } catch (err) {
         if (!cancelled) {
           setError(
@@ -195,7 +204,9 @@ export default function NewSalesReturnPage() {
 
       const result = await getSalesInvoices();
 
-      const selected = result.find((item) => item.id === value);
+      const invoiceItems = getListItems(result);
+
+      const selected = invoiceItems.find((item) => item.id === value);
 
       if (!selected) {
         throw new Error("Sales invoice not found.");

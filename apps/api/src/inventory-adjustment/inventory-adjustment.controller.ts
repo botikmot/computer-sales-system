@@ -5,6 +5,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
@@ -18,6 +19,7 @@ import { InventoryAdjustmentService } from './inventory-adjustment.service.js';
 import { CreateInventoryAdjustmentDto } from './dto/create-inventory-adjustment.dto.js';
 import { CountInventoryAdjustmentDto } from './dto/count-inventory-adjustment.dto.js';
 import { RejectInventoryAdjustmentDto } from './dto/reject-inventory-adjustment.dto.js';
+import { InventoryAdjustmentQueryDto } from './dto/inventory-adjustment-query.dto.js';
 
 @Controller('inventory-adjustments')
 export class InventoryAdjustmentController {
@@ -36,8 +38,11 @@ export class InventoryAdjustmentController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get()
-  findAll(@CurrentUser() user: AuthenticatedUser) {
-    return this.inventoryAdjustmentService.findAll(user);
+  findAll(
+    @Query() query: InventoryAdjustmentQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.inventoryAdjustmentService.findAll(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)

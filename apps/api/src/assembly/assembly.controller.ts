@@ -5,6 +5,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
@@ -16,6 +17,8 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { AssemblyService } from './assembly.service.js';
 import { CreateBomDto } from './dto/create-bom.dto.js';
 import { CreateAssemblyDto } from './dto/create-assembly.dto.js';
+import { AssemblyQueryDto } from './dto/assembly-query.dto.js';
+import { BomQueryDto } from './dto/bom-query.dto.js';
 
 @Controller('assemblies')
 export class AssemblyController {
@@ -29,8 +32,20 @@ export class AssemblyController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
   @Get()
-  findAll(@CurrentUser() user: AuthenticatedUser) {
-    return this.assemblyService.findAll(user);
+  findAll(
+    @Query() query: AssemblyQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.assemblyService.findAll(query, user);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
+  @Get('bom')
+  findBoms(
+    @Query() query: BomQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.assemblyService.findBoms(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)

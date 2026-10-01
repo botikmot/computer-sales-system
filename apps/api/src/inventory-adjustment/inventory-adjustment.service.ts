@@ -20,6 +20,8 @@ import { CreateInventoryAdjustmentDto } from './dto/create-inventory-adjustment.
 import { CountInventoryAdjustmentDto } from './dto/count-inventory-adjustment.dto.js';
 import { RejectInventoryAdjustmentDto } from './dto/reject-inventory-adjustment.dto.js';
 
+import { InventoryAdjustmentQueryDto } from './dto/inventory-adjustment-query.dto.js';
+
 @Injectable()
 export class InventoryAdjustmentService {
   constructor(
@@ -66,36 +68,136 @@ export class InventoryAdjustmentService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
+  async findAll(query: InventoryAdjustmentQueryDto, user: AuthenticatedUser) {
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
-      user.role === UserRole.ADMIN
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const normalizedStatus = search?.toUpperCase();
+
+    const searchableStatuses: InventoryAdjustmentStatus[] = [
+      InventoryAdjustmentStatus.DRAFT,
+      InventoryAdjustmentStatus.COUNTED,
+      InventoryAdjustmentStatus.FOR_APPROVAL,
+      InventoryAdjustmentStatus.CONFIRMED,
+      InventoryAdjustmentStatus.APPROVED,
+      InventoryAdjustmentStatus.REJECTED,
+      InventoryAdjustmentStatus.POSTED,
+      InventoryAdjustmentStatus.CANCELLED,
+    ];
+
+    const isStatusSearch = normalizedStatus
+      ? searchableStatuses.includes(
+          normalizedStatus as InventoryAdjustmentStatus,
+        )
+      : false;
+
+    const where: Prisma.InventoryAdjustmentWhereInput = {
+      ...(user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
-          };
+          }),
 
-    return this.prisma.inventoryAdjustment.findMany({
-      where,
+      ...(search
+        ? {
+            OR: [
+              {
+                adjustmentNo: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                branch: {
+                  is: {
+                    code: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              },
+              {
+                branch: {
+                  is: {
+                    name: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              },
+              ...(isStatusSearch
+                ? [
+                    {
+                      status: normalizedStatus as InventoryAdjustmentStatus,
+                    },
+                  ]
+                : []),
+            ],
+          }
+        : {}),
+    };
 
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const sortOrder = query.sortOrder ?? 'desc';
 
-      include: {
-        branch: true,
+    const orderBy =
+      query.sortBy === 'adjustmentNo'
+        ? {
+            adjustmentNo: sortOrder,
+          }
+        : query.sortBy === 'status'
+          ? {
+              status: sortOrder,
+            }
+          : query.sortBy === 'adjustmentDate'
+            ? {
+                adjustmentDate: sortOrder,
+              }
+            : {
+                createdAt: sortOrder,
+              };
 
-        items: {
-          include: {
-            product: true,
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.inventoryAdjustment.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          branch: true,
+
+          items: {
+            include: {
+              product: true,
+            },
           },
-        },
 
-        createdBy: true,
-        approvedBy: true,
+          createdBy: true,
+          approvedBy: true,
+        },
+      }),
+
+      this.prisma.inventoryAdjustment.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

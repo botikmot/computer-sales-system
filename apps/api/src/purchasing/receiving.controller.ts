@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -12,6 +12,7 @@ import { VerifyReceivingDto } from './dto/verify-receiving.dto.js';
 import type { ReceivingWithRelations } from './receiving.types.js';
 
 import { ReceivingService } from './receiving.service.js';
+import { ReceivingQueryDto } from './dto/receiving-query.dto.js';
 
 @Controller('receivings')
 export class ReceivingController {
@@ -39,9 +40,10 @@ export class ReceivingController {
   )
   @Get()
   findAll(
+    @Query() query: ReceivingQueryDto,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<ReceivingWithRelations[]> {
-    return this.receivingService.findAll(user);
+  ) {
+    return this.receivingService.findAll(query, user);
   }
 
   @Roles(

@@ -11,13 +11,11 @@ import { BranchAccessService } from '../auth/branch-access.service.js';
 
 import { CreateReceivingDto } from './dto/create-receiving.dto.js';
 import { VerifyReceivingDto } from './dto/verify-receiving.dto.js';
+import { ReceivingQueryDto } from './dto/receiving-query.dto.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
-import type {
-  ReceivingRecord,
-  ReceivingWithRelations,
-} from './receiving.types.js';
+import type { ReceivingWithRelations } from './receiving.types.js';
 
 @Injectable()
 export class ReceivingService {
@@ -189,39 +187,110 @@ export class ReceivingService {
     return receiving;
   }
 
-  async findAll(user: AuthenticatedUser): Promise<ReceivingWithRelations[]> {
-    const where =
-      user.role === 'ADMIN'
+  async findAll(query: ReceivingQueryDto, user: AuthenticatedUser) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const where = {
+      ...(user.role === 'ADMIN'
         ? {}
         : {
             branchId: user.branchId!,
-          };
+          }),
+      ...(search
+        ? {
+            OR: [
+              {
+                receivingNo: {
+                  contains: search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                referenceNo: {
+                  contains: search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                purchaseOrder: {
+                  poNumber: {
+                    contains: search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+              {
+                purchaseOrder: {
+                  supplier: {
+                    name: {
+                      contains: search,
+                      mode: 'insensitive' as const,
+                    },
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
+    const sortOrder = query.sortOrder ?? 'desc';
+
+    const orderBy =
+      query.sortBy === 'receivingNo'
+        ? { receivingNo: sortOrder }
+        : query.sortBy === 'receivedDate'
+          ? { receivedDate: sortOrder }
+          : query.sortBy === 'status'
+            ? { status: sortOrder }
+            : query.sortBy === 'checkStatus'
+              ? { checkStatus: sortOrder }
+              : { createdAt: sortOrder };
 
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    return this.prisma.receiving.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.receiving.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          branch: true,
 
-      include: {
-        branch: true,
+          purchaseOrder: {
+            include: {
+              supplier: true,
+            },
+          },
 
-        purchaseOrder: {
-          include: {
-            supplier: true,
+          items: {
+            include: {
+              product: true,
+              purchaseOrderItem: true,
+            },
           },
         },
+      }),
 
-        items: {
-          include: {
-            product: true,
-            purchaseOrderItem: true,
-          },
-        },
+      this.prisma.receiving.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async verify(

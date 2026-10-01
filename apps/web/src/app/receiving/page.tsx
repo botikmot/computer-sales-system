@@ -1,82 +1,132 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   AlertCircle,
-  ArrowUpDown,
-  Boxes,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Edit3,
+  Eye,
   Loader2,
-  Package,
-  Plus,
   Search,
+  Truck,
   X,
-  XCircle,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import {
-  getProducts,
-  type Product,
-  type ProductListResponse,
-} from "@/features/products/products-api";
+  getReceivings,
+  type Receiving,
+  type ReceivingListResponse,
+} from "@/features/purchasing/receivings-api";
+import {
+  SearchableSelect,
+  type SelectOption,
+} from "@/components/ui/searchable-select";
 
 const PAGE_SIZE = 10;
 
-type ActiveFilter = "ALL" | "ACTIVE" | "INACTIVE";
-
 type SortBy =
-  | "sku"
-  | "name"
-  | "brand"
-  | "model"
-  | "defaultSellingPrice"
-  | "defaultCostPrice"
-  | "isActive"
-  | "trackInventory"
-  | "createdAt";
+  "receivingNo" | "receivedDate" | "status" | "checkStatus" | "createdAt";
 
-function formatCurrency(value: string | number | null | undefined) {
-  if (value === null || value === undefined || value === "") {
+const sortByOptions: SelectOption[] = [
+  {
+    value: "receivingNo",
+    label: "Receiving No.",
+    description: "Sort by receiving number",
+  },
+  {
+    value: "receivedDate",
+    label: "Received Date",
+    description: "Sort by receiving date",
+  },
+  {
+    value: "status",
+    label: "Status",
+    description: "Sort by posting status",
+  },
+  {
+    value: "checkStatus",
+    label: "Check Status",
+    description: "Sort by verification status",
+  },
+  {
+    value: "createdAt",
+    label: "Created Date",
+    description: "Sort by creation date",
+  },
+];
+
+const sortOrderOptions: SelectOption[] = [
+  {
+    value: "asc",
+    label: "Ascending",
+    description: "Oldest / A → Z",
+  },
+  {
+    value: "desc",
+    label: "Descending",
+    description: "Newest / Z → A",
+  },
+];
+
+function formatDate(value: string | null | undefined) {
+  if (!value) {
     return "—";
   }
 
-  const amount = Number(value);
+  const date = new Date(value);
 
-  if (!Number.isFinite(amount)) {
+  if (Number.isNaN(date.getTime())) {
     return "—";
   }
 
-  return new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP",
-    maximumFractionDigits: 2,
-  }).format(amount);
+  return new Intl.DateTimeFormat("en-PH", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
 }
 
-function getStatusClass(isActive: boolean) {
-  return isActive
-    ? "bg-emerald-50 text-emerald-700"
-    : "bg-slate-100 text-slate-500";
+function getStatusClass(status: string) {
+  switch (status) {
+    case "POSTED":
+      return "bg-emerald-50 text-emerald-700";
+
+    case "DRAFT":
+      return "bg-amber-50 text-amber-700";
+
+    default:
+      return "bg-slate-100 text-slate-600";
+  }
 }
 
-export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+function getCheckStatusClass(status: string) {
+  switch (status) {
+    case "VERIFIED":
+      return "bg-blue-50 text-blue-700";
+
+    case "PENDING":
+      return "bg-amber-50 text-amber-700";
+
+    default:
+      return "bg-slate-100 text-slate-600";
+  }
+}
+
+export default function ReceivingPage() {
+  const [items, setItems] = useState<Receiving[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
-  const [activeFilter, setActiveFilter] = useState<ActiveFilter>("ALL");
-
-  const [sortBy, setSortBy] = useState<SortBy>("name");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState<SortBy>("receivedDate");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const [pagination, setPagination] = useState({
     page: 1,
@@ -85,24 +135,18 @@ export default function ProductsPage() {
     pages: 0,
   });
 
-  const [summary, setSummary] = useState({
-    total: 0,
-    active: 0,
-    inactive: 0,
-    tracked: 0,
-  });
-
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchProducts() {
+    async function fetchReceivings() {
       try {
-        const result: ProductListResponse = await getProducts({
+        setLoading(true);
+        setError("");
+
+        const result: ReceivingListResponse = await getReceivings({
           page: pagination.page,
           limit: pagination.limit,
           search: search || undefined,
-          isActive:
-            activeFilter === "ALL" ? undefined : activeFilter === "ACTIVE",
           sortBy,
           sortOrder,
         });
@@ -111,10 +155,8 @@ export default function ProductsPage() {
           return;
         }
 
-        setProducts(result.items);
+        setItems(result.items);
         setPagination(result.pagination);
-        setSummary(result.summary);
-        setError("");
         setLoading(false);
       } catch (err) {
         if (cancelled) {
@@ -122,25 +164,20 @@ export default function ProductsPage() {
         }
 
         setError(
-          err instanceof Error ? err.message : "Unable to load products.",
+          err instanceof Error
+            ? err.message
+            : "Unable to load receiving records.",
         );
         setLoading(false);
       }
     }
 
-    void fetchProducts();
+    void fetchReceivings();
 
     return () => {
       cancelled = true;
     };
-  }, [
-    pagination.page,
-    pagination.limit,
-    search,
-    activeFilter,
-    sortBy,
-    sortOrder,
-  ]);
+  }, [pagination.page, pagination.limit, search, sortBy, sortOrder]);
 
   function handleSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -148,27 +185,23 @@ export default function ProductsPage() {
     const nextSearch = searchInput.trim();
 
     setLoading(true);
-
-    if (pagination.page !== 1) {
-      setPagination((current) => ({
-        ...current,
-        page: 1,
-      }));
-    }
-
     setSearch(nextSearch);
+
+    setPagination((current) => ({
+      ...current,
+      page: 1,
+    }));
   }
 
   function handleClearSearch() {
     setSearchInput("");
 
-    if (!search && activeFilter === "ALL") {
+    if (!search) {
       return;
     }
 
     setLoading(true);
     setSearch("");
-    setActiveFilter("ALL");
 
     setPagination((current) => ({
       ...current,
@@ -176,13 +209,15 @@ export default function ProductsPage() {
     }));
   }
 
-  function handleActiveFilter(value: ActiveFilter) {
-    if (value === activeFilter) {
+  function handleSortBy(value: string) {
+    const nextValue = value as SortBy;
+
+    if (nextValue === sortBy) {
       return;
     }
 
     setLoading(true);
-    setActiveFilter(value);
+    setSortBy(nextValue);
 
     setPagination((current) => ({
       ...current,
@@ -190,27 +225,15 @@ export default function ProductsPage() {
     }));
   }
 
-  function handleSortBy(value: SortBy) {
-    if (value === sortBy) {
+  function handleSortOrder(value: string) {
+    const nextValue = value as "asc" | "desc";
+
+    if (nextValue === sortOrder) {
       return;
     }
 
     setLoading(true);
-    setSortBy(value);
-
-    setPagination((current) => ({
-      ...current,
-      page: 1,
-    }));
-  }
-
-  function handleSortOrder(value: "asc" | "desc") {
-    if (value === sortOrder) {
-      return;
-    }
-
-    setLoading(true);
-    setSortOrder(value);
+    setSortOrder(nextValue);
 
     setPagination((current) => ({
       ...current,
@@ -246,70 +269,44 @@ export default function ProductsPage() {
   return (
     <AppShell>
       <div className="space-y-6 pb-10">
-        {/* Header */}
+        {/* HEADER */}
         <section className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-semibold text-primary">Inventory</p>
 
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-              Products
+              Receiving
             </h1>
 
             <p className="mt-1 max-w-2xl text-sm text-slate-500">
-              Manage product master data, pricing, categories, and inventory
-              tracking settings.
+              Receive supplier deliveries, verify quantities and quality, and
+              post accepted stock into inventory.
             </p>
           </div>
 
           <Link
-            href="/products/new"
+            href="/receiving/new"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
           >
-            <Plus className="h-4 w-4" />
-            New Product
+            <Truck className="h-4 w-4" />
+            New Receiving
           </Link>
         </section>
 
-        {/* Summary */}
-        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard
-            label="Products"
-            value={summary.total}
-            icon={<Package className="h-5 w-5" />}
-          />
-
-          <SummaryCard
-            label="Active"
-            value={summary.active}
-            icon={<CheckCircle2 className="h-5 w-5" />}
-          />
-
-          <SummaryCard
-            label="Inactive"
-            value={summary.inactive}
-            icon={<XCircle className="h-5 w-5" />}
-          />
-
-          <SummaryCard
-            label="Inventory Tracked"
-            value={summary.tracked}
-            icon={<Boxes className="h-5 w-5" />}
-          />
-        </section>
-
-        {/* Error */}
+        {/* ERROR */}
         {error && (
           <div className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
 
             <div>
-              <p className="font-semibold">Unable to load products</p>
+              <p className="font-semibold">Unable to load receiving records</p>
+
               <p className="mt-0.5">{error}</p>
             </div>
           </div>
         )}
 
-        {/* Toolbar */}
+        {/* TOOLBAR */}
         <section className="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
           <form
             onSubmit={handleSearch}
@@ -324,7 +321,7 @@ export default function ProductsPage() {
                   onChange={(event) => {
                     setSearchInput(event.target.value);
                   }}
-                  placeholder="Search by SKU, product, brand, or model..."
+                  placeholder="Search receiving no., PO, supplier, or reference..."
                   className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
                 />
               </div>
@@ -337,7 +334,7 @@ export default function ProductsPage() {
                 Search
               </button>
 
-              {(search || activeFilter !== "ALL") && (
+              {search && (
                 <button
                   type="button"
                   onClick={handleClearSearch}
@@ -350,81 +347,36 @@ export default function ProductsPage() {
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              {/* Active filter */}
-              <div className="flex rounded-xl border border-slate-200 bg-slate-50 p-1">
-                {[
-                  { value: "ALL" as const, label: "All" },
-                  { value: "ACTIVE" as const, label: "Active" },
-                  { value: "INACTIVE" as const, label: "Inactive" },
-                ].map((option) => {
-                  const selected = activeFilter === option.value;
+              <SearchableSelect
+                value={sortBy}
+                onChange={handleSortBy}
+                options={sortByOptions}
+                placeholder="Sort by"
+                searchPlaceholder="Search sort field..."
+                className="w-full sm:w-52"
+              />
 
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => handleActiveFilter(option.value)}
-                      className={[
-                        "rounded-lg px-3 py-1.5 text-xs font-semibold transition",
-                        selected
-                          ? "bg-white text-slate-900 shadow-sm"
-                          : "text-slate-500 hover:text-slate-800",
-                      ].join(" ")}
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Sort */}
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <ArrowUpDown className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-
-                  <select
-                    value={sortBy}
-                    onChange={(event) =>
-                      handleSortBy(event.target.value as SortBy)
-                    }
-                    className="h-10 min-w-44 appearance-none rounded-xl border border-slate-200 bg-white pl-9 pr-8 text-sm text-slate-700 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
-                  >
-                    <option value="name">Product Name</option>
-                    <option value="sku">SKU</option>
-                    <option value="brand">Brand</option>
-                    <option value="model">Model</option>
-                    <option value="defaultSellingPrice">Selling Price</option>
-                    <option value="defaultCostPrice">Cost Price</option>
-                    <option value="isActive">Status</option>
-                    <option value="trackInventory">Inventory Tracking</option>
-                    <option value="createdAt">Created Date</option>
-                  </select>
-                </div>
-
-                <select
-                  value={sortOrder}
-                  onChange={(event) =>
-                    handleSortOrder(event.target.value as "asc" | "desc")
-                  }
-                  className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
-                >
-                  <option value="asc">Ascending</option>
-                  <option value="desc">Descending</option>
-                </select>
-              </div>
+              <SearchableSelect
+                value={sortOrder}
+                onChange={handleSortOrder}
+                options={sortOrderOptions}
+                placeholder="Order"
+                searchPlaceholder="Search order..."
+                className="w-full sm:w-48"
+              />
             </div>
           </form>
         </section>
 
-        {/* Records */}
+        {/* RECORDS */}
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
           <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <Package className="h-4 w-4 text-primary" />
+                <Truck className="h-4 w-4 text-primary" />
 
                 <h2 className="font-semibold text-slate-950">
-                  Product Records
+                  Receiving Records
                 </h2>
               </div>
 
@@ -444,21 +396,21 @@ export default function ProductsPage() {
             <div className="flex h-80 items-center justify-center">
               <div className="flex items-center gap-3 text-sm text-slate-500">
                 <Loader2 className="h-5 w-5 animate-spin" />
-                Loading products...
+                Loading receiving records...
               </div>
             </div>
-          ) : products.length === 0 ? (
+          ) : items.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-5 py-16 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
-                <Package className="h-6 w-6" />
+                <Truck className="h-6 w-6" />
               </div>
 
               <h3 className="mt-4 text-sm font-semibold text-slate-800">
-                No products found
+                No receiving records found
               </h3>
 
               <p className="mt-1 max-w-sm text-sm text-slate-400">
-                Try a different search or create a new product.
+                Try a different search or create a new receiving report.
               </p>
             </div>
           ) : (
@@ -466,97 +418,92 @@ export default function ProductsPage() {
               <table className="w-full min-w-[1050px] border-collapse">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/70">
-                    <TableHeader>SKU</TableHeader>
-                    <TableHeader>Product</TableHeader>
-                    <TableHeader>Category</TableHeader>
-                    <TableHeader>Unit</TableHeader>
-                    <TableHeader align="right">Selling Price</TableHeader>
-                    <TableHeader align="right">Cost Price</TableHeader>
-                    <TableHeader>Inventory</TableHeader>
+                    <TableHeader>Receiving No.</TableHeader>
+                    <TableHeader>Purchase Order</TableHeader>
+                    <TableHeader>Supplier</TableHeader>
+                    <TableHeader>Received Date</TableHeader>
+                    <TableHeader>Check Status</TableHeader>
                     <TableHeader>Status</TableHeader>
+                    <TableHeader align="right">Items</TableHeader>
                     <TableHeader align="right">Action</TableHeader>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {products.map((product) => (
+                  {items.map((receiving) => (
                     <tr
-                      key={product.id}
+                      key={receiving.id}
                       className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50/50"
                     >
                       <td className="px-5 py-4">
-                        <span className="font-mono text-xs font-semibold text-slate-600">
-                          {product.sku}
+                        <span className="font-mono text-xs font-semibold text-slate-700">
+                          {receiving.receivingNo}
                         </span>
+
+                        {receiving.referenceNo && (
+                          <p className="mt-1 text-xs text-slate-400">
+                            Ref: {receiving.referenceNo}
+                          </p>
+                        )}
                       </td>
 
                       <td className="px-5 py-4">
-                        <div className="min-w-48">
+                        <div>
                           <p className="text-sm font-semibold text-slate-900">
-                            {product.name}
+                            {receiving.purchaseOrder.poNumber}
                           </p>
 
-                          {(product.brand || product.model) && (
-                            <p className="mt-0.5 text-xs text-slate-400">
-                              {[product.brand, product.model]
-                                .filter(Boolean)
-                                .join(" · ")}
-                            </p>
-                          )}
+                          <p className="mt-0.5 text-xs text-slate-400">
+                            {receiving.purchaseOrder.status}
+                          </p>
                         </div>
                       </td>
 
                       <td className="px-5 py-4">
-                        {product.category ? (
-                          <span className="inline-flex rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-                            {product.category.name}
-                          </span>
-                        ) : (
-                          <span className="text-xs text-slate-400">—</span>
-                        )}
-                      </td>
-
-                      <td className="px-5 py-4 text-sm text-slate-600">
-                        {product.unit || "pcs"}
-                      </td>
-
-                      <td className="px-5 py-4 text-right text-sm font-semibold text-slate-800">
-                        {formatCurrency(product.defaultSellingPrice)}
-                      </td>
-
-                      <td className="px-5 py-4 text-right text-sm text-slate-600">
-                        {formatCurrency(product.defaultCostPrice)}
+                        <span className="text-sm text-slate-700">
+                          {receiving.purchaseOrder.supplier.name}
+                        </span>
                       </td>
 
                       <td className="px-5 py-4">
-                        {product.trackInventory ? (
-                          <span className="inline-flex rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
-                            Tracked
-                          </span>
-                        ) : (
-                          <span className="inline-flex rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
-                            Not tracked
-                          </span>
-                        )}
+                        <span className="text-sm text-slate-600">
+                          {formatDate(receiving.receivedDate)}
+                        </span>
+                      </td>
+
+                      <td className="px-5 py-4">
+                        <span
+                          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide ${getCheckStatusClass(
+                            receiving.checkStatus,
+                          )}`}
+                        >
+                          {receiving.checkStatus}
+                        </span>
                       </td>
 
                       <td className="px-5 py-4">
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide ${getStatusClass(
-                            product.isActive,
+                            receiving.status,
                           )}`}
                         >
-                          {product.isActive ? "ACTIVE" : "INACTIVE"}
+                          {receiving.status}
+                        </span>
+                      </td>
+
+                      <td className="px-5 py-4 text-right">
+                        <span className="text-sm font-semibold text-slate-700">
+                          {receiving.items.length}
                         </span>
                       </td>
 
                       <td className="px-5 py-4 text-right">
                         <Link
-                          href={`/products/${product.id}`}
+                          href={`/receiving/${receiving.id}`}
                           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-primary/20 hover:text-primary"
                         >
-                          <Edit3 className="h-3.5 w-3.5" />
-                          Edit
+                          <Eye className="h-3.5 w-3.5" />
+                          View
                         </Link>
                       </td>
                     </tr>
@@ -566,7 +513,7 @@ export default function ProductsPage() {
             </div>
           )}
 
-          {/* Pagination */}
+          {/* PAGINATION */}
           {!loading && pagination.total > 0 && (
             <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/40 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-slate-400">
@@ -606,39 +553,11 @@ export default function ProductsPage() {
   );
 }
 
-function SummaryCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon: ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          {label}
-        </span>
-
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
-          {icon}
-        </span>
-      </div>
-
-      <p className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
-        {value}
-      </p>
-    </div>
-  );
-}
-
 function TableHeader({
   children,
   align = "left",
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   align?: "left" | "right";
 }) {
   return (
