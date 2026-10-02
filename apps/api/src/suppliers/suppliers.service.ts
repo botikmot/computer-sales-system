@@ -73,6 +73,10 @@ export class SuppliersService {
   }
 
   async findAll(query: SupplierQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
     const where: Prisma.SupplierWhereInput = {};
 
     if (query.isActive !== undefined) {
@@ -116,17 +120,46 @@ export class SuppliersService {
       ];
     }
 
-    return this.prisma.supplier.findMany({
-      where,
-      orderBy: [
-        {
-          isActive: 'desc',
-        },
-        {
-          name: 'asc',
-        },
-      ],
-    });
+    const allowedSortFields = [
+      'code',
+      'name',
+      'contactPerson',
+      'contactNumber',
+      'email',
+      'createdAt',
+    ] as const;
+
+    const sortBy = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const sortOrder = query.sortOrder ?? 'desc';
+
+    const orderBy: Prisma.SupplierOrderByWithRelationInput = {
+      [sortBy]: sortOrder,
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.supplier.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+      }),
+      this.prisma.supplier.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string) {

@@ -13,6 +13,8 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreateSupplierPaymentDto } from './dto/create-supplier-payment.dto.js';
 
+import { SupplierPaymentQueryDto } from './dto/supplier-payment-query.dto.js';
+
 @Injectable()
 export class SupplierPaymentService {
   constructor(
@@ -169,31 +171,99 @@ export class SupplierPaymentService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
-    // Non-admin users must belong to a branch.
+  async findAll(query: SupplierPaymentQueryDto, user: AuthenticatedUser) {
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
-      user.role === UserRole.ADMIN
+    const page = query.page;
+    const limit = query.limit;
+    const skip = (page - 1) * limit;
+
+    const where = {
+      ...(user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
-          };
+          }),
 
-    return this.prisma.supplierPayment.findMany({
-      where,
+      ...(query.status
+        ? {
+            status: query.status,
+          }
+        : {}),
 
-      orderBy: {
-        createdAt: 'desc',
-      },
+      ...(query.search
+        ? {
+            OR: [
+              {
+                paymentNo: {
+                  contains: query.search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                referenceNo: {
+                  contains: query.search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                notes: {
+                  contains: query.search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                supplier: {
+                  name: {
+                    contains: query.search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+              {
+                supplier: {
+                  code: {
+                    contains: query.search,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+    };
 
-      include: {
-        branch: true,
-        supplier: true,
-        accountsPayable: true,
-        cashBankTransaction: true,
-      },
-    });
+    const orderBy = {
+      [query.sortBy]: query.sortOrder,
+    };
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.supplierPayment.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+
+        include: {
+          branch: true,
+          supplier: true,
+          accountsPayable: true,
+          cashBankTransaction: true,
+        },
+      }),
+
+      this.prisma.supplierPayment.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

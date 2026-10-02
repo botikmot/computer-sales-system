@@ -133,18 +133,27 @@ const sections: {
       {
         label: "Suppliers",
         icon: Users,
+        href: "/suppliers",
+      },
+      {
+        label: "Purchase Requests",
+        icon: ClipboardList,
+        href: "/purchase-requests",
+      },
+      {
+        label: "Supplier Quotations",
+        icon: FileText,
+        href: "/supplier-quotations",
       },
       {
         label: "Purchase Orders",
         icon: ShoppingCart,
-      },
-      {
-        label: "Receiving",
-        icon: Truck,
+        href: "/purchase-orders",
       },
       {
         label: "Supplier Payments",
         icon: CreditCard,
+        href: "/supplier-payments",
       },
     ],
   },

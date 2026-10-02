@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { UserRole } from '@computer-sales/database';
+import { Prisma, UserRole } from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
@@ -17,9 +17,12 @@ import {
 } from './dto/create-purchase-request.dto.js';
 import { UpdatePurchaseRequestDto } from './dto/update-purchase-request.dto.js';
 
+import { PurchaseRequestQueryDto } from './dto/purchase-request-query.dto.js';
+
 import type {
   PurchaseRequestRecord,
   PurchaseRequestWithRelations,
+  PurchaseRequestListResponse,
 } from './purchase-request.types.js';
 
 const PURCHASE_REQUEST_STATUSES = [
@@ -140,64 +143,116 @@ export class PurchaseRequestService {
   }
 
   async findAll(
-    branchId: string | undefined,
-    status: PurchaseRequestStatus | undefined,
+    query: PurchaseRequestQueryDto,
     user: AuthenticatedUser,
-  ): Promise<PurchaseRequestWithRelations[]> {
-    if (status && !PURCHASE_REQUEST_STATUSES.includes(status)) {
+  ): Promise<PurchaseRequestListResponse> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    // Validate status.
+    if (query.status && !PURCHASE_REQUEST_STATUSES.includes(query.status)) {
       throw new BadRequestException('Invalid purchase request status.');
     }
 
-    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+    // Validate optional branch access.
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      user,
+      user.role === UserRole.ADMIN ? query.branchId : user.branchId,
+    );
 
-    let where:
-      | {
-          branchId?: string;
-          status?: PurchaseRequestStatus;
-        }
-      | undefined;
+    const where: Prisma.PurchaseRequestWhereInput = {};
 
-    if (user.role === UserRole.ADMIN) {
-      where = {
-        ...(branchId
-          ? {
-              branchId,
-            }
-          : {}),
-        ...(status
-          ? {
-              status,
-            }
-          : {}),
-      };
-    } else {
-      where = {
-        branchId: user.branchId!,
-        ...(status
-          ? {
-              status,
-            }
-          : {}),
-      };
-    }
+    // Search
+    if (query.search?.trim()) {
+      const search = query.search.trim();
 
-    return this.prisma.purchaseRequest.findMany({
-      where,
-
-      orderBy: {
-        createdAt: 'desc',
-      },
-
-      include: {
-        branch: true,
-
-        items: {
-          include: {
-            product: true,
+      where.OR = [
+        {
+          requestNo: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
-      },
-    });
+        {
+          purpose: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+    // Status filter
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    // Branch isolation / filtering
+    if (user.role === UserRole.ADMIN) {
+      if (query.branchId) {
+        where.branchId = query.branchId;
+      }
+    } else {
+      where.branchId = user.branchId!;
+    }
+
+    // Allowed sort fields
+    const allowedSortFields = [
+      'requestNo',
+      'purpose',
+      'status',
+      'createdAt',
+    ] as const;
+
+    const sortBy = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const sortOrder = query.sortOrder ?? 'desc';
+
+    const orderBy: Prisma.PurchaseRequestOrderByWithRelationInput = {
+      [sortBy]: sortOrder,
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.purchaseRequest.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+
+        include: {
+          branch: true,
+
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.purchaseRequest.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(

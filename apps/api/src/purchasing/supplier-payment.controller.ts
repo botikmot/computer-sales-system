@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -10,6 +10,8 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { CreateSupplierPaymentDto } from './dto/create-supplier-payment.dto.js';
 
 import { SupplierPaymentService } from './supplier-payment.service.js';
+
+import { SupplierPaymentQueryDto } from './dto/supplier-payment-query.dto.js';
 
 @Controller('supplier-payments')
 export class SupplierPaymentController {
@@ -33,8 +35,11 @@ export class SupplierPaymentController {
     UserRole.PURCHASING,
   )
   @Get()
-  findAll(@CurrentUser() user: AuthenticatedUser) {
-    return this.supplierPaymentService.findAll(user);
+  findAll(
+    @Query() query: SupplierPaymentQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.supplierPaymentService.findAll(query, user);
   }
 
   @Roles(

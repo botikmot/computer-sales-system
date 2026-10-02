@@ -19,10 +19,12 @@ import { CreatePurchaseRequestDto } from './dto/create-purchase-request.dto.js';
 import { UpdatePurchaseRequestDto } from './dto/update-purchase-request.dto.js';
 
 import { PurchaseRequestService } from './purchase-request.service.js';
+import { PurchaseRequestQueryDto } from './dto/purchase-request-query.dto.js';
 
 import type {
   PurchaseRequestRecord,
   PurchaseRequestWithRelations,
+  PurchaseRequestListResponse,
 } from './purchase-request.types.js';
 
 @Controller('purchase-requests')
@@ -43,15 +45,10 @@ export class PurchaseRequestController {
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
   @Get()
   findAll(
-    @Query('branchId') branchId: string | undefined,
-
-    @Query('status')
-    status:
-      'DRAFT' | 'SUBMITTED' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | undefined,
-
+    @Query() query: PurchaseRequestQueryDto,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<PurchaseRequestWithRelations[]> {
-    return this.purchaseRequestService.findAll(branchId, status, user);
+  ): Promise<PurchaseRequestListResponse> {
+    return this.purchaseRequestService.findAll(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)

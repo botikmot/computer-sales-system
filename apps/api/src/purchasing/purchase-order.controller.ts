@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -9,7 +17,10 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreatePurchaseOrderDto } from './dto/create-purchase-order.dto.js';
 
+import { PurchaseOrderQueryDto } from './dto/purchase-order-query.dto.js';
+
 import type {
+  PurchaseOrderListResponse,
   PurchaseOrderRecord,
   PurchaseOrderWithRelations,
 } from './purchase-order.types.js';
@@ -32,9 +43,10 @@ export class PurchaseOrderController {
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
   @Get()
   findAll(
+    @Query() query: PurchaseOrderQueryDto,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<PurchaseOrderWithRelations[]> {
-    return this.purchaseOrderService.findAll(user);
+  ): Promise<PurchaseOrderListResponse> {
+    return this.purchaseOrderService.findAll(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)

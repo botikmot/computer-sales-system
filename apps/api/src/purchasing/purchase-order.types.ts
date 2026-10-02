@@ -15,3 +15,11 @@ export type PurchaseOrderWithRelations = Prisma.PurchaseOrderGetPayload<{
 }>;
 
 export type PurchaseOrderRecord = Prisma.PurchaseOrderGetPayload<{}>;
+
+export type PurchaseOrderListResponse = {
+  data: PurchaseOrderWithRelations[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};

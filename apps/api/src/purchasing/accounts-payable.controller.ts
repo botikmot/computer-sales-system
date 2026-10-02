@@ -28,7 +28,12 @@ export class AccountsPayableController {
     return this.accountsPayableService.createFromInvoice(dto, user);
   }
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
+  @Roles(
+    UserRole.ADMIN,
+    UserRole.MANAGER,
+    UserRole.CASHIER,
+    UserRole.PURCHASING,
+  )
   @Get()
   findAll(
     @CurrentUser() user: AuthenticatedUser,
@@ -36,7 +41,12 @@ export class AccountsPayableController {
     return this.accountsPayableService.findAll(user);
   }
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
+  @Roles(
+    UserRole.ADMIN,
+    UserRole.MANAGER,
+    UserRole.CASHIER,
+    UserRole.PURCHASING,
+  )
   @Get(':id')
   findOne(
     @Param('id') id: string,

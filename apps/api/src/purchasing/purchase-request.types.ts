@@ -12,3 +12,11 @@ export type PurchaseRequestWithRelations = Prisma.PurchaseRequestGetPayload<{
 }>;
 
 export type PurchaseRequestRecord = Prisma.PurchaseRequestGetPayload<{}>;
+
+export type PurchaseRequestListResponse = {
+  data: PurchaseRequestWithRelations[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};

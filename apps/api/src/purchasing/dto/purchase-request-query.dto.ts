@@ -1,16 +1,16 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
-  IsBoolean,
   IsIn,
   IsInt,
   IsOptional,
   IsString,
+  IsUUID,
   Max,
   MaxLength,
   Min,
 } from 'class-validator';
 
-export class SupplierQueryDto {
+export class PurchaseRequestQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -30,26 +30,18 @@ export class SupplierQueryDto {
   search?: string;
 
   @IsOptional()
-  @IsIn([
-    'code',
-    'name',
-    'contactPerson',
-    'contactNumber',
-    'email',
-    'createdAt',
-  ])
+  @IsUUID()
+  branchId?: string;
+
+  @IsOptional()
+  @IsIn(['DRAFT', 'SUBMITTED', 'APPROVED', 'REJECTED', 'CANCELLED'])
+  status?: 'DRAFT' | 'SUBMITTED' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+
+  @IsOptional()
+  @IsIn(['requestNo', 'purpose', 'status', 'createdAt'])
   sortBy?: string;
 
   @IsOptional()
   @IsIn(['asc', 'desc'])
   sortOrder?: 'asc' | 'desc';
-
-  @IsOptional()
-  @Transform(({ value }) => {
-    if (value === 'true') return true;
-    if (value === 'false') return false;
-    return value;
-  })
-  @IsBoolean()
-  isActive?: boolean;
 }

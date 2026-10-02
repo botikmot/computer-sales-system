@@ -6,15 +6,17 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
-import { UserRole } from '@computer-sales/database';
+import { UserRole, Prisma } from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreatePurchaseOrderDto } from './dto/create-purchase-order.dto.js';
+import { PurchaseOrderQueryDto } from './dto/purchase-order-query.dto.js';
 
 import type {
+  PurchaseOrderListResponse,
   PurchaseOrderRecord,
   PurchaseOrderWithRelations,
 } from './purchase-order.types.js';
@@ -176,35 +178,183 @@ export class PurchaseOrderService {
   }
 
   async findAll(
+    query: PurchaseOrderQueryDto,
     user: AuthenticatedUser,
-  ): Promise<PurchaseOrderWithRelations[]> {
+  ): Promise<PurchaseOrderListResponse> {
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = Math.max(Number(query.page ?? 1), 1);
+    const limit = Math.min(Math.max(Number(query.limit ?? 10), 1), 100);
+
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const where: Prisma.PurchaseOrderWhereInput =
       user.role === UserRole.ADMIN
-        ? {}
+        ? {
+            ...(query.branchId
+              ? {
+                  branchId: query.branchId,
+                }
+              : {}),
+
+            ...(query.status
+              ? {
+                  status: query.status,
+                }
+              : {}),
+
+            ...(search
+              ? {
+                  OR: [
+                    {
+                      poNumber: {
+                        contains: search,
+                        mode: 'insensitive',
+                      },
+                    },
+                    {
+                      notes: {
+                        contains: search,
+                        mode: 'insensitive',
+                      },
+                    },
+                    {
+                      supplier: {
+                        is: {
+                          name: {
+                            contains: search,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                    {
+                      supplier: {
+                        is: {
+                          code: {
+                            contains: search,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                    {
+                      purchaseRequest: {
+                        is: {
+                          requestNo: {
+                            contains: search,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                  ],
+                }
+              : {}),
+          }
         : {
             branchId: user.branchId!,
+
+            ...(query.status
+              ? {
+                  status: query.status,
+                }
+              : {}),
+
+            ...(search
+              ? {
+                  OR: [
+                    {
+                      poNumber: {
+                        contains: search,
+                        mode: 'insensitive',
+                      },
+                    },
+                    {
+                      notes: {
+                        contains: search,
+                        mode: 'insensitive',
+                      },
+                    },
+                    {
+                      supplier: {
+                        is: {
+                          name: {
+                            contains: search,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                    {
+                      supplier: {
+                        is: {
+                          code: {
+                            contains: search,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                    {
+                      purchaseRequest: {
+                        is: {
+                          requestNo: {
+                            contains: search,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                  ],
+                }
+              : {}),
           };
 
-    return this.prisma.purchaseOrder.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        branch: true,
-        supplier: true,
-        purchaseRequest: true,
-        supplierQuotation: true,
+    const orderBy: Prisma.PurchaseOrderOrderByWithRelationInput = {
+      [query.sortBy ?? 'createdAt']: query.sortOrder ?? 'desc',
+    };
 
-        items: {
-          include: {
-            product: true,
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.purchaseOrder.findMany({
+        where,
+
+        skip,
+        take: limit,
+
+        orderBy,
+
+        include: {
+          branch: true,
+
+          supplier: true,
+
+          purchaseRequest: true,
+
+          supplierQuotation: true,
+
+          items: {
+            include: {
+              product: true,
+            },
           },
         },
-      },
-    });
+      }),
+
+      this.prisma.purchaseOrder.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async approve(

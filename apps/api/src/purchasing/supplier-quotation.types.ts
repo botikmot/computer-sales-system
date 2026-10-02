@@ -15,3 +15,11 @@ export type SupplierQuotationWithRelations =
   }>;
 
 export type SupplierQuotationRecord = Prisma.SupplierQuotationGetPayload<{}>;
+
+export type SupplierQuotationListResponse = {
+  data: SupplierQuotationWithRelations[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};

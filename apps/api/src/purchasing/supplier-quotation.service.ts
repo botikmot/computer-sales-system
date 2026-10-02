@@ -6,15 +6,17 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
-import { UserRole } from '@computer-sales/database';
+import { UserRole, Prisma } from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateSupplierQuotationDto } from './dto/create-supplier-quotation.dto.js';
+import { SupplierQuotationQueryDto } from './dto/supplier-quotation-query.dto.js';
 
 import type {
+  SupplierQuotationListResponse,
   SupplierQuotationRecord,
   SupplierQuotationWithRelations,
 } from './supplier-quotation.types.js';
@@ -232,46 +234,132 @@ export class SupplierQuotationService {
   }
 
   async findAll(
-    purchaseRequestId: string | undefined,
+    query: SupplierQuotationQueryDto,
     user: AuthenticatedUser,
-  ): Promise<SupplierQuotationWithRelations[]> {
-    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+  ): Promise<SupplierQuotationListResponse> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
 
-    const where =
-      user.role === UserRole.ADMIN
-        ? purchaseRequestId
-          ? {
-              purchaseRequestId,
-            }
-          : {}
-        : {
-            branchId: user.branchId!,
-            ...(purchaseRequestId
-              ? {
-                  purchaseRequestId,
-                }
-              : {}),
-          };
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      user,
+      user.role === UserRole.ADMIN ? query.branchId : user.branchId,
+    );
 
-    return this.prisma.supplierQuotation.findMany({
-      where,
+    const where: Prisma.SupplierQuotationWhereInput = {};
 
-      orderBy: {
-        createdAt: 'desc',
-      },
+    if (query.search?.trim()) {
+      const search = query.search.trim();
 
-      include: {
-        branch: true,
-        supplier: true,
-        purchaseRequest: true,
-
-        items: {
-          include: {
-            product: true,
+      where.OR = [
+        {
+          quotationNo: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
-      },
-    });
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          supplier: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          supplier: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          purchaseRequest: {
+            requestNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    if (query.purchaseRequestId) {
+      where.purchaseRequestId = query.purchaseRequestId;
+    }
+
+    if (user.role === UserRole.ADMIN) {
+      if (query.branchId) {
+        where.branchId = query.branchId;
+      }
+    } else {
+      where.branchId = user.branchId!;
+    }
+
+    const allowedSortFields = [
+      'quotationNo',
+      'quotationDate',
+      'validUntil',
+      'status',
+      'total',
+      'createdAt',
+    ] as const;
+
+    const sortBy = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const sortOrder = query.sortOrder ?? 'desc';
+
+    const orderBy: Prisma.SupplierQuotationOrderByWithRelationInput = {
+      [sortBy]: sortOrder,
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.supplierQuotation.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+
+        include: {
+          branch: true,
+          supplier: true,
+          purchaseRequest: true,
+
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.supplierQuotation.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async receive(

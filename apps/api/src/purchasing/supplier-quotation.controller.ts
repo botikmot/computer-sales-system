@@ -8,10 +8,12 @@ import { Roles } from '../auth/decorators/roles.decorator.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreateSupplierQuotationDto } from './dto/create-supplier-quotation.dto.js';
+import { SupplierQuotationQueryDto } from './dto/supplier-quotation-query.dto.js';
 
 import type {
   SupplierQuotationRecord,
   SupplierQuotationWithRelations,
+  SupplierQuotationListResponse,
 } from './supplier-quotation.types.js';
 
 import { SupplierQuotationService } from './supplier-quotation.service.js';
@@ -34,12 +36,10 @@ export class SupplierQuotationController {
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
   @Get()
   findAll(
-    @Query('purchaseRequestId')
-    purchaseRequestId: string | undefined,
-
+    @Query() query: SupplierQuotationQueryDto,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<SupplierQuotationWithRelations[]> {
-    return this.supplierQuotationService.findAll(purchaseRequestId, user);
+  ): Promise<SupplierQuotationListResponse> {
+    return this.supplierQuotationService.findAll(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
