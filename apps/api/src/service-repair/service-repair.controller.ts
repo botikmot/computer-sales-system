@@ -6,6 +6,7 @@ import {
   ParseUUIDPipe,
   Post,
   Patch,
+  Query,
 } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
@@ -23,6 +24,8 @@ import { ServiceRepairService } from './service-repair.service.js';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
+import { ServiceJobQueryDto } from './dto/service-job-query.dto.js';
+
 @Controller('service-repair/jobs')
 export class ServiceRepairController {
   constructor(private readonly serviceRepairService: ServiceRepairService) {}
@@ -38,8 +41,11 @@ export class ServiceRepairController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.TECHNICIAN)
   @Get()
-  findAll(@CurrentUser() currentUser: AuthenticatedUser) {
-    return this.serviceRepairService.findAll(currentUser);
+  findAll(
+    @Query() query: ServiceJobQueryDto,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
+    return this.serviceRepairService.findAll(query, currentUser);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.TECHNICIAN)
@@ -49,6 +55,15 @@ export class ServiceRepairController {
     @CurrentUser() currentUser: AuthenticatedUser,
   ) {
     return this.serviceRepairService.findOne(id, currentUser);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  @Get(':id/technicians')
+  getTechnicians(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
+    return this.serviceRepairService.getTechniciansForJob(id, currentUser);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.TECHNICIAN)

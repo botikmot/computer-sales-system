@@ -3,6 +3,32 @@ import { getCurrentUser } from "@/lib/auth/session";
 
 type Money = string | number;
 
+type ListResult<T> =
+  | T[]
+  | {
+      items: T[];
+      pagination?: unknown;
+    }
+  | {
+      data: T[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+
+function getListItems<T>(result: ListResult<T>): T[] {
+  if (Array.isArray(result)) {
+    return result;
+  }
+
+  if ("items" in result) {
+    return result.items;
+  }
+
+  return result.data;
+}
+
 type SalesInvoiceSummary = {
   id: string;
   invoiceNo: string;
@@ -223,12 +249,12 @@ export async function getDashboardData(): Promise<DashboardData> {
 
   const [
     monthlySales,
-    salesOrders,
+    salesOrdersResult,
     customerBalances,
     lowStock,
     outstandingPurchases,
     openServiceJobs,
-    salesInvoices,
+    salesInvoicesResult,
   ] = await Promise.all([
     canViewSales
       ? apiFetch<MonthlySalesResponse>(
@@ -237,7 +263,7 @@ export async function getDashboardData(): Promise<DashboardData> {
       : Promise.resolve(null),
 
     canViewOrders
-      ? apiFetch<SalesOrderSummary[]>("/sales/orders")
+      ? apiFetch<ListResult<SalesOrderSummary>>("/sales/orders?limit=100")
       : Promise.resolve(null),
 
     canViewReceivables
@@ -259,9 +285,15 @@ export async function getDashboardData(): Promise<DashboardData> {
       : Promise.resolve(null),
 
     canViewSales
-      ? apiFetch<SalesInvoiceSummary[]>("/sales/invoices")
+      ? apiFetch<ListResult<SalesInvoiceSummary>>("/sales/invoices?limit=100")
       : Promise.resolve(null),
   ]);
+
+  const salesOrders =
+    salesOrdersResult === null ? null : getListItems(salesOrdersResult);
+
+  const salesInvoices =
+    salesInvoicesResult === null ? null : getListItems(salesInvoicesResult);
 
   const invoices = monthlySales?.invoices ?? [];
 

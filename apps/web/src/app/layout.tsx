@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ComFlow",
-    template: "%s | ComFlow",
+    default: "CompFlow",
+    template: "%s | CompFlow",
   },
   description:
     "Computer Sales, Inventory, Service, and Operations Management System",

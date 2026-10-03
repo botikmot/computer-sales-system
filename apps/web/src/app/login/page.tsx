@@ -21,7 +21,7 @@ export default function LoginPage() {
           <div className="relative flex w-full flex-col justify-between p-12 xl:p-16">
             <div>
               <div className="text-2xl font-bold tracking-tight text-white">
-                Com<span className="text-blue-400">Flow</span>
+                Comp<span className="text-blue-400">Flow</span>
               </div>
 
               <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -61,7 +61,7 @@ export default function LoginPage() {
             </div>
 
             <p className="text-xs text-slate-600">
-              ComFlow · Computer Sales & Operations System
+              CompFlow · Computer Sales & Operations System
             </p>
           </div>
         </section>
@@ -71,7 +71,7 @@ export default function LoginPage() {
           <div className="w-full max-w-md">
             <div className="mb-8 lg:hidden">
               <div className="text-2xl font-bold tracking-tight text-slate-950">
-                Com<span className="text-primary">Flow</span>
+                Comp<span className="text-primary">Flow</span>
               </div>
 
               <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 </h2>
 
                 <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Sign in to access your ComFlow workspace.
+                  Sign in to access your CompFlow workspace.
                 </p>
               </div>
 

@@ -24,6 +24,8 @@ import { IssueServicePartsDto } from './dto/issue-service-parts.dto.js';
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
+import { ServiceJobQueryDto } from './dto/service-job-query.dto.js';
+
 @Injectable()
 export class ServiceRepairService {
   constructor(
@@ -126,46 +128,122 @@ export class ServiceRepairService {
     });
   }
 
-  async findAll(currentUser: AuthenticatedUser) {
+  async findAll(query: ServiceJobQueryDto, currentUser: AuthenticatedUser) {
     this.branchAccessService.assertCanAccessOptionalBranch(
       currentUser,
       currentUser.branchId,
     );
 
-    const where: Prisma.ServiceJobWhereInput =
-      currentUser.role === UserRole.ADMIN
+    const page = query.page;
+    const limit = query.limit;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.ServiceJobWhereInput = {
+      ...(currentUser.role === UserRole.ADMIN
         ? {}
         : {
             branchId: currentUser.branchId!,
-          };
+          }),
 
-    return this.prisma.serviceJob.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        branch: true,
-        customer: true,
-        technician: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            fullName: true,
-            role: true,
-            status: true,
-            branchId: true,
+      ...(query.status
+        ? {
+            status: query.status,
+          }
+        : {}),
+
+      ...(query.search?.trim()
+        ? {
+            OR: [
+              {
+                jobNo: {
+                  contains: query.search.trim(),
+                  mode: 'insensitive',
+                },
+              },
+              {
+                notes: {
+                  contains: query.search.trim(),
+                  mode: 'insensitive',
+                },
+              },
+              {
+                diagnosticFindings: {
+                  contains: query.search.trim(),
+                  mode: 'insensitive',
+                },
+              },
+              {
+                customer: {
+                  is: {
+                    name: {
+                      contains: query.search.trim(),
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              },
+              {
+                technician: {
+                  is: {
+                    fullName: {
+                      contains: query.search.trim(),
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
+    const orderBy = {
+      [query.sortBy]: query.sortOrder,
+    } as Prisma.ServiceJobOrderByWithRelationInput;
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.serviceJob.findMany({
+        where,
+        orderBy,
+
+        skip,
+        take: limit,
+
+        include: {
+          branch: true,
+          customer: true,
+          technician: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              fullName: true,
+              role: true,
+              status: true,
+              branchId: true,
+            },
           },
-        },
-        parts: {
-          include: {
-            product: true,
+          parts: {
+            include: {
+              product: true,
+            },
           },
+          invoice: true,
         },
-        invoice: true,
-      },
-    });
+      }),
+
+      this.prisma.serviceJob.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string, currentUser: AuthenticatedUser) {
@@ -843,6 +921,51 @@ export class ServiceRepairService {
             product: true,
           },
         },
+      },
+    });
+  }
+
+  async getTechniciansForJob(id: string, user: AuthenticatedUser) {
+    const job = await this.prisma.serviceJob.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        branchId: true,
+      },
+    });
+
+    if (!job) {
+      throw new NotFoundException('Service job not found.');
+    }
+
+    this.assertJobAccess(user, job.branchId);
+
+    return this.prisma.user.findMany({
+      where: {
+        role: UserRole.TECHNICIAN,
+        status: UserStatus.ACTIVE,
+        OR: [
+          {
+            branchId: job.branchId,
+          },
+          {
+            branchId: null,
+          },
+        ],
+      },
+      orderBy: {
+        fullName: 'asc',
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        fullName: true,
+        role: true,
+        status: true,
+        branchId: true,
       },
     });
   }

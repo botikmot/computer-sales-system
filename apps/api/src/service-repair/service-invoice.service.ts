@@ -10,6 +10,7 @@ import {
   ServiceInvoiceItemType,
   ServiceInvoiceStatus,
   ServicePaymentMode,
+  UserRole,
 } from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
@@ -19,6 +20,8 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateServiceInvoiceDto } from './dto/create-service-invoice.dto.js';
+
+import { ServiceInvoiceQueryDto } from './dto/service-invoice-query.dto.js';
 
 @Injectable()
 export class ServiceInvoiceService {
@@ -212,30 +215,97 @@ export class ServiceInvoiceService {
     });
   }
 
-  async findAll(user: AuthenticatedUser) {
-    const where =
-      user.role === 'ADMIN'
+  async findAll(query: ServiceInvoiceQueryDto, user: AuthenticatedUser) {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const page = query.page;
+    const limit = query.limit;
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const where: Prisma.ServiceInvoiceWhereInput = {
+      ...(user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
-          };
-    return this.prisma.serviceInvoice.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        branch: true,
-        customer: true,
-        serviceJob: true,
-        items: {
-          include: {
-            product: true,
+          }),
+
+      ...(query.status
+        ? {
+            status: query.status,
+          }
+        : {}),
+
+      ...(search
+        ? {
+            OR: [
+              {
+                invoiceNo: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                customer: {
+                  is: {
+                    name: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              },
+              {
+                serviceJob: {
+                  is: {
+                    jobNo: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
+    const orderBy = {
+      [query.sortBy]: query.sortOrder,
+    } as Prisma.ServiceInvoiceOrderByWithRelationInput;
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.serviceInvoice.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+        include: {
+          branch: true,
+          customer: true,
+          serviceJob: true,
+          items: {
+            include: {
+              product: true,
+            },
           },
+          accountsReceivable: true,
         },
-        accountsReceivable: true,
-      },
-    });
+      }),
+
+      this.prisma.serviceInvoice.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

@@ -163,10 +163,12 @@ const sections: {
       {
         label: "Service Jobs",
         icon: Wrench,
+        href: "/service-jobs",
       },
       {
         label: "Service Invoices",
         icon: Receipt,
+        href: "/service-invoices",
       },
     ],
   },
@@ -215,7 +217,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <div className="flex h-20 shrink-0 items-center border-b border-slate-200 px-5">
         <div className="min-w-0">
           <div className="truncate text-[20px] font-bold tracking-tight text-slate-950">
-            Com<span className="text-primary">Flow</span>
+            Comp<span className="text-primary">Flow</span>
           </div>
 
           <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">

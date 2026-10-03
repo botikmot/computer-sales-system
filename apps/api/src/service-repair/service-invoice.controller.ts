@@ -5,6 +5,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
@@ -18,6 +19,8 @@ import { ServiceInvoiceService } from './service-invoice.service.js';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+
+import { ServiceInvoiceQueryDto } from './dto/service-invoice-query.dto.js';
 
 @Controller('service-repair/invoices')
 export class ServiceInvoiceController {
@@ -40,8 +43,11 @@ export class ServiceInvoiceController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
   @Get()
-  findAll(@CurrentUser() user: AuthenticatedUser) {
-    return this.serviceInvoiceService.findAll(user);
+  findAll(
+    @Query() query: ServiceInvoiceQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.serviceInvoiceService.findAll(query, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
