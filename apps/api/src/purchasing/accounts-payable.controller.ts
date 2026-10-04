@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -12,6 +12,7 @@ import { CreateAccountsPayableDto } from './dto/create-accounts-payable.dto.js';
 import type { AccountsPayableWithRelations } from './accounts-payable.types.js';
 
 import { AccountsPayableService } from './accounts-payable.service.js';
+import { AccountsPayableQueryDto } from './dto/accounts-payable-query.dto.js';
 
 @Controller('accounts-payable')
 export class AccountsPayableController {
@@ -36,9 +37,10 @@ export class AccountsPayableController {
   )
   @Get()
   findAll(
+    @Query() query: AccountsPayableQueryDto,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<AccountsPayableWithRelations[]> {
-    return this.accountsPayableService.findAll(user);
+  ) {
+    return this.accountsPayableService.findAll(user, query);
   }
 
   @Roles(

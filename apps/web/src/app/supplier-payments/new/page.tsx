@@ -112,13 +112,16 @@ export default function NewSupplierPaymentPage() {
     async function loadFormData() {
       try {
         const [apResult, accountResult] = await Promise.all([
-          getAccountsPayable(),
+          getAccountsPayable({
+            page: 1,
+            limit: 100,
+          }),
           getCashBankAccounts(),
         ]);
 
         if (cancelled) return;
 
-        setAccountsPayable(apResult);
+        setAccountsPayable(apResult.items);
         setCashBankAccounts(accountResult);
         setError("");
         setLoading(false);

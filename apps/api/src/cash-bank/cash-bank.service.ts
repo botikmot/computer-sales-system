@@ -14,6 +14,7 @@ import { PrismaService } from '../database/prisma.service.js';
 import { CreateBankReconciliationDto } from './dto/create-bank-reconciliation.dto.js';
 import { AddBankReconciliationItemDto } from './dto/add-bank-reconciliation-item.dto.js';
 import { CreateCashBankTransactionDto } from './dto/create-cash-bank-transaction.dto.js';
+import { CashBankTransactionQueryDto } from './dto/cash-bank-transaction-query.dto.js';
 
 @Injectable()
 export class CashBankService {
@@ -616,5 +617,134 @@ export class CashBankService {
         branch: true,
       },
     });
+  }
+
+  async findTransactions(
+    query: CashBankTransactionQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const search = query.search?.trim();
+
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const allowedSortFields = [
+      'accountName',
+      'transactionType',
+      'direction',
+      'amount',
+      'transactionDate',
+      'createdAt',
+      'updatedAt',
+    ] as const;
+
+    const sortField = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'transactionDate';
+
+    const where: Prisma.CashBankTransactionWhereInput =
+      user.role === UserRole.ADMIN
+        ? {}
+        : {
+            branchId: user.branchId!,
+          };
+
+    if (query.direction) {
+      where.direction = query.direction;
+    }
+
+    if (query.transactionType) {
+      where.transactionType = query.transactionType;
+    }
+
+    if (query.accountId) {
+      where.accountId = query.accountId;
+    }
+
+    if (search) {
+      where.OR = [
+        {
+          accountName: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          referenceNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.cashBankTransaction.findMany({
+        where,
+
+        skip: (page - 1) * limit,
+        take: limit,
+
+        orderBy: {
+          [sortField]: sortOrder,
+        } as Prisma.CashBankTransactionOrderByWithRelationInput,
+
+        include: {
+          account: true,
+          branch: true,
+        },
+      }),
+
+      this.prisma.cashBankTransaction.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findTransaction(id: string, user: AuthenticatedUser) {
+    const transaction = await this.prisma.cashBankTransaction.findUnique({
+      where: {
+        id,
+      },
+
+      include: {
+        account: true,
+        branch: true,
+        supplierPayment: true,
+        customerPayment: true,
+        pettyCashReplenishment: true,
+        salesReturn: true,
+      },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Cash/Bank transaction not found.');
+    }
+
+    this.branchAccessService.assertCanAccessBranch(user, transaction.branchId);
+
+    return transaction;
   }
 }

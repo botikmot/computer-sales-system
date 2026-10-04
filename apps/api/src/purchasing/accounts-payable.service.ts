@@ -5,7 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { UserRole } from '@computer-sales/database';
+import {
+  AccountsPayableStatus,
+  Prisma,
+  UserRole,
+} from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
@@ -13,11 +17,9 @@ import { PrismaService } from '../database/prisma.service.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreateAccountsPayableDto } from './dto/create-accounts-payable.dto.js';
+import { AccountsPayableQueryDto } from './dto/accounts-payable-query.dto.js';
 
-import type {
-  AccountsPayableRecord,
-  AccountsPayableWithRelations,
-} from './accounts-payable.types.js';
+import type { AccountsPayableWithRelations } from './accounts-payable.types.js';
 
 @Injectable()
 export class AccountsPayableService {
@@ -40,7 +42,6 @@ export class AccountsPayableService {
       throw new NotFoundException('Purchase invoice not found.');
     }
 
-    // The purchase invoice branch must be accessible to the current user.
     this.branchAccessService.assertCanAccessBranch(user, invoice.branchId);
 
     if (invoice.status !== 'POSTED') {
@@ -76,12 +77,10 @@ export class AccountsPayableService {
 
           paymentMode: invoice.paymentMode,
 
-          status: 'OPEN',
+          status: AccountsPayableStatus.OPEN,
 
           originalAmount: invoice.total,
-
           amountPaid: invoice.amountPaid,
-
           balanceDue: invoice.balanceDue,
 
           dueDate: invoice.dueDate,
@@ -125,31 +124,118 @@ export class AccountsPayableService {
     return payable;
   }
 
-  async findAll(
-    user: AuthenticatedUser,
-  ): Promise<AccountsPayableWithRelations[]> {
-    // Non-admin users must belong to a branch.
+  async findAll(user: AuthenticatedUser, query: AccountsPayableQueryDto) {
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const search = query.search?.trim();
+
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const allowedSortFields = [
+      'dueDate',
+      'originalAmount',
+      'amountPaid',
+      'balanceDue',
+      'status',
+      'paymentMode',
+      'createdAt',
+      'updatedAt',
+    ] as const;
+
+    const sortField = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const where: Prisma.AccountsPayableWhereInput =
       user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.accountsPayable.findMany({
-      where,
+    if (query.status) {
+      where.status = query.status;
+    }
 
-      orderBy: {
-        createdAt: 'desc',
-      },
+    if (search) {
+      where.OR = [
+        {
+          supplier: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          supplier: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          purchaseInvoice: {
+            invoiceNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          purchaseInvoice: {
+            supplierInvoiceNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
 
-      include: {
-        branch: true,
-        supplier: true,
-        purchaseInvoice: true,
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.accountsPayable.findMany({
+        where,
+
+        skip: (page - 1) * limit,
+        take: limit,
+
+        orderBy: {
+          [sortField]: sortOrder,
+        } as Prisma.AccountsPayableOrderByWithRelationInput,
+
+        include: {
+          branch: true,
+          supplier: true,
+          purchaseInvoice: true,
+        },
+      }),
+
+      this.prisma.accountsPayable.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 }

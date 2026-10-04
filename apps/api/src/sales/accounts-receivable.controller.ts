@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -9,6 +9,8 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { AccountsReceivableService } from './accounts-receivable.service.js';
 
+import { AccountsReceivableQueryDto } from './dto/accounts-receivable-query.dto.js';
+
 @Controller('sales/accounts-receivable')
 export class AccountsReceivableController {
   constructor(
@@ -17,8 +19,11 @@ export class AccountsReceivableController {
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
   @Get()
-  findAll(@CurrentUser() user: AuthenticatedUser) {
-    return this.accountsReceivableService.findAll(user);
+  findAll(
+    @Query() query: AccountsReceivableQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.accountsReceivableService.findAll(user, query);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)

@@ -6,5 +6,6 @@ export type AccountsReceivableWithRelations =
       branch: true;
       customer: true;
       salesInvoice: true;
+      serviceInvoice: true;
     };
   }>;

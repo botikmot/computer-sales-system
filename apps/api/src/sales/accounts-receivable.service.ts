@@ -5,12 +5,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { UserRole } from '@computer-sales/database';
+import {
+  AccountsReceivableStatus,
+  Prisma,
+  UserRole,
+} from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+
+import { AccountsReceivableQueryDto } from './dto/accounts-receivable-query.dto.js';
 import type { AccountsReceivableWithRelations } from './accounts-receivable.types.js';
 
 @Injectable()
@@ -20,30 +26,120 @@ export class AccountsReceivableService {
     private readonly branchAccessService: BranchAccessService,
   ) {}
 
-  async findAll(
-    user: AuthenticatedUser,
-  ): Promise<AccountsReceivableWithRelations[]> {
+  async findAll(user: AuthenticatedUser, query: AccountsReceivableQueryDto) {
     // Non-admin users must belong to a branch.
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
 
-    const where =
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const search = query.search?.trim();
+
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
+    const allowedSortFields = [
+      'dueDate',
+      'originalAmount',
+      'amountPaid',
+      'balanceDue',
+      'status',
+      'createdAt',
+      'updatedAt',
+    ] as const;
+
+    const sortField = allowedSortFields.includes(
+      query.sortBy as (typeof allowedSortFields)[number],
+    )
+      ? query.sortBy!
+      : 'createdAt';
+
+    const where: Prisma.AccountsReceivableWhereInput =
       user.role === UserRole.ADMIN
         ? {}
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.accountsReceivable.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc',
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    if (search) {
+      where.OR = [
+        {
+          customer: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          customer: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          salesInvoice: {
+            is: {
+              invoiceNo: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+        {
+          serviceInvoice: {
+            is: {
+              invoiceNo: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.accountsReceivable.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: {
+          [sortField]: sortOrder,
+        } as Prisma.AccountsReceivableOrderByWithRelationInput,
+        include: {
+          branch: true,
+          customer: true,
+          salesInvoice: true,
+          serviceInvoice: true,
+        },
+      }),
+
+      this.prisma.accountsReceivable.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-      include: {
-        branch: true,
-        customer: true,
-        salesInvoice: true,
-      },
-    });
+    };
   }
 
   async findOne(
@@ -58,6 +154,7 @@ export class AccountsReceivableService {
         branch: true,
         customer: true,
         salesInvoice: true,
+        serviceInvoice: true,
       },
     });
 
@@ -122,7 +219,7 @@ export class AccountsReceivableService {
           amountPaid: invoice.amountPaid,
           balanceDue: invoice.balanceDue,
 
-          status: 'OPEN',
+          status: AccountsReceivableStatus.OPEN,
           dueDate: invoice.dueDate,
           notes: invoice.notes,
         },
@@ -130,6 +227,7 @@ export class AccountsReceivableService {
           branch: true,
           customer: true,
           salesInvoice: true,
+          serviceInvoice: true,
         },
       });
     });

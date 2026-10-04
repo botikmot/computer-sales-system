@@ -178,18 +178,22 @@ const sections: {
       {
         label: "Accounts Receivable",
         icon: UserRound,
+        href: "/accounts-receivable",
       },
       {
         label: "Accounts Payable",
         icon: Building2,
+        href: "/accounts-payable",
       },
       {
         label: "Cash & Bank",
         icon: CreditCard,
+        href: "/cash-bank",
       },
       {
         label: "Petty Cash",
         icon: Receipt,
+        href: "/petty-cash",
       },
     ],
   },
@@ -199,6 +203,7 @@ const sections: {
       {
         label: "Reports Center",
         icon: BarChart3,
+        href: "/reports",
       },
     ],
   },

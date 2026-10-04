@@ -12,10 +12,46 @@ import { CashBankService } from './cash-bank.service.js';
 import { CreateBankReconciliationDto } from './dto/create-bank-reconciliation.dto.js';
 import { AddBankReconciliationItemDto } from './dto/add-bank-reconciliation-item.dto.js';
 import { CreateCashBankTransactionDto } from './dto/create-cash-bank-transaction.dto.js';
+import { CashBankTransactionQueryDto } from './dto/cash-bank-transaction-query.dto.js';
 
 @Controller('cash-bank')
 export class CashBankController {
   constructor(private readonly cashBankService: CashBankService) {}
+
+  // ----------------------------------
+  // CASH / BANK TRANSACTIONS
+  // ----------------------------------
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
+  @Get('transactions')
+  findTransactions(
+    @Query() query: CashBankTransactionQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.cashBankService.findTransactions(query, user);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
+  @Get('transactions/:id')
+  findTransaction(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.cashBankService.findTransaction(id, user);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
+  @Post('transactions')
+  createTransaction(
+    @Body() dto: CreateCashBankTransactionDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.cashBankService.createManualTransaction(dto, user);
+  }
+
+  // ----------------------------------
+  // BANK RECONCILIATION
+  // ----------------------------------
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @Post('reconciliations')
@@ -34,15 +70,6 @@ export class CashBankController {
     @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.cashBankService.findAll(branchId, accountId, user);
-  }
-
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
-  @Post('transactions')
-  createTransaction(
-    @Body() dto: CreateCashBankTransactionDto,
-    @CurrentUser() user: AuthenticatedUser,
-  ) {
-    return this.cashBankService.createManualTransaction(dto, user);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
