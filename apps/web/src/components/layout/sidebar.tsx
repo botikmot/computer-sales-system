@@ -425,8 +425,8 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* User / Settings area */}
       <div className="shrink-0 border-t border-slate-200 p-3">
-        <button
-          type="button"
+        <Link
+          href="/settings"
           className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
         >
           <Settings className="h-[17px] w-[17px] shrink-0 text-slate-400" />
@@ -434,7 +434,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           <span>Settings</span>
 
           <ChevronDown className="ml-auto h-4 w-4 text-slate-300" />
-        </button>
+        </Link>
       </div>
     </div>
   );

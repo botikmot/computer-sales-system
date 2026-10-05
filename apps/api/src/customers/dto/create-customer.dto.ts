@@ -1,16 +1,12 @@
 import {
+  IsBoolean,
   IsEmail,
   IsOptional,
   IsString,
-  IsBoolean,
   MaxLength,
 } from 'class-validator';
 
 export class CreateCustomerDto {
-  @IsString()
-  @MaxLength(50)
-  code!: string;
-
   @IsString()
   @MaxLength(200)
   name!: string;

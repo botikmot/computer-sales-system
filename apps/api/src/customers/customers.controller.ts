@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import { UserRole } from '@computer-sales/database';
 
@@ -12,6 +20,8 @@ import { UpdateCustomerDto } from './dto/update-customer.dto.js';
 
 import { CustomersService } from './customers.service.js';
 
+import { GetCustomersQueryDto } from './dto/get-customers-query.dto.js';
+
 @Controller('customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
@@ -23,8 +33,8 @@ export class CustomersController {
   }
 
   @Get()
-  findAll() {
-    return this.customersService.findAll();
+  findAll(@Query() query: GetCustomersQueryDto) {
+    return this.customersService.findAll(query);
   }
 
   @Get(':id')

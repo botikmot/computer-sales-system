@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Post,
+  Query,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -16,6 +18,9 @@ import { UpdateUserBranchDto } from './dto/update-user-branch.dto.js';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto.js';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto.js';
 
+import { CreateUserDto } from './dto/create-user.dto.js';
+import { GetUsersQueryDto } from './dto/get-users-query.dto.js';
+
 import { UsersService } from './users.service.js';
 
 type CurrentAuthenticatedUser = {
@@ -29,8 +34,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: GetUsersQueryDto) {
+    return this.usersService.findAll(query);
+  }
+
+  @Post()
+  create(@Body() dto: CreateUserDto) {
+    return this.usersService.create(dto);
   }
 
   @Get(':id')
