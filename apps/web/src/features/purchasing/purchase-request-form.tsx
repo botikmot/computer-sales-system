@@ -22,7 +22,6 @@ import {
 } from "./purchase-requests-api";
 
 import { getBranches, type Branch } from "@/features/branches/branches-api";
-
 import { getProducts, type Product } from "@/features/products/products-api";
 
 type PurchaseRequestFormProps = {
@@ -289,9 +288,13 @@ export function PurchaseRequestForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="grid gap-6 lg:grid-cols-[minmax(320px,0.8fr)_minmax(0,1.2fr)]"
+    >
+      {/* Error */}
       {error && (
-        <div className="rounded-2xl border border-rose-100 bg-rose-50 px-5 py-4">
+        <div className="rounded-2xl border border-rose-100 bg-rose-50 px-5 py-4 lg:col-span-2">
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
 
@@ -306,7 +309,9 @@ export function PurchaseRequestForm({
         </div>
       )}
 
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      {/* Request Information */}
+      <section className="h-fit rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {/* Header */}
         <div className="border-b border-slate-100 bg-slate-50/40 px-5 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
@@ -325,7 +330,9 @@ export function PurchaseRequestForm({
           </div>
         </div>
 
-        <div className="grid gap-5 p-5 md:grid-cols-2">
+        {/* Fields */}
+        <div className="grid gap-5 p-5">
+          {/* Branch */}
           <div>
             <label className="mb-1.5 block text-xs font-semibold text-slate-600">
               Branch
@@ -342,6 +349,7 @@ export function PurchaseRequestForm({
             />
           </div>
 
+          {/* Purpose */}
           <div>
             <label className="mb-1.5 block text-xs font-semibold text-slate-600">
               Purpose
@@ -357,7 +365,8 @@ export function PurchaseRequestForm({
             />
           </div>
 
-          <div className="md:col-span-2">
+          {/* Request Notes */}
+          <div>
             <label className="mb-1.5 block text-xs font-semibold text-slate-600">
               Request Notes
             </label>
@@ -373,7 +382,9 @@ export function PurchaseRequestForm({
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      {/* Requested Items */}
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {/* Header */}
         <div className="flex flex-col gap-4 border-b border-slate-100 bg-slate-50/40 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
@@ -402,32 +413,24 @@ export function PurchaseRequestForm({
           </button>
         </div>
 
-        <div className="space-y-4 p-5">
+        {/* Items */}
+        <div className="space-y-3 p-4 sm:p-5">
           {items.map((item, index) => (
             <div
               key={item.localId}
-              className="rounded-2xl border border-slate-200 bg-slate-50/40 p-4"
+              className="rounded-xl border border-slate-200 bg-slate-50/40 p-3 sm:p-4"
             >
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
-                    Item {index + 1}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => removeItem(item.localId)}
-                  disabled={submitting || items.length === 1}
-                  className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  Remove
-                </button>
+              {/* Item header */}
+              <div className="mb-3">
+                <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                  Item {index + 1}
+                </p>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_140px]">
-                <div>
+              {/* Product / Quantity / Remove */}
+              <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_110px_auto]">
+                {/* Product */}
+                <div className="min-w-0">
                   <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                     Product
                     <span className="ml-1 text-rose-500">*</span>
@@ -446,6 +449,7 @@ export function PurchaseRequestForm({
                   />
                 </div>
 
+                {/* Quantity */}
                 <div>
                   <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                     Quantity
@@ -465,7 +469,23 @@ export function PurchaseRequestForm({
                   />
                 </div>
 
-                <div className="lg:col-span-2">
+                {/* Remove */}
+                <div className="flex items-end">
+                  <button
+                    type="button"
+                    onClick={() => removeItem(item.localId)}
+                    disabled={submitting || items.length === 1}
+                    aria-label={`Remove item ${index + 1}`}
+                    className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-400 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-40 lg:w-auto"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span className="lg:hidden">Remove Item</span>
+                    <span className="hidden lg:inline">Remove</span>
+                  </button>
+                </div>
+
+                {/* Item Notes */}
+                <div className="lg:col-span-3">
                   <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                     Item Notes
                   </label>
@@ -487,6 +507,7 @@ export function PurchaseRequestForm({
           ))}
         </div>
 
+        {/* Footer */}
         <div className="border-t border-slate-100 bg-slate-50/40 px-5 py-3">
           <p className="text-xs text-slate-400">
             {items.length} {items.length === 1 ? "product" : "products"}{" "}
@@ -495,7 +516,8 @@ export function PurchaseRequestForm({
         </div>
       </section>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      {/* Actions */}
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end lg:col-span-2">
         <button
           type="button"
           onClick={onCancel}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   AlertCircle,
   ArrowLeft,
@@ -119,12 +119,10 @@ type ActionType = "submit" | "approve" | "reject" | "cancel";
 
 export default function PurchaseRequestDetailPage() {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
 
   const id = params.id;
 
   const [request, setRequest] = useState<PurchaseRequest | null>(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [actionError, setActionError] = useState("");
@@ -230,7 +228,7 @@ export default function PurchaseRequestDetailPage() {
   if (error || !request) {
     return (
       <AppShell>
-        <div className="space-y-6">
+        <div className="space-y-5">
           <PageHeader
             eyebrow="Purchasing"
             title="Purchase Request"
@@ -279,7 +277,7 @@ export default function PurchaseRequestDetailPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-5">
         <PageHeader
           eyebrow="Purchasing"
           title={request.requestNo}
@@ -295,30 +293,34 @@ export default function PurchaseRequestDetailPage() {
           }
         />
 
+        {/* Main Header + Summary */}
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-100 bg-slate-50/40 px-5 py-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
+          {/* Header */}
+          <div className="border-b border-slate-100 bg-slate-50/40 px-5 py-4">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
                   <FileText className="h-5 w-5" />
                 </div>
 
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
                     Purchase Request
                   </p>
 
-                  <h2 className="mt-1 text-xl font-bold tracking-tight text-slate-950">
-                    {request.requestNo}
-                  </h2>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                    <h2 className="truncate text-lg font-bold tracking-tight text-slate-950">
+                      {request.requestNo}
+                    </h2>
 
-                  <p className="mt-1 text-xs text-slate-400">
-                    Created {formatDate(request.createdAt)}
-                  </p>
+                    <span className="text-xs text-slate-400">
+                      Created {formatDate(request.createdAt)}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div>
+              <div className="flex shrink-0 items-center gap-3">
                 <span
                   className={[
                     "inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold",
@@ -328,15 +330,16 @@ export default function PurchaseRequestDetailPage() {
                   {getStatusLabel(request.status)}
                 </span>
 
-                <p className="mt-1 text-right text-xs text-slate-400">
+                <span className="hidden text-xs text-slate-400 lg:block">
                   {getStatusDescription(request.status)}
-                </p>
+                </span>
               </div>
             </div>
           </div>
 
+          {/* Action error */}
           {actionError && (
-            <div className="border-b border-rose-100 bg-rose-50 px-5 py-4">
+            <div className="border-b border-rose-100 bg-rose-50 px-5 py-3">
               <div className="flex items-start gap-3">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
 
@@ -345,13 +348,14 @@ export default function PurchaseRequestDetailPage() {
                     Action failed
                   </p>
 
-                  <p className="mt-1 text-xs text-rose-700">{actionError}</p>
+                  <p className="mt-0.5 text-xs text-rose-700">{actionError}</p>
                 </div>
               </div>
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-px bg-slate-100 md:grid-cols-3">
+          {/* Summary */}
+          <div className="grid grid-cols-1 gap-px bg-slate-100 sm:grid-cols-2 xl:grid-cols-3">
             <InfoBlock
               label="Branch"
               value={request.branch?.name ?? "—"}
@@ -365,28 +369,29 @@ export default function PurchaseRequestDetailPage() {
 
             <InfoBlock
               label="Requested Items"
-              value={String(request.items.length)}
+              value={`${request.items.length} ${
+                request.items.length === 1 ? "item" : "items"
+              }`}
               secondary={`${totalRequestedQuantity} total units`}
             />
           </div>
         </section>
 
+        {/* Requested Items */}
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-100 px-5 py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
-                <Package className="h-5 w-5" />
-              </div>
+          <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-3.5">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+              <Package className="h-4.5 w-4.5" />
+            </div>
 
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  Requested Items
-                </p>
+            <div>
+              <p className="text-sm font-semibold text-slate-900">
+                Requested Items
+              </p>
 
-                <p className="text-xs text-slate-400">
-                  Products and quantities requested for purchasing.
-                </p>
-              </div>
+              <p className="text-xs text-slate-400">
+                Products and quantities requested for purchasing.
+              </p>
             </div>
           </div>
 
@@ -394,23 +399,23 @@ export default function PurchaseRequestDetailPage() {
             <table className="w-full min-w-[760px]">
               <thead className="border-b border-slate-100 bg-slate-50/60">
                 <tr>
-                  <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                  <th className="px-4 py-2.5 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
                     Product
                   </th>
 
-                  <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                  <th className="px-4 py-2.5 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
                     SKU
                   </th>
 
-                  <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                  <th className="px-4 py-2.5 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
                     Unit
                   </th>
 
-                  <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                  <th className="px-4 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
                     Quantity
                   </th>
 
-                  <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                  <th className="px-4 py-2.5 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
                     Notes
                   </th>
                 </tr>
@@ -419,8 +424,8 @@ export default function PurchaseRequestDetailPage() {
               <tbody className="divide-y divide-slate-100">
                 {request.items.map((item) => (
                   <tr key={item.id} className="transition hover:bg-slate-50/60">
-                    <td className="px-5 py-4">
-                      <div>
+                    <td className="px-4 py-3">
+                      <div className="min-w-0">
                         <p className="text-sm font-semibold text-slate-900">
                           {item.product?.name ?? "Unknown product"}
                         </p>
@@ -435,21 +440,21 @@ export default function PurchaseRequestDetailPage() {
                       </div>
                     </td>
 
-                    <td className="px-5 py-4 text-sm font-medium text-slate-700">
+                    <td className="px-4 py-3 text-sm font-medium text-slate-700">
                       {item.product?.sku ?? "—"}
                     </td>
 
-                    <td className="px-5 py-4 text-sm text-slate-500">
+                    <td className="px-4 py-3 text-sm text-slate-500">
                       {item.product?.unit ?? "—"}
                     </td>
 
-                    <td className="px-5 py-4 text-right">
+                    <td className="px-4 py-3 text-right">
                       <span className="inline-flex min-w-10 items-center justify-center rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
                         {item.quantity}
                       </span>
                     </td>
 
-                    <td className="max-w-[280px] px-5 py-4">
+                    <td className="max-w-[360px] px-4 py-3">
                       <p className="truncate text-sm text-slate-600">
                         {item.notes || "—"}
                       </p>
@@ -461,31 +466,42 @@ export default function PurchaseRequestDetailPage() {
           </div>
         </section>
 
-        {request.notes && (
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
-                <FileText className="h-5 w-5" />
+        {/* Notes + Workflow */}
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
+          {/* Request Notes */}
+          {request.notes ? (
+            <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="flex items-start gap-3 px-5 py-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+                  <FileText className="h-4 w-4" />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-slate-900">
+                    Request Notes
+                  </p>
+
+                  <p className="mt-1 whitespace-pre-wrap text-sm leading-5 text-slate-600">
+                    {request.notes}
+                  </p>
+                </div>
               </div>
-
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-slate-900">
-                  Request Notes
-                </p>
-
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-600">
-                  {request.notes}
+            </section>
+          ) : (
+            <section className="hidden rounded-2xl border border-slate-200 bg-slate-50/40 lg:block">
+              <div className="flex h-full items-center px-5 py-4">
+                <p className="text-xs text-slate-400">
+                  No additional request notes.
                 </p>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-100 px-5 py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
-                <Clock3 className="h-5 w-5" />
+          {/* Workflow */}
+          <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-3.5">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+                <Clock3 className="h-4 w-4" />
               </div>
 
               <div>
@@ -494,96 +510,96 @@ export default function PurchaseRequestDetailPage() {
                 </p>
 
                 <p className="text-xs text-slate-400">
-                  Available actions depend on the current request status.
+                  Available actions depend on status.
                 </p>
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-3 px-5 py-5">
-            {canSubmit && (
-              <button
-                type="button"
-                disabled={actionDisabled()}
-                onClick={() => void handleAction("submit")}
-                className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {actionLoading === "submit" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
-                )}
-                Submit Request
-              </button>
-            )}
+            <div className="flex flex-wrap items-center gap-2.5 px-5 py-4">
+              {canSubmit && (
+                <button
+                  type="button"
+                  disabled={actionDisabled()}
+                  onClick={() => void handleAction("submit")}
+                  className="inline-flex h-9 items-center gap-2 rounded-lg bg-primary px-3.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {actionLoading === "submit" ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                  Submit Request
+                </button>
+              )}
 
-            {canApprove && (
-              <button
-                type="button"
-                disabled={actionDisabled()}
-                onClick={() => void handleAction("approve")}
-                className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {actionLoading === "approve" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4" />
-                )}
-                Approve
-              </button>
-            )}
+              {canApprove && (
+                <button
+                  type="button"
+                  disabled={actionDisabled()}
+                  onClick={() => void handleAction("approve")}
+                  className="inline-flex h-9 items-center gap-2 rounded-lg bg-emerald-600 px-3.5 text-xs font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {actionLoading === "approve" ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="h-4 w-4" />
+                  )}
+                  Approve
+                </button>
+              )}
 
-            {canReject && (
-              <button
-                type="button"
-                disabled={actionDisabled()}
-                onClick={() => void handleAction("reject")}
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-rose-200 bg-white px-4 text-sm font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {actionLoading === "reject" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <XCircle className="h-4 w-4" />
-                )}
-                Reject
-              </button>
-            )}
+              {canReject && (
+                <button
+                  type="button"
+                  disabled={actionDisabled()}
+                  onClick={() => void handleAction("reject")}
+                  className="inline-flex h-9 items-center gap-2 rounded-lg border border-rose-200 bg-white px-3.5 text-xs font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {actionLoading === "reject" ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <XCircle className="h-4 w-4" />
+                  )}
+                  Reject
+                </button>
+              )}
 
-            {canCancel && (
-              <button
-                type="button"
-                disabled={actionDisabled()}
-                onClick={() => void handleAction("cancel")}
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {actionLoading === "cancel" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Ban className="h-4 w-4" />
-                )}
-                Cancel Request
-              </button>
-            )}
+              {canCancel && (
+                <button
+                  type="button"
+                  disabled={actionDisabled()}
+                  onClick={() => void handleAction("cancel")}
+                  className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {actionLoading === "cancel" ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Ban className="h-4 w-4" />
+                  )}
+                  Cancel Request
+                </button>
+              )}
 
-            {request.status === "APPROVED" && (
-              <div className="rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-xs font-medium text-emerald-700">
-                Approved and ready for the supplier quotation stage.
-              </div>
-            )}
+              {request.status === "APPROVED" && (
+                <div className="w-full rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2.5 text-xs font-medium text-emerald-700">
+                  Approved and ready for the supplier quotation stage.
+                </div>
+              )}
 
-            {request.status === "REJECTED" && (
-              <div className="rounded-lg border border-rose-100 bg-rose-50 px-4 py-2.5 text-xs font-medium text-rose-700">
-                This purchase request has been rejected.
-              </div>
-            )}
+              {request.status === "REJECTED" && (
+                <div className="w-full rounded-lg border border-rose-100 bg-rose-50 px-3 py-2.5 text-xs font-medium text-rose-700">
+                  This purchase request has been rejected.
+                </div>
+              )}
 
-            {request.status === "CANCELLED" && (
-              <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-medium text-slate-500">
-                This purchase request has been cancelled.
-              </div>
-            )}
-          </div>
-        </section>
+              {request.status === "CANCELLED" && (
+                <div className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs font-medium text-slate-500">
+                  This purchase request has been cancelled.
+                </div>
+              )}
+            </div>
+          </section>
+        </div>
       </div>
     </AppShell>
   );
@@ -599,12 +615,14 @@ function InfoBlock({
   secondary?: string;
 }) {
   return (
-    <div className="bg-white px-5 py-4">
+    <div className="bg-white px-5 py-3.5">
       <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
         {label}
       </p>
 
-      <p className="mt-1 text-sm font-semibold text-slate-900">{value}</p>
+      <p className="mt-0.5 truncate text-sm font-semibold text-slate-900">
+        {value}
+      </p>
 
       {secondary && (
         <p className="mt-0.5 text-xs text-slate-400">{secondary}</p>

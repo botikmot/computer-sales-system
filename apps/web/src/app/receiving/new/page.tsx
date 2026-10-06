@@ -396,17 +396,19 @@ export default function NewReceivingPage() {
           {/* RECEIVING DETAILS */}
           {purchaseOrder && (
             <>
-              <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-                <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-primary" />
+              {/* RECEIVING DETAILS + ITEMS HEADER */}
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* RECEIVING DETAILS */}
+                <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                  <div className="flex items-center gap-2">
+                    <Truck className="h-4 w-4 text-primary" />
 
-                  <h2 className="font-semibold text-slate-950">
-                    Receiving Details
-                  </h2>
-                </div>
+                    <h2 className="font-semibold text-slate-950">
+                      Receiving Details
+                    </h2>
+                  </div>
 
-                <div className="mt-5 grid gap-5 lg:grid-cols-2">
-                  <div>
+                  <div className="mt-5">
                     <label
                       htmlFor="referenceNo"
                       className="text-xs font-bold uppercase tracking-wide text-slate-500"
@@ -424,8 +426,19 @@ export default function NewReceivingPage() {
                       className="mt-2 h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
                     />
                   </div>
+                </section>
 
-                  <div>
+                {/* RECEIVING NOTES */}
+                <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                  <div className="flex items-center gap-2">
+                    <Package className="h-4 w-4 text-primary" />
+
+                    <h2 className="font-semibold text-slate-950">
+                      Receiving Notes
+                    </h2>
+                  </div>
+
+                  <div className="mt-5">
                     <label
                       htmlFor="notes"
                       className="text-xs font-bold uppercase tracking-wide text-slate-500"
@@ -444,8 +457,8 @@ export default function NewReceivingPage() {
                       className="mt-2 w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
                     />
                   </div>
-                </div>
-              </section>
+                </section>
+              </div>
 
               {/* ITEMS */}
               <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">

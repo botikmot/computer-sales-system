@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
 import {
   BarChart3,
@@ -220,13 +221,27 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full min-h-0 flex-col">
       {/* Brand */}
       <div className="flex h-20 shrink-0 items-center border-b border-slate-200 px-5">
-        <div className="min-w-0">
-          <div className="truncate text-[20px] font-bold tracking-tight text-slate-950">
-            Comp<span className="text-primary">Flow</span>
+        <div className="flex min-w-0 items-center gap-3">
+          {/* CompFlow Logo */}
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="CompFlow"
+              width={50}
+              height={50}
+              className="h-10 w-10 object-contain"
+            />
           </div>
 
-          <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-            Business Operations
+          {/* Brand Text */}
+          <div className="min-w-0">
+            <div className="truncate text-[20px] font-bold tracking-tight text-slate-950">
+              Comp<span className="text-primary">Flow</span>
+            </div>
+
+            <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Computer Sales & Services System
+            </div>
           </div>
         </div>
       </div>

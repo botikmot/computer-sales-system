@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { LoginForm } from "@/features/auth/login-form";
 import { LockKeyhole } from "lucide-react";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -19,14 +20,28 @@ export default function LoginPage() {
           </div>
 
           <div className="relative flex w-full flex-col justify-between p-12 xl:p-16">
-            <div>
-              <div className="text-2xl font-bold tracking-tight text-white">
-                Comp<span className="text-blue-400">Flow</span>
+            <div className="flex items-center gap-3">
+              {/* CompFlow Logo */}
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
+                <Image
+                  src="/logo.png"
+                  alt="CompFlow"
+                  width={50}
+                  height={50}
+                  className="h-10 w-10 object-contain"
+                />
               </div>
 
-              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                Business Operations
-              </p>
+              {/* Brand */}
+              <div>
+                <div className="text-2xl font-bold tracking-tight text-white">
+                  Comp<span className="text-blue-400">Flow</span>
+                </div>
+
+                <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Business Operations
+                </p>
+              </div>
             </div>
 
             <div className="max-w-xl">
@@ -81,8 +96,14 @@ export default function LoginPage() {
 
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_12px_40px_rgba(15,23,42,0.08)] sm:p-8">
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-primary">
-                  <LockKeyhole className="h-5 w-5" />
+                <div className="flex w-full items-center justify-center">
+                  <Image
+                    src="/logo.png"
+                    alt="CompFlow"
+                    width={100}
+                    height={100}
+                    className="object-contain"
+                  />
                 </div>
 
                 <h2 className="mt-6 text-2xl font-bold tracking-tight text-slate-950">

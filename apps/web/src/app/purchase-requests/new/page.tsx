@@ -21,7 +21,7 @@ export default function NewPurchaseRequestPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="mx-auto w-full max-w-[1600px] space-y-6">
         <PageHeader
           eyebrow="Purchasing"
           title="New Purchase Request"

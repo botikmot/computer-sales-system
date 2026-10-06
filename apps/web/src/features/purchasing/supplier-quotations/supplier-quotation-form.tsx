@@ -4,19 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
 import {
   AlertCircle,
   ArrowLeft,
   Building2,
   CalendarDays,
-  //CheckCircle2,
   ClipboardList,
   FileText,
   Loader2,
   Package,
   Plus,
   Save,
-  //UserRound,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -114,6 +113,7 @@ export function SupplierQuotationForm() {
             sortBy: "createdAt",
             sortOrder: "desc",
           }),
+
           getSuppliers({
             page: 1,
             limit: 100,
@@ -405,13 +405,14 @@ export function SupplierQuotationForm() {
           ? err.message
           : "Unable to create supplier quotation.",
       );
+
       setSubmitting(false);
     }
   }
 
   return (
     <AppShell>
-      <div className="space-y-6 pb-10">
+      <div className="space-y-5 pb-8">
         {/* BACK */}
         <Link
           href="/supplier-quotations"
@@ -456,8 +457,10 @@ export function SupplierQuotationForm() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* BASIC DETAILS */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* ========================================================= */}
+          {/* QUOTATION DETAILS                                         */}
+          {/* ========================================================= */}
           <section className="rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
             <SectionHeader
               icon={<FileText className="h-5 w-5" />}
@@ -465,7 +468,7 @@ export function SupplierQuotationForm() {
               description="Select the approved purchase request and supplier."
             />
 
-            <div className="grid gap-5 px-5 py-5 lg:grid-cols-2">
+            <div className="grid gap-4 px-5 py-4 lg:grid-cols-2 xl:grid-cols-4">
               <Field label="Purchase Request" required>
                 <SearchableSelect
                   value={selectedPurchaseRequestId}
@@ -501,7 +504,7 @@ export function SupplierQuotationForm() {
                     value={quotationDate}
                     onChange={(event) => setQuotationDate(event.target.value)}
                     disabled={submitting}
-                    className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
                   />
                 </div>
               </Field>
@@ -516,63 +519,93 @@ export function SupplierQuotationForm() {
                     min={quotationDate || undefined}
                     onChange={(event) => setValidUntil(event.target.value)}
                     disabled={submitting}
-                    className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
                   />
                 </div>
               </Field>
             </div>
           </section>
 
-          {/* PURCHASE REQUEST CONTEXT */}
+          {/* ========================================================= */}
+          {/* PURCHASE REQUEST + NOTES                                  */}
+          {/* ========================================================= */}
           {purchaseRequest && (
-            <section className="rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-              <SectionHeader
-                icon={<ClipboardList className="h-5 w-5" />}
-                title="Purchase Request"
-                description="Reference information from the selected approved request."
-              />
-
-              <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-4">
-                <InfoCell
-                  label="Request No."
-                  value={purchaseRequest.requestNo}
-                  href={`/purchase-requests/${purchaseRequest.id}`}
+            <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(300px,1fr)]">
+              {/* PURCHASE REQUEST CONTEXT */}
+              <section className="h-full rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                <SectionHeader
+                  icon={<ClipboardList className="h-5 w-5" />}
+                  title="Purchase Request"
+                  description="Reference information from the selected approved request."
                 />
 
-                <InfoCell
-                  label="Branch"
-                  value={
-                    purchaseRequest.branch
-                      ? `${purchaseRequest.branch.name} (${purchaseRequest.branch.code})`
-                      : "—"
-                  }
-                  icon={<Building2 className="h-4 w-4" />}
+                <div className="grid gap-0 sm:grid-cols-2 xl:grid-cols-4">
+                  <InfoCell
+                    label="Request No."
+                    value={purchaseRequest.requestNo}
+                    href={`/purchase-requests/${purchaseRequest.id}`}
+                  />
+
+                  <InfoCell
+                    label="Branch"
+                    value={
+                      purchaseRequest.branch
+                        ? `${purchaseRequest.branch.name} (${purchaseRequest.branch.code})`
+                        : "—"
+                    }
+                    icon={<Building2 className="h-4 w-4" />}
+                  />
+
+                  <InfoCell
+                    label="Purpose"
+                    value={purchaseRequest.purpose || "—"}
+                  />
+
+                  <InfoCell
+                    label="Items"
+                    value={String(purchaseRequest.items.length)}
+                    icon={<Package className="h-4 w-4" />}
+                  />
+                </div>
+
+                {purchaseRequest.notes && (
+                  <div className="border-t border-slate-100 px-5 py-3.5">
+                    <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                      Request Notes
+                    </p>
+
+                    <p className="mt-1 whitespace-pre-wrap text-sm leading-5 text-slate-600">
+                      {purchaseRequest.notes}
+                    </p>
+                  </div>
+                )}
+              </section>
+
+              {/* QUOTATION NOTES */}
+              <section className="h-full rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                <SectionHeader
+                  icon={<FileText className="h-5 w-5" />}
+                  title="Notes"
+                  description="Optional additional quotation information."
                 />
 
-                <InfoCell
-                  label="Purpose"
-                  value={purchaseRequest.purpose || "—"}
-                />
+                <div className="flex h-[calc(100%-73px)] flex-col px-5 py-4">
+                  <textarea
+                    value={notes}
+                    onChange={(event) => setNotes(event.target.value)}
+                    rows={4}
+                    maxLength={2000}
+                    placeholder="Add quotation notes, supplier terms, delivery information, or other details..."
+                    disabled={submitting}
+                    className="min-h-[120px] flex-1 resize-y rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                  />
 
-                <InfoCell
-                  label="Items"
-                  value={String(purchaseRequest.items.length)}
-                  icon={<Package className="h-4 w-4" />}
-                />
-              </div>
-
-              {purchaseRequest.notes && (
-                <div className="border-t border-slate-100 px-5 py-4">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                    Request Notes
-                  </p>
-
-                  <p className="mt-1.5 whitespace-pre-wrap text-sm leading-6 text-slate-600">
-                    {purchaseRequest.notes}
+                  <p className="mt-1.5 text-right text-xs text-slate-400">
+                    {notes.length}/2000
                   </p>
                 </div>
-              )}
-            </section>
+              </section>
+            </div>
           )}
 
           {/* FIELD ERROR */}
@@ -587,7 +620,9 @@ export function SupplierQuotationForm() {
             </div>
           )}
 
-          {/* ITEMS */}
+          {/* ========================================================= */}
+          {/* QUOTATION ITEMS                                            */}
+          {/* ========================================================= */}
           <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
             <SectionHeader
               icon={<Package className="h-5 w-5" />}
@@ -773,7 +808,7 @@ export function SupplierQuotationForm() {
 
                 {/* TOTAL */}
                 <div className="border-t border-slate-100 bg-slate-50/50">
-                  <div className="ml-auto max-w-sm px-5 py-5">
+                  <div className="ml-auto max-w-sm px-5 py-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold text-slate-500">
                         Quotation Total
@@ -789,33 +824,10 @@ export function SupplierQuotationForm() {
             )}
           </section>
 
-          {/* NOTES */}
-          <section className="rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-            <SectionHeader
-              icon={<FileText className="h-5 w-5" />}
-              title="Notes"
-              description="Optional additional quotation information."
-            />
-
-            <div className="px-5 py-5">
-              <textarea
-                value={notes}
-                onChange={(event) => setNotes(event.target.value)}
-                rows={5}
-                maxLength={2000}
-                placeholder="Add quotation notes, supplier terms, delivery information, or other details..."
-                disabled={submitting}
-                className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
-              />
-
-              <p className="mt-1.5 text-right text-xs text-slate-400">
-                {notes.length}/2000
-              </p>
-            </div>
-          </section>
-
-          {/* ACTIONS */}
-          <section className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
+          {/* ========================================================= */}
+          {/* ACTIONS                                                    */}
+          {/* ========================================================= */}
+          <section className="flex flex-col-reverse gap-3 pt-1 sm:flex-row sm:items-center sm:justify-end">
             <Link
               href="/supplier-quotations"
               className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
@@ -860,9 +872,9 @@ function SectionHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
           {icon}
         </div>
 
@@ -890,9 +902,10 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
       <label className="block text-xs font-bold uppercase tracking-wide text-slate-500">
         {label}
+
         {required && <span className="ml-1 text-rose-500">*</span>}
       </label>
 
@@ -913,15 +926,17 @@ function InfoCell({
   href?: string;
 }) {
   const content = (
-    <div className="border-b border-slate-100 px-5 py-4">
+    <div className="border-b border-slate-100 px-4 py-3.5 xl:px-5">
       <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
         {label}
       </p>
 
-      <div className="mt-1.5 flex items-center gap-2">
-        {icon && <span className="text-slate-400">{icon}</span>}
+      <div className="mt-1.5 flex min-w-0 items-center gap-2">
+        {icon && <span className="shrink-0 text-slate-400">{icon}</span>}
 
-        <span className="text-sm font-semibold text-slate-800">{value}</span>
+        <span className="truncate text-sm font-semibold text-slate-800">
+          {value}
+        </span>
       </div>
     </div>
   );

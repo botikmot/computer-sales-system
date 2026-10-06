@@ -180,12 +180,25 @@ export async function postReceiving(id: string): Promise<Receiving> {
 export async function getPurchaseOrdersForReceiving(): Promise<
   PurchaseOrderForReceiving[]
 > {
-  const orders =
-    await apiFetch<PurchaseOrderForReceiving[]>("/purchase-orders");
+  const [sentResponse, partiallyReceivedResponse] = await Promise.all([
+    apiFetch<{
+      data: PurchaseOrderForReceiving[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }>("/purchase-orders?status=SENT&limit=100&page=1"),
 
-  return orders.filter(
-    (order) => order.status === "SENT" || order.status === "PARTIALLY_RECEIVED",
-  );
+    apiFetch<{
+      data: PurchaseOrderForReceiving[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }>("/purchase-orders?status=PARTIALLY_RECEIVED&limit=100&page=1"),
+  ]);
+
+  return [...sentResponse.data, ...partiallyReceivedResponse.data];
 }
 
 export async function getPurchaseOrder(
