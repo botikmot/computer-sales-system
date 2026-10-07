@@ -602,12 +602,18 @@ export async function getCustomerPayment(id: string): Promise<CustomerPayment> {
   return apiFetch<CustomerPayment>(`/sales/customer-payments/${id}`);
 }
 
+type ListResult<T> = T[] | { items: T[] };
+
 export async function getCustomers(): Promise<CustomerRecord[]> {
-  return apiFetch<CustomerRecord[]>("/customers");
+  const result = await apiFetch<ListResult<CustomerRecord>>("/customers");
+
+  return Array.isArray(result) ? result : result.items;
 }
 
 export async function getProducts(): Promise<ProductRecord[]> {
-  return apiFetch<ProductRecord[]>("/products");
+  const result = await apiFetch<ListResult<ProductRecord>>("/products");
+
+  return Array.isArray(result) ? result : result.items;
 }
 
 export async function getSalesInquiries(
@@ -818,5 +824,22 @@ export async function createSalesInvoiceFromOrder(
     body: JSON.stringify({
       paymentMode,
     }),
+  });
+}
+
+export type CreateSalesCustomerPayload = {
+  name: string;
+  contactNumber?: string;
+  email?: string;
+  address?: string;
+  taxId?: string;
+};
+
+export async function createSalesCustomer(
+  payload: CreateSalesCustomerPayload,
+): Promise<CustomerRecord> {
+  return apiFetch<CustomerRecord>("/customers", {
+    method: "POST",
+    body: JSON.stringify(payload),
   });
 }
