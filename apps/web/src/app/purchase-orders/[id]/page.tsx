@@ -24,6 +24,8 @@ import {
   type PurchaseOrder,
 } from "@/features/purchasing/purchase-orders-api";
 
+import { getCurrentUser } from "@/lib/auth/session";
+
 function formatMoney(value: string | number | null | undefined) {
   const amount = Number(value ?? 0);
 
@@ -99,6 +101,9 @@ export default function PurchaseOrderDetailPage() {
   //const router = useRouter();
 
   const id = params?.id;
+
+  const user = getCurrentUser();
+  const role = user?.role;
 
   const [order, setOrder] = useState<PurchaseOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -279,6 +284,8 @@ export default function PurchaseOrderDetailPage() {
 
   const totalUnits = getTotalUnits(order);
   const receivedUnits = getReceivedUnits(order);
+  const canApprove =
+    order.status === "DRAFT" && (role === "ADMIN" || role === "MANAGER");
 
   return (
     <AppShell>
@@ -343,19 +350,21 @@ export default function PurchaseOrderDetailPage() {
                   Cancel
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleApprove}
-                  disabled={!!actionLoading}
-                  className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {actionLoading === "approve" ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <CheckCircle2 className="h-4 w-4" />
-                  )}
-                  Approve
-                </button>
+                {canApprove && (
+                  <button
+                    type="button"
+                    onClick={handleApprove}
+                    disabled={!!actionLoading}
+                    className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {actionLoading === "approve" ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="h-4 w-4" />
+                    )}
+                    Approve
+                  </button>
+                )}
               </>
             )}
 

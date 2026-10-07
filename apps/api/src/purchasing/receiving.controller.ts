@@ -13,6 +13,7 @@ import type { ReceivingWithRelations } from './receiving.types.js';
 
 import { ReceivingService } from './receiving.service.js';
 import { ReceivingQueryDto } from './dto/receiving-query.dto.js';
+import type { PurchaseOrderListResponse } from './purchase-order.types.js';
 
 @Controller('receivings')
 export class ReceivingController {
@@ -44,6 +45,20 @@ export class ReceivingController {
     @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.receivingService.findAll(query, user);
+  }
+
+  @Roles(
+    UserRole.ADMIN,
+    UserRole.MANAGER,
+    UserRole.PURCHASING,
+    UserRole.INVENTORY,
+  )
+  @Get('awaiting-purchase-orders')
+  findAwaitingPurchaseOrders(
+    @Query() query: ReceivingQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<PurchaseOrderListResponse> {
+    return this.receivingService.findAwaitingPurchaseOrders(query, user);
   }
 
   @Roles(

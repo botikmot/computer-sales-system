@@ -1,5 +1,7 @@
 import { apiFetch } from "@/lib/api/client";
 
+import type { PurchaseOrderListResponse } from "./purchase-orders-api";
+
 export type ReceivingProduct = {
   id: string;
   sku: string;
@@ -205,4 +207,29 @@ export async function getPurchaseOrder(
   id: string,
 ): Promise<PurchaseOrderForReceiving> {
   return apiFetch<PurchaseOrderForReceiving>(`/purchase-orders/${id}`);
+}
+
+export async function getPurchaseOrdersAwaitingReceiving(
+  query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  } = {},
+): Promise<PurchaseOrderListResponse> {
+  const params = new URLSearchParams();
+
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 5));
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  const queryString = params.toString();
+
+  return apiFetch<PurchaseOrderListResponse>(
+    `/receivings/awaiting-purchase-orders${
+      queryString ? `?${queryString}` : ""
+    }`,
+  );
 }

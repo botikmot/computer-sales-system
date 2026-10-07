@@ -15,6 +15,8 @@ import { PrismaService } from '../database/prisma.service.js';
 import { CreatePurchaseOrderDto } from './dto/create-purchase-order.dto.js';
 import { PurchaseOrderQueryDto } from './dto/purchase-order-query.dto.js';
 
+import type { SupplierQuotationListResponse } from './supplier-quotation.types.js';
+
 import type {
   PurchaseOrderListResponse,
   PurchaseOrderRecord,
@@ -421,5 +423,119 @@ export class PurchaseOrderService {
         status: 'CANCELLED',
       },
     });
+  }
+
+  async findAwaitingSupplierQuotations(
+    query: PurchaseOrderQueryDto,
+    user: AuthenticatedUser,
+  ): Promise<SupplierQuotationListResponse> {
+    const page = Math.max(Number(query.page ?? 1), 1);
+    const limit = Math.min(Math.max(Number(query.limit ?? 5), 1), 100);
+    const skip = (page - 1) * limit;
+
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      user,
+      user.role === UserRole.ADMIN ? query.branchId : user.branchId,
+    );
+
+    const search = query.search?.trim();
+
+    const where: Prisma.SupplierQuotationWhereInput = {
+      status: 'ACCEPTED',
+
+      purchaseOrders: {
+        none: {
+          status: {
+            not: 'CANCELLED',
+          },
+        },
+      },
+    };
+
+    if (search) {
+      where.OR = [
+        {
+          quotationNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          supplier: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          supplier: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          purchaseRequest: {
+            requestNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+
+    if (user.role === UserRole.ADMIN) {
+      if (query.branchId) {
+        where.branchId = query.branchId;
+      }
+    } else {
+      where.branchId = user.branchId!;
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.supplierQuotation.findMany({
+        where,
+
+        orderBy: {
+          createdAt: 'desc',
+        },
+
+        skip,
+        take: limit,
+
+        include: {
+          branch: true,
+          supplier: true,
+          purchaseRequest: true,
+
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.supplierQuotation.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

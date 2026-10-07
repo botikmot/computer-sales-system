@@ -17,6 +17,9 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import type { ReceivingWithRelations } from './receiving.types.js';
 
+import { Prisma, UserRole } from '@computer-sales/database';
+import type { PurchaseOrderListResponse } from './purchase-order.types.js';
+
 @Injectable()
 export class ReceivingService {
   constructor(
@@ -608,5 +611,108 @@ export class ReceivingService {
         },
       });
     });
+  }
+
+  async findAwaitingPurchaseOrders(
+    query: ReceivingQueryDto,
+    user: AuthenticatedUser,
+  ): Promise<PurchaseOrderListResponse> {
+    const page = Math.max(Number(query.page ?? 1), 1);
+    const limit = Math.min(Math.max(Number(query.limit ?? 5), 1), 100);
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    const where: Prisma.PurchaseOrderWhereInput = {
+      status: {
+        in: ['SENT', 'PARTIALLY_RECEIVED'],
+      },
+
+      receivings: {
+        none: {
+          status: 'DRAFT',
+        },
+      },
+    };
+
+    if (search) {
+      where.OR = [
+        {
+          poNumber: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          supplier: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          supplier: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          purchaseRequest: {
+            requestNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+
+    if (user.role !== UserRole.ADMIN) {
+      where.branchId = user.branchId!;
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.purchaseOrder.findMany({
+        where,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        skip,
+        take: limit,
+        include: {
+          branch: true,
+          supplier: true,
+          purchaseRequest: true,
+          supplierQuotation: true,
+
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.purchaseOrder.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

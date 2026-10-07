@@ -1,5 +1,7 @@
 import { apiFetch } from "@/lib/api/client";
 
+import type { SupplierQuotationListResponse } from "./supplier-quotations-api";
+
 export type PurchaseOrderStatus =
   | "DRAFT"
   | "APPROVED"
@@ -212,4 +214,34 @@ export async function cancelPurchaseOrder(id: string): Promise<PurchaseOrder> {
   return apiFetch<PurchaseOrder>(`/purchase-orders/${id}/cancel`, {
     method: "PATCH",
   });
+}
+
+export async function getSupplierQuotationsAwaitingPurchaseOrder(
+  query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    branchId?: string;
+  } = {},
+): Promise<SupplierQuotationListResponse> {
+  const params = new URLSearchParams();
+
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 5));
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.branchId) {
+    params.set("branchId", query.branchId);
+  }
+
+  const queryString = params.toString();
+
+  return apiFetch<SupplierQuotationListResponse>(
+    `/purchase-orders/awaiting-supplier-quotations${
+      queryString ? `?${queryString}` : ""
+    }`,
+  );
 }

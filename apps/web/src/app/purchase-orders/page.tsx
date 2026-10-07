@@ -21,7 +21,10 @@ import {
   type SelectOption,
 } from "@/components/ui/searchable-select";
 
+import type { SupplierQuotation } from "@/features/purchasing/supplier-quotations-api";
+
 import {
+  getSupplierQuotationsAwaitingPurchaseOrder,
   getPurchaseOrders,
   type PurchaseOrder,
   type PurchaseOrderListResponse,
@@ -194,6 +197,15 @@ export default function PurchaseOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [awaitingQuotations, setAwaitingQuotations] = useState<
+    SupplierQuotation[]
+  >([]);
+
+  const [awaitingQuotationsTotal, setAwaitingQuotationsTotal] = useState(0);
+  const [awaitingQuotationsLoading, setAwaitingQuotationsLoading] =
+    useState(true);
+  const [awaitingQuotationsError, setAwaitingQuotationsError] = useState("");
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
@@ -208,6 +220,49 @@ export default function PurchaseOrdersPage() {
     total: 0,
     totalPages: 0,
   });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchAwaitingQuotations() {
+      try {
+        setAwaitingQuotationsLoading(true);
+        setAwaitingQuotationsError("");
+
+        const result = await getSupplierQuotationsAwaitingPurchaseOrder({
+          page: 1,
+          limit: 5,
+        });
+
+        if (cancelled) {
+          return;
+        }
+
+        setAwaitingQuotations(result.data);
+        setAwaitingQuotationsTotal(result.total);
+      } catch (err) {
+        if (cancelled) {
+          return;
+        }
+
+        setAwaitingQuotationsError(
+          err instanceof Error
+            ? err.message
+            : "Unable to load accepted supplier quotations awaiting purchase order.",
+        );
+      } finally {
+        if (!cancelled) {
+          setAwaitingQuotationsLoading(false);
+        }
+      }
+    }
+
+    void fetchAwaitingQuotations();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -383,6 +438,115 @@ export default function PurchaseOrdersPage() {
             Supplier Quotations
           </Link>
         </section>
+
+        {awaitingQuotationsLoading ? (
+          <section className="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+            <div className="flex items-center gap-3 text-sm text-slate-500">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading accepted supplier quotations...
+            </div>
+          </section>
+        ) : awaitingQuotationsError ? (
+          <section className="rounded-2xl border border-rose-100 bg-rose-50 px-5 py-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="mt-0.5 h-4 w-4 text-rose-600" />
+
+              <div>
+                <p className="text-sm font-semibold text-rose-800">
+                  Unable to load quotation queue
+                </p>
+
+                <p className="mt-1 text-xs text-rose-700">
+                  {awaitingQuotationsError}
+                </p>
+              </div>
+            </div>
+          </section>
+        ) : awaitingQuotations.length > 0 ? (
+          <section className="overflow-hidden rounded-2xl border border-emerald-200 bg-white shadow-sm">
+            <div className="border-b border-emerald-100 bg-emerald-50/60 px-5 py-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                    <ShoppingCart className="h-5 w-5" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900">
+                      Accepted Supplier Quotations
+                    </p>
+
+                    <p className="text-xs text-slate-500">
+                      Accepted quotations that still need a purchase order.
+                    </p>
+                  </div>
+                </div>
+
+                <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                  {awaitingQuotationsTotal} awaiting
+                </span>
+              </div>
+            </div>
+
+            <div className="divide-y divide-slate-100">
+              {awaitingQuotations.map((quotation) => (
+                <div
+                  key={quotation.id}
+                  className="flex flex-col gap-4 px-5 py-4 transition hover:bg-slate-50/60 lg:flex-row lg:items-center lg:justify-between"
+                >
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link
+                        href={`/supplier-quotations/${quotation.id}`}
+                        className="text-sm font-semibold text-slate-900 hover:text-primary"
+                      >
+                        {quotation.quotationNo}
+                      </Link>
+
+                      <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+                        Accepted
+                      </span>
+                    </div>
+
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
+                      <span>{quotation.supplier?.name || "—"}</span>
+
+                      <span>•</span>
+
+                      <span>
+                        {quotation.purchaseRequest?.requestNo || "No PR"}
+                      </span>
+
+                      <span>•</span>
+
+                      <span>{quotation.branch?.name || "—"}</span>
+
+                      <span>•</span>
+
+                      <span>{formatCurrency(quotation.total)}</span>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={`/purchase-orders/new?supplierQuotationId=${quotation.id}`}
+                    className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg bg-primary px-3.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90"
+                  >
+                    Create Purchase Order
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {awaitingQuotationsTotal > awaitingQuotations.length && (
+              <div className="border-t border-slate-100 bg-slate-50/40 px-5 py-3">
+                <p className="text-xs text-slate-400">
+                  Showing {awaitingQuotations.length} of{" "}
+                  {awaitingQuotationsTotal} awaiting quotations.
+                </p>
+              </div>
+            )}
+          </section>
+        ) : null}
 
         {/* Toolbar */}
         <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">

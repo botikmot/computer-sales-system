@@ -25,6 +25,8 @@ import {
   type SelectOption,
 } from "@/components/ui/searchable-select";
 
+import { useSearchParams } from "next/navigation";
+
 type ReceivingLine = {
   purchaseOrderItemId: string;
   productId: string;
@@ -70,11 +72,17 @@ function formatDate(value: string | null | undefined) {
 export default function NewReceivingPage() {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
+  const initialPurchaseOrderId = searchParams.get("purchaseOrderId") ?? "";
+
   const [purchaseOrders, setPurchaseOrders] = useState<
     PurchaseOrderForReceiving[]
   >([]);
 
-  const [selectedPurchaseOrderId, setSelectedPurchaseOrderId] = useState("");
+  const [selectedPurchaseOrderId, setSelectedPurchaseOrderId] = useState(
+    initialPurchaseOrderId,
+  );
 
   const [purchaseOrder, setPurchaseOrder] =
     useState<PurchaseOrderForReceiving | null>(null);
@@ -129,6 +137,31 @@ export default function NewReceivingPage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      !initialPurchaseOrderId ||
+      loadingPurchaseOrders ||
+      selectedPurchaseOrderId !== initialPurchaseOrderId
+    ) {
+      return;
+    }
+
+    const exists = purchaseOrders.some(
+      (order) => order.id === initialPurchaseOrderId,
+    );
+
+    if (!exists) {
+      return;
+    }
+
+    void handlePurchaseOrderChange(initialPurchaseOrderId);
+  }, [
+    initialPurchaseOrderId,
+    loadingPurchaseOrders,
+    purchaseOrders,
+    selectedPurchaseOrderId,
+  ]);
 
   async function handlePurchaseOrderChange(value: string) {
     setSelectedPurchaseOrderId(value);

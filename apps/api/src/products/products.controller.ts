@@ -21,7 +21,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
   }

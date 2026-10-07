@@ -1,11 +1,20 @@
 import { apiFetch } from "@/lib/api/client";
 
+export type UserRole =
+  | "ADMIN"
+  | "MANAGER"
+  | "SALES"
+  | "PURCHASING"
+  | "INVENTORY"
+  | "TECHNICIAN"
+  | "CASHIER";
+
 export type AuthUser = {
   id: string;
   username: string;
   email?: string | null;
   fullName?: string | null;
-  role: string;
+  role: UserRole;
   status: string;
   branchId?: string | null;
   branch?: {

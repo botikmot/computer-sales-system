@@ -24,6 +24,8 @@ import {
   type Receiving,
 } from "@/features/purchasing/receivings-api";
 
+import { getCurrentUser } from "@/lib/auth/session";
+
 type VerificationLine = {
   receivingItemId: string;
   quantityAccepted: number;
@@ -105,6 +107,9 @@ function getQualityStatusClass(status: string) {
 
 export default function ReceivingDetailPage() {
   const params = useParams();
+
+  const user = getCurrentUser();
+  const role = user?.role;
 
   const id = typeof params.id === "string" ? params.id : "";
 
@@ -395,10 +400,14 @@ export default function ReceivingDetailPage() {
   }
 
   const canVerify =
-    receiving.status === "DRAFT" && receiving.checkStatus === "PENDING";
+    (role === "ADMIN" || role === "MANAGER" || role === "INVENTORY") &&
+    receiving.status === "DRAFT" &&
+    receiving.checkStatus === "PENDING";
 
   const canPost =
-    receiving.status === "DRAFT" && receiving.checkStatus === "VERIFIED";
+    (role === "ADMIN" || role === "MANAGER" || role === "INVENTORY") &&
+    receiving.status === "DRAFT" &&
+    receiving.checkStatus === "VERIFIED";
 
   const totalReceived = receiving.items.reduce(
     (sum, item) => sum + item.quantityReceived,

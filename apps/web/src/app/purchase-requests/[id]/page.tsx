@@ -18,6 +18,7 @@ import {
 
 import { AppShell } from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/ui/page-header";
+import { getCurrentUser } from "@/lib/auth/session";
 
 import {
   approvePurchaseRequest,
@@ -119,6 +120,9 @@ type ActionType = "submit" | "approve" | "reject" | "cancel";
 
 export default function PurchaseRequestDetailPage() {
   const params = useParams<{ id: string }>();
+
+  const user = getCurrentUser();
+  const role = user?.role;
 
   const id = params.id;
 
@@ -270,8 +274,11 @@ export default function PurchaseRequestDetailPage() {
   );
 
   const canSubmit = request.status === "DRAFT";
-  const canApprove = request.status === "SUBMITTED";
-  const canReject = request.status === "SUBMITTED";
+  const canApprove =
+    request.status === "SUBMITTED" && (role === "ADMIN" || role === "MANAGER");
+
+  const canReject =
+    request.status === "SUBMITTED" && (role === "ADMIN" || role === "MANAGER");
   const canCancel =
     request.status === "DRAFT" || request.status === "SUBMITTED";
 

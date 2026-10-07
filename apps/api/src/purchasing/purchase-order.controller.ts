@@ -25,6 +25,8 @@ import type {
   PurchaseOrderWithRelations,
 } from './purchase-order.types.js';
 
+import type { SupplierQuotationListResponse } from './supplier-quotation.types.js';
+
 import { PurchaseOrderService } from './purchase-order.service.js';
 
 @Controller('purchase-orders')
@@ -47,6 +49,18 @@ export class PurchaseOrderController {
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<PurchaseOrderListResponse> {
     return this.purchaseOrderService.findAll(query, user);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
+  @Get('awaiting-supplier-quotations')
+  findAwaitingSupplierQuotations(
+    @Query() query: PurchaseOrderQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<SupplierQuotationListResponse> {
+    return this.purchaseOrderService.findAwaitingSupplierQuotations(
+      query,
+      user,
+    );
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)

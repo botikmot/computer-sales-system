@@ -41,7 +41,13 @@ export class ServiceInvoiceController {
     );
   }
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
+  @Roles(
+    UserRole.ADMIN,
+    UserRole.MANAGER,
+    UserRole.SALES,
+    UserRole.CASHIER,
+    UserRole.TECHNICIAN,
+  )
   @Get()
   findAll(
     @Query() query: ServiceInvoiceQueryDto,
@@ -50,7 +56,13 @@ export class ServiceInvoiceController {
     return this.serviceInvoiceService.findAll(query, user);
   }
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
+  @Roles(
+    UserRole.ADMIN,
+    UserRole.MANAGER,
+    UserRole.SALES,
+    UserRole.CASHIER,
+    UserRole.TECHNICIAN,
+  )
   @Get(':id')
   findOne(
     @Param('id', new ParseUUIDPipe()) id: string,

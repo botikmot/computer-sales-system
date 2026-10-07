@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { getCurrentUser } from "@/lib/auth/session";
+import { hasPermission, type Permission } from "@/features/auth/permissions";
 
 import {
   BarChart3,
@@ -34,9 +36,11 @@ type NavItem = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   href?: string;
+  permission?: Permission;
   children?: {
     label: string;
     href: string;
+    permission?: Permission;
   }[];
 };
 
@@ -51,6 +55,7 @@ const sections: {
         label: "Dashboard",
         icon: LayoutDashboard,
         href: "/",
+        permission: "dashboard",
       },
     ],
   },
@@ -61,31 +66,37 @@ const sections: {
         label: "Inquiries",
         icon: ClipboardList,
         href: "/sales/inquiries",
+        permission: "sales.inquiries",
       },
       {
         label: "Quotations",
         icon: FileText,
         href: "/sales/quotations",
+        permission: "sales.quotations",
       },
       {
         label: "Sales Orders",
         icon: ShoppingCart,
         href: "/sales/orders",
+        permission: "sales.orders",
       },
       {
         label: "Invoices",
         icon: Receipt,
         href: "/sales/invoices",
+        permission: "sales.invoices",
       },
       {
         label: "Payments",
         icon: CreditCard,
         href: "/sales/payments",
+        permission: "sales.payments",
       },
       {
         label: "Returns",
         icon: Truck,
         href: "/sales/returns",
+        permission: "sales.returns",
       },
     ],
   },
@@ -95,14 +106,17 @@ const sections: {
       {
         label: "Products",
         icon: Package,
+        permission: "inventory.products",
         children: [
           {
             label: "All Products",
             href: "/products",
+            permission: "inventory.products",
           },
           {
             label: "Categories",
             href: "/products/categories",
+            permission: "inventory.products",
           },
         ],
       },
@@ -110,21 +124,25 @@ const sections: {
         label: "Stock",
         icon: Boxes,
         href: "/stock",
+        permission: "inventory.stock",
       },
       {
         label: "Receiving",
         icon: Truck,
         href: "/receiving",
+        permission: "inventory.receiving",
       },
       {
         label: "Assembly",
         icon: Settings,
         href: "/assembly",
+        permission: "inventory.assembly",
       },
       {
         label: "Adjustments",
         icon: ClipboardList,
         href: "/adjustments",
+        permission: "inventory.adjustments",
       },
     ],
   },
@@ -135,26 +153,37 @@ const sections: {
         label: "Suppliers",
         icon: Users,
         href: "/suppliers",
+        permission: "purchasing.suppliers",
       },
       {
         label: "Purchase Requests",
         icon: ClipboardList,
         href: "/purchase-requests",
+        permission: "purchasing.requests",
       },
       {
         label: "Supplier Quotations",
         icon: FileText,
         href: "/supplier-quotations",
+        permission: "purchasing.quotations",
       },
       {
         label: "Purchase Orders",
         icon: ShoppingCart,
         href: "/purchase-orders",
+        permission: "purchasing.orders",
+      },
+      {
+        label: "Purchase Invoices",
+        icon: Receipt,
+        href: "/purchase-invoices",
+        permission: "purchasing.invoices",
       },
       {
         label: "Supplier Payments",
         icon: CreditCard,
         href: "/supplier-payments",
+        permission: "purchasing.payments",
       },
     ],
   },
@@ -165,11 +194,13 @@ const sections: {
         label: "Service Jobs",
         icon: Wrench,
         href: "/service-jobs",
+        permission: "services.jobs",
       },
       {
         label: "Service Invoices",
         icon: Receipt,
         href: "/service-invoices",
+        permission: "services.invoices",
       },
     ],
   },
@@ -180,21 +211,25 @@ const sections: {
         label: "Accounts Receivable",
         icon: UserRound,
         href: "/accounts-receivable",
+        permission: "finance.ar",
       },
       {
         label: "Accounts Payable",
         icon: Building2,
         href: "/accounts-payable",
+        permission: "finance.ap",
       },
       {
         label: "Cash & Bank",
         icon: CreditCard,
         href: "/cash-bank",
+        permission: "finance.cash-bank",
       },
       {
         label: "Petty Cash",
         icon: Receipt,
         href: "/petty-cash",
+        permission: "finance.petty-cash",
       },
     ],
   },
@@ -205,6 +240,7 @@ const sections: {
         label: "Reports Center",
         icon: BarChart3,
         href: "/reports",
+        permission: "reports",
       },
     ],
   },
@@ -213,9 +249,29 @@ const sections: {
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
+  const user = getCurrentUser();
+  const role = user?.role;
+
   const [productsOpen, setProductsOpen] = useState(
     pathname.startsWith("/products"),
   );
+
+  const visibleSections = sections
+    .map((section) => ({
+      ...section,
+      items: section.items
+        .filter(
+          (item) => !item.permission || hasPermission(role, item.permission),
+        )
+        .map((item) => ({
+          ...item,
+          children: item.children?.filter(
+            (child) =>
+              !child.permission || hasPermission(role, child.permission),
+          ),
+        })),
+    }))
+    .filter((section) => section.items.length > 0);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -249,7 +305,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       {/* Navigation */}
       <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
         <div className="space-y-5">
-          {sections.map((section) => (
+          {visibleSections.map((section) => (
             <div key={section.label}>
               <div className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
                 {section.label}
@@ -440,16 +496,18 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* User / Settings area */}
       <div className="shrink-0 border-t border-slate-200 p-3">
-        <Link
-          href="/settings"
-          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
-        >
-          <Settings className="h-[17px] w-[17px] shrink-0 text-slate-400" />
+        {hasPermission(role, "settings") && (
+          <Link
+            href="/settings"
+            className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
+          >
+            <Settings className="h-[17px] w-[17px] shrink-0 text-slate-400" />
 
-          <span>Settings</span>
+            <span>Settings</span>
 
-          <ChevronDown className="ml-auto h-4 w-4 text-slate-300" />
-        </Link>
+            <ChevronDown className="ml-auto h-4 w-4 text-slate-300" />
+          </Link>
+        )}
       </div>
     </div>
   );

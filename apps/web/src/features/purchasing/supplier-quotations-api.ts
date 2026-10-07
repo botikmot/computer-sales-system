@@ -1,5 +1,7 @@
 import { apiFetch } from "@/lib/api/client";
 
+import type { PurchaseRequestListResponse } from "@/features/purchasing/purchase-requests-api";
+
 export type SupplierQuotationStatus =
   "DRAFT" | "RECEIVED" | "ACCEPTED" | "REJECTED" | "CANCELLED";
 
@@ -255,5 +257,35 @@ export async function cancelSupplierQuotation(
     {
       method: "POST",
     },
+  );
+}
+
+export async function getPurchaseRequestsAwaitingSupplierQuotation(
+  query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    branchId?: string;
+  } = {},
+): Promise<PurchaseRequestListResponse> {
+  const params = new URLSearchParams();
+
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 10));
+
+  if (query.search?.trim()) {
+    params.set("search", query.search.trim());
+  }
+
+  if (query.branchId) {
+    params.set("branchId", query.branchId);
+  }
+
+  const queryString = params.toString();
+
+  return apiFetch<PurchaseRequestListResponse>(
+    `/supplier-quotations/awaiting-purchase-requests${
+      queryString ? `?${queryString}` : ""
+    }`,
   );
 }

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
-import { UserRole } from '@computer-sales/database';
+import { Prisma, UserRole } from '@computer-sales/database';
 
 import { BranchAccessService } from '../auth/branch-access.service.js';
 import { PrismaService } from '../database/prisma.service.js';
@@ -18,6 +18,8 @@ import {
 
 import type { PurchaseInvoiceWithRelations } from './purchase-invoice.types.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import { PurchaseInvoiceQueryDto } from './dto/purchase-invoice-query.dto.js';
+import { PurchaseInvoiceListResponse } from './purchase-invoice.types.js';
 
 @Injectable()
 export class PurchaseInvoiceService {
@@ -252,37 +254,249 @@ export class PurchaseInvoiceService {
   }
 
   async findAll(
+    query: PurchaseInvoiceQueryDto,
     user: AuthenticatedUser,
-  ): Promise<PurchaseInvoiceWithRelations[]> {
-    // Non-admin users must belong to a branch.
-    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+  ): Promise<PurchaseInvoiceListResponse> {
+    const page = Math.max(Number(query.page ?? 1), 1);
+    const limit = Math.min(Math.max(Number(query.limit ?? 10), 1), 100);
+    const skip = (page - 1) * limit;
 
-    const where =
+    const search = query.search?.trim();
+
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      user,
+      user.role === UserRole.ADMIN ? query.branchId : user.branchId,
+    );
+
+    const where: Prisma.PurchaseInvoiceWhereInput =
       user.role === UserRole.ADMIN
-        ? {}
+        ? {
+            ...(query.branchId
+              ? {
+                  branchId: query.branchId,
+                }
+              : {}),
+          }
         : {
             branchId: user.branchId!,
           };
 
-    return this.prisma.purchaseInvoice.findMany({
-      where,
+    if (query.status) {
+      where.status = query.status;
+    }
 
-      orderBy: {
-        createdAt: 'desc',
-      },
-
-      include: {
-        branch: true,
-        supplier: true,
-        purchaseOrder: true,
-        receiving: true,
-
-        items: {
-          include: {
-            product: true,
+    if (search) {
+      where.OR = [
+        {
+          invoiceNo: {
+            contains: search,
+            mode: 'insensitive',
           },
         },
+        {
+          supplierInvoiceNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          supplier: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          supplier: {
+            code: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          purchaseOrder: {
+            poNumber: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          receiving: {
+            receivingNo: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+
+    const sortOrder = query.sortOrder ?? 'desc';
+
+    const orderBy =
+      query.sortBy === 'invoiceNo'
+        ? { invoiceNo: sortOrder }
+        : query.sortBy === 'invoiceDate'
+          ? { invoiceDate: sortOrder }
+          : query.sortBy === 'dueDate'
+            ? { dueDate: sortOrder }
+            : query.sortBy === 'total'
+              ? { total: sortOrder }
+              : query.sortBy === 'balanceDue'
+                ? { balanceDue: sortOrder }
+                : query.sortBy === 'status'
+                  ? { status: sortOrder }
+                  : { createdAt: sortOrder };
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.purchaseInvoice.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          branch: true,
+          supplier: true,
+          purchaseOrder: true,
+          receiving: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.purchaseInvoice.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-    });
+    };
+  }
+
+  async findAwaitingReceivings(
+    query: PurchaseInvoiceQueryDto,
+    user: AuthenticatedUser,
+  ) {
+    const page = Math.max(Number(query.page ?? 1), 1);
+    const limit = Math.min(Math.max(Number(query.limit ?? 5), 1), 100);
+    const skip = (page - 1) * limit;
+
+    const search = query.search?.trim();
+
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      user,
+      user.role === UserRole.ADMIN ? query.branchId : user.branchId,
+    );
+
+    const where: Prisma.ReceivingWhereInput =
+      user.role === UserRole.ADMIN
+        ? {
+            ...(query.branchId
+              ? {
+                  branchId: query.branchId,
+                }
+              : {}),
+          }
+        : {
+            branchId: user.branchId!,
+          };
+
+    where.status = 'POSTED';
+    where.checkStatus = 'VERIFIED';
+
+    where.purchaseInvoices = {
+      none: {
+        status: {
+          not: 'CANCELLED',
+        },
+      },
+    };
+
+    if (search) {
+      where.OR = [
+        {
+          receivingNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          referenceNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          purchaseOrder: {
+            poNumber: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          purchaseOrder: {
+            supplier: {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+      ];
+    }
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.receiving.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: {
+          receivedDate: 'desc',
+        },
+        include: {
+          branch: true,
+          purchaseOrder: {
+            include: {
+              supplier: true,
+            },
+          },
+          items: {
+            include: {
+              product: true,
+              purchaseOrderItem: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.receiving.count({
+        where,
+      }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    };
   }
 }

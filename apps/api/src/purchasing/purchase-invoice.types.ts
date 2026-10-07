@@ -15,3 +15,13 @@ export type PurchaseInvoiceWithRelations = Prisma.PurchaseInvoiceGetPayload<{
 }>;
 
 export type PurchaseInvoiceRecord = Prisma.PurchaseInvoiceGetPayload<{}>;
+
+export type PurchaseInvoiceListResponse = {
+  items: PurchaseInvoiceWithRelations[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};

@@ -16,6 +16,7 @@ import {
   Package,
   Plus,
   Save,
+  X,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -34,7 +35,18 @@ import {
   getPurchaseRequest,
 } from "@/features/purchasing/purchase-requests-api";
 
-import { getSuppliers, getSupplier } from "@/features/purchasing/suppliers-api";
+import {
+  createSupplier,
+  getSuppliers,
+  getSupplier,
+  type CreateSupplierPayload,
+} from "@/features/purchasing/suppliers-api";
+
+type SupplierQuotationFormProps = {
+  initialPurchaseRequestId?: string;
+};
+
+import { getCurrentUser } from "@/lib/auth/session";
 
 type PurchaseRequest = Awaited<ReturnType<typeof getPurchaseRequest>>;
 type Supplier = Awaited<ReturnType<typeof getSupplier>>;
@@ -57,7 +69,9 @@ function formatCurrency(value: number) {
   }).format(value);
 }
 
-export function SupplierQuotationForm() {
+export function SupplierQuotationForm({
+  initialPurchaseRequestId = "",
+}: SupplierQuotationFormProps) {
   const router = useRouter();
 
   const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>(
@@ -66,8 +80,9 @@ export function SupplierQuotationForm() {
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
-  const [selectedPurchaseRequestId, setSelectedPurchaseRequestId] =
-    useState("");
+  const [selectedPurchaseRequestId, setSelectedPurchaseRequestId] = useState(
+    initialPurchaseRequestId,
+  );
 
   const [selectedSupplierId, setSelectedSupplierId] = useState("");
 
@@ -93,6 +108,73 @@ export function SupplierQuotationForm() {
   const [error, setError] = useState("");
 
   const [fieldError, setFieldError] = useState("");
+
+  const [quickCreateSupplierOpen, setQuickCreateSupplierOpen] = useState(false);
+
+  const [quickCreateSupplierSubmitting, setQuickCreateSupplierSubmitting] =
+    useState(false);
+
+  const [quickCreateSupplierError, setQuickCreateSupplierError] = useState("");
+
+  const currentUser = getCurrentUser();
+
+  const canQuickCreateSupplier =
+    currentUser?.role === "ADMIN" ||
+    currentUser?.role === "MANAGER" ||
+    currentUser?.role === "PURCHASING";
+
+  function openQuickCreateSupplier() {
+    if (!canQuickCreateSupplier || submitting) {
+      return;
+    }
+
+    setQuickCreateSupplierError("");
+    setQuickCreateSupplierOpen(true);
+  }
+
+  function closeQuickCreateSupplier() {
+    if (quickCreateSupplierSubmitting) {
+      return;
+    }
+
+    setQuickCreateSupplierOpen(false);
+    setQuickCreateSupplierError("");
+  }
+
+  async function handleQuickCreateSupplier(payload: CreateSupplierPayload) {
+    try {
+      setQuickCreateSupplierSubmitting(true);
+      setQuickCreateSupplierError("");
+
+      const supplier = await createSupplier({
+        code: payload.code.trim(),
+        name: payload.name.trim(),
+        contactPerson: payload.contactPerson?.trim() || undefined,
+        contactNumber: payload.contactNumber?.trim() || undefined,
+        email: payload.email?.trim() || undefined,
+        address: payload.address?.trim() || undefined,
+        taxId: payload.taxId?.trim() || undefined,
+        isActive: true,
+      });
+
+      setSuppliers((current) => {
+        const next = [...current, supplier];
+
+        return next.sort((a, b) => a.name.localeCompare(b.name));
+      });
+
+      setSelectedSupplierId(supplier.id);
+
+      setQuickCreateSupplierOpen(false);
+      setQuickCreateSupplierError("");
+    } catch (err) {
+      setQuickCreateSupplierError(
+        err instanceof Error ? err.message : "Unable to create supplier.",
+      );
+    } finally {
+      setQuickCreateSupplierSubmitting(false);
+    }
+  }
 
   /*
    * Load approved purchase requests + active suppliers.
@@ -411,452 +493,470 @@ export function SupplierQuotationForm() {
   }
 
   return (
-    <AppShell>
-      <div className="space-y-5 pb-8">
-        {/* BACK */}
-        <Link
-          href="/supplier-quotations"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-slate-900"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Supplier Quotations
-        </Link>
+    <>
+      <AppShell>
+        <div className="space-y-5 pb-8">
+          {/* BACK */}
+          <Link
+            href="/supplier-quotations"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-slate-900"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Supplier Quotations
+          </Link>
 
-        {/* HEADER */}
-        <section className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-sm font-semibold text-primary">Purchasing</p>
-
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-              New Supplier Quotation
-            </h1>
-
-            <p className="mt-1 max-w-2xl text-sm text-slate-500">
-              Create a supplier quotation against an approved purchase request.
-            </p>
-          </div>
-        </section>
-
-        {/* LOADING REFERENCES */}
-        {loadingReferences && (
-          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-500">
-            <Loader2 className="h-5 w-5 animate-spin" />
-            Loading approved purchase requests and suppliers...
-          </div>
-        )}
-
-        {/* ERROR */}
-        {error && (
-          <div className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm text-rose-700">
-            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
-
+          {/* HEADER */}
+          <section className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="font-semibold">Unable to continue</p>
-              <p className="mt-0.5">{error}</p>
-            </div>
-          </div>
-        )}
+              <p className="text-sm font-semibold text-primary">Purchasing</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* ========================================================= */}
-          {/* QUOTATION DETAILS                                         */}
-          {/* ========================================================= */}
-          <section className="rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-            <SectionHeader
-              icon={<FileText className="h-5 w-5" />}
-              title="Quotation Details"
-              description="Select the approved purchase request and supplier."
-            />
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+                New Supplier Quotation
+              </h1>
 
-            <div className="grid gap-4 px-5 py-4 lg:grid-cols-2 xl:grid-cols-4">
-              <Field label="Purchase Request" required>
-                <SearchableSelect
-                  value={selectedPurchaseRequestId}
-                  onChange={setSelectedPurchaseRequestId}
-                  options={purchaseRequestOptions}
-                  placeholder="Select approved purchase request"
-                  searchPlaceholder="Search purchase request..."
-                  emptyMessage="No approved purchase requests found."
-                  disabled={
-                    loadingReferences || loadingPurchaseRequest || submitting
-                  }
-                />
-              </Field>
-
-              <Field label="Supplier" required>
-                <SearchableSelect
-                  value={selectedSupplierId}
-                  onChange={setSelectedSupplierId}
-                  options={supplierOptions}
-                  placeholder="Select supplier"
-                  searchPlaceholder="Search supplier..."
-                  emptyMessage="No active suppliers found."
-                  disabled={loadingReferences || submitting}
-                />
-              </Field>
-
-              <Field label="Quotation Date">
-                <div className="relative">
-                  <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-
-                  <input
-                    type="date"
-                    value={quotationDate}
-                    onChange={(event) => setQuotationDate(event.target.value)}
-                    disabled={submitting}
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
-                  />
-                </div>
-              </Field>
-
-              <Field label="Valid Until">
-                <div className="relative">
-                  <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-
-                  <input
-                    type="date"
-                    value={validUntil}
-                    min={quotationDate || undefined}
-                    onChange={(event) => setValidUntil(event.target.value)}
-                    disabled={submitting}
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
-                  />
-                </div>
-              </Field>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                Create a supplier quotation against an approved purchase
+                request.
+              </p>
             </div>
           </section>
 
-          {/* ========================================================= */}
-          {/* PURCHASE REQUEST + NOTES                                  */}
-          {/* ========================================================= */}
-          {purchaseRequest && (
-            <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(300px,1fr)]">
-              {/* PURCHASE REQUEST CONTEXT */}
-              <section className="h-full rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-                <SectionHeader
-                  icon={<ClipboardList className="h-5 w-5" />}
-                  title="Purchase Request"
-                  description="Reference information from the selected approved request."
-                />
-
-                <div className="grid gap-0 sm:grid-cols-2 xl:grid-cols-4">
-                  <InfoCell
-                    label="Request No."
-                    value={purchaseRequest.requestNo}
-                    href={`/purchase-requests/${purchaseRequest.id}`}
-                  />
-
-                  <InfoCell
-                    label="Branch"
-                    value={
-                      purchaseRequest.branch
-                        ? `${purchaseRequest.branch.name} (${purchaseRequest.branch.code})`
-                        : "—"
-                    }
-                    icon={<Building2 className="h-4 w-4" />}
-                  />
-
-                  <InfoCell
-                    label="Purpose"
-                    value={purchaseRequest.purpose || "—"}
-                  />
-
-                  <InfoCell
-                    label="Items"
-                    value={String(purchaseRequest.items.length)}
-                    icon={<Package className="h-4 w-4" />}
-                  />
-                </div>
-
-                {purchaseRequest.notes && (
-                  <div className="border-t border-slate-100 px-5 py-3.5">
-                    <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                      Request Notes
-                    </p>
-
-                    <p className="mt-1 whitespace-pre-wrap text-sm leading-5 text-slate-600">
-                      {purchaseRequest.notes}
-                    </p>
-                  </div>
-                )}
-              </section>
-
-              {/* QUOTATION NOTES */}
-              <section className="h-full rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-                <SectionHeader
-                  icon={<FileText className="h-5 w-5" />}
-                  title="Notes"
-                  description="Optional additional quotation information."
-                />
-
-                <div className="flex h-[calc(100%-73px)] flex-col px-5 py-4">
-                  <textarea
-                    value={notes}
-                    onChange={(event) => setNotes(event.target.value)}
-                    rows={4}
-                    maxLength={2000}
-                    placeholder="Add quotation notes, supplier terms, delivery information, or other details..."
-                    disabled={submitting}
-                    className="min-h-[120px] flex-1 resize-y rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
-                  />
-
-                  <p className="mt-1.5 text-right text-xs text-slate-400">
-                    {notes.length}/2000
-                  </p>
-                </div>
-              </section>
+          {/* LOADING REFERENCES */}
+          {loadingReferences && (
+            <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-500">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Loading approved purchase requests and suppliers...
             </div>
           )}
 
-          {/* FIELD ERROR */}
-          {fieldError && (
-            <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-700">
+          {/* ERROR */}
+          {error && (
+            <div className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm text-rose-700">
               <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
 
               <div>
-                <p className="font-semibold">Please review the form</p>
-                <p className="mt-0.5">{fieldError}</p>
+                <p className="font-semibold">Unable to continue</p>
+                <p className="mt-0.5">{error}</p>
               </div>
             </div>
           )}
 
-          {/* ========================================================= */}
-          {/* QUOTATION ITEMS                                            */}
-          {/* ========================================================= */}
-          <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-            <SectionHeader
-              icon={<Package className="h-5 w-5" />}
-              title="Quotation Items"
-              description="Quote the products requested in the purchase request."
-              action={
-                purchaseRequest && items.length === 0 ? (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* ========================================================= */}
+            {/* QUOTATION DETAILS                                         */}
+            {/* ========================================================= */}
+            <section className="rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+              <SectionHeader
+                icon={<FileText className="h-5 w-5" />}
+                title="Quotation Details"
+                description="Select the approved purchase request and supplier."
+              />
+
+              <div className="grid gap-4 px-5 py-4 lg:grid-cols-2 xl:grid-cols-4">
+                <Field label="Purchase Request" required>
+                  <SearchableSelect
+                    value={selectedPurchaseRequestId}
+                    onChange={setSelectedPurchaseRequestId}
+                    options={purchaseRequestOptions}
+                    placeholder="Select approved purchase request"
+                    searchPlaceholder="Search purchase request..."
+                    emptyMessage="No approved purchase requests found."
+                    disabled={
+                      loadingReferences || loadingPurchaseRequest || submitting
+                    }
+                  />
+                </Field>
+
+                <Field label="Supplier" required>
+                  <SearchableSelect
+                    value={selectedSupplierId}
+                    onChange={setSelectedSupplierId}
+                    options={supplierOptions}
+                    placeholder="Select supplier"
+                    searchPlaceholder="Search supplier..."
+                    emptyMessage="No active suppliers found."
+                    disabled={loadingReferences || submitting}
+                    actionLabel="Add New Supplier"
+                    onAction={
+                      canQuickCreateSupplier
+                        ? openQuickCreateSupplier
+                        : undefined
+                    }
+                  />
+                </Field>
+
+                <Field label="Quotation Date">
+                  <div className="relative">
+                    <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+
+                    <input
+                      type="date"
+                      value={quotationDate}
+                      onChange={(event) => setQuotationDate(event.target.value)}
+                      disabled={submitting}
+                      className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                    />
+                  </div>
+                </Field>
+
+                <Field label="Valid Until">
+                  <div className="relative">
+                    <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+
+                    <input
+                      type="date"
+                      value={validUntil}
+                      min={quotationDate || undefined}
+                      onChange={(event) => setValidUntil(event.target.value)}
+                      disabled={submitting}
+                      className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                    />
+                  </div>
+                </Field>
+              </div>
+            </section>
+
+            {/* ========================================================= */}
+            {/* PURCHASE REQUEST + NOTES                                  */}
+            {/* ========================================================= */}
+            {purchaseRequest && (
+              <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(300px,1fr)]">
+                {/* PURCHASE REQUEST CONTEXT */}
+                <section className="h-full rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                  <SectionHeader
+                    icon={<ClipboardList className="h-5 w-5" />}
+                    title="Purchase Request"
+                    description="Reference information from the selected approved request."
+                  />
+
+                  <div className="grid gap-0 sm:grid-cols-2 xl:grid-cols-4">
+                    <InfoCell
+                      label="Request No."
+                      value={purchaseRequest.requestNo}
+                      href={`/purchase-requests/${purchaseRequest.id}`}
+                    />
+
+                    <InfoCell
+                      label="Branch"
+                      value={
+                        purchaseRequest.branch
+                          ? `${purchaseRequest.branch.name} (${purchaseRequest.branch.code})`
+                          : "—"
+                      }
+                      icon={<Building2 className="h-4 w-4" />}
+                    />
+
+                    <InfoCell
+                      label="Purpose"
+                      value={purchaseRequest.purpose || "—"}
+                    />
+
+                    <InfoCell
+                      label="Items"
+                      value={String(purchaseRequest.items.length)}
+                      icon={<Package className="h-4 w-4" />}
+                    />
+                  </div>
+
+                  {purchaseRequest.notes && (
+                    <div className="border-t border-slate-100 px-5 py-3.5">
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                        Request Notes
+                      </p>
+
+                      <p className="mt-1 whitespace-pre-wrap text-sm leading-5 text-slate-600">
+                        {purchaseRequest.notes}
+                      </p>
+                    </div>
+                  )}
+                </section>
+
+                {/* QUOTATION NOTES */}
+                <section className="h-full rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                  <SectionHeader
+                    icon={<FileText className="h-5 w-5" />}
+                    title="Notes"
+                    description="Optional additional quotation information."
+                  />
+
+                  <div className="flex h-[calc(100%-73px)] flex-col px-5 py-4">
+                    <textarea
+                      value={notes}
+                      onChange={(event) => setNotes(event.target.value)}
+                      rows={4}
+                      maxLength={2000}
+                      placeholder="Add quotation notes, supplier terms, delivery information, or other details..."
+                      disabled={submitting}
+                      className="min-h-[120px] flex-1 resize-y rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                    />
+
+                    <p className="mt-1.5 text-right text-xs text-slate-400">
+                      {notes.length}/2000
+                    </p>
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {/* FIELD ERROR */}
+            {fieldError && (
+              <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-700">
+                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+
+                <div>
+                  <p className="font-semibold">Please review the form</p>
+                  <p className="mt-0.5">{fieldError}</p>
+                </div>
+              </div>
+            )}
+
+            {/* ========================================================= */}
+            {/* QUOTATION ITEMS                                            */}
+            {/* ========================================================= */}
+            <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+              <SectionHeader
+                icon={<Package className="h-5 w-5" />}
+                title="Quotation Items"
+                description="Quote the products requested in the purchase request."
+                action={
+                  purchaseRequest && items.length === 0 ? (
+                    <button
+                      type="button"
+                      onClick={handleRestoreAllItems}
+                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Restore Items
+                    </button>
+                  ) : undefined
+                }
+              />
+
+              {loadingPurchaseRequest ? (
+                <div className="flex h-48 items-center justify-center text-sm text-slate-500">
+                  <div className="flex items-center gap-3">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Loading purchase request items...
+                  </div>
+                </div>
+              ) : !selectedPurchaseRequestId ? (
+                <div className="flex flex-col items-center justify-center px-5 py-16 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+                    <ClipboardList className="h-6 w-6" />
+                  </div>
+
+                  <h3 className="mt-4 text-sm font-semibold text-slate-800">
+                    Select a purchase request
+                  </h3>
+
+                  <p className="mt-1 max-w-sm text-sm text-slate-400">
+                    Choose an approved purchase request above to load its
+                    requested products.
+                  </p>
+                </div>
+              ) : items.length === 0 ? (
+                <div className="flex flex-col items-center justify-center px-5 py-16 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+                    <Package className="h-6 w-6" />
+                  </div>
+
+                  <h3 className="mt-4 text-sm font-semibold text-slate-800">
+                    No quotation items
+                  </h3>
+
+                  <p className="mt-1 max-w-sm text-sm text-slate-400">
+                    Restore the purchase request items to continue.
+                  </p>
+
                   <button
                     type="button"
                     onClick={handleRestoreAllItems}
-                    className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
+                    className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white transition hover:opacity-90"
                   >
                     <Plus className="h-3.5 w-3.5" />
-                    Restore Items
+                    Restore All Items
                   </button>
-                ) : undefined
-              }
-            />
-
-            {loadingPurchaseRequest ? (
-              <div className="flex h-48 items-center justify-center text-sm text-slate-500">
-                <div className="flex items-center gap-3">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Loading purchase request items...
                 </div>
-              </div>
-            ) : !selectedPurchaseRequestId ? (
-              <div className="flex flex-col items-center justify-center px-5 py-16 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
-                  <ClipboardList className="h-6 w-6" />
-                </div>
+              ) : (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[1000px] border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-100 bg-slate-50/70">
+                          <TableHeader>Product</TableHeader>
+                          <TableHeader>SKU</TableHeader>
+                          <TableHeader align="right">Quantity</TableHeader>
+                          <TableHeader align="right">Unit Cost</TableHeader>
+                          <TableHeader align="right">Subtotal</TableHeader>
+                          <TableHeader align="right">Action</TableHeader>
+                        </tr>
+                      </thead>
 
-                <h3 className="mt-4 text-sm font-semibold text-slate-800">
-                  Select a purchase request
-                </h3>
+                      <tbody>
+                        {items.map((item, index) => {
+                          const quantity = Number(item.quantity);
+                          const unitCost = Number(item.unitCost);
 
-                <p className="mt-1 max-w-sm text-sm text-slate-400">
-                  Choose an approved purchase request above to load its
-                  requested products.
-                </p>
-              </div>
-            ) : items.length === 0 ? (
-              <div className="flex flex-col items-center justify-center px-5 py-16 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
-                  <Package className="h-6 w-6" />
-                </div>
+                          const lineSubtotal =
+                            Number.isFinite(quantity) &&
+                            Number.isFinite(unitCost) &&
+                            quantity > 0 &&
+                            unitCost >= 0
+                              ? quantity * unitCost
+                              : 0;
 
-                <h3 className="mt-4 text-sm font-semibold text-slate-800">
-                  No quotation items
-                </h3>
-
-                <p className="mt-1 max-w-sm text-sm text-slate-400">
-                  Restore the purchase request items to continue.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={handleRestoreAllItems}
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white transition hover:opacity-90"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Restore All Items
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[1000px] border-collapse">
-                    <thead>
-                      <tr className="border-b border-slate-100 bg-slate-50/70">
-                        <TableHeader>Product</TableHeader>
-                        <TableHeader>SKU</TableHeader>
-                        <TableHeader align="right">Quantity</TableHeader>
-                        <TableHeader align="right">Unit Cost</TableHeader>
-                        <TableHeader align="right">Subtotal</TableHeader>
-                        <TableHeader align="right">Action</TableHeader>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {items.map((item, index) => {
-                        const quantity = Number(item.quantity);
-                        const unitCost = Number(item.unitCost);
-
-                        const lineSubtotal =
-                          Number.isFinite(quantity) &&
-                          Number.isFinite(unitCost) &&
-                          quantity > 0 &&
-                          unitCost >= 0
-                            ? quantity * unitCost
-                            : 0;
-
-                        return (
-                          <tr
-                            key={item.productId}
-                            className="border-b border-slate-100 last:border-b-0"
-                          >
-                            <td className="px-5 py-4">
-                              <p className="text-sm font-semibold text-slate-900">
-                                {item.productName}
-                              </p>
-
-                              {item.notes && (
-                                <p className="mt-0.5 text-xs text-slate-400">
-                                  {item.notes}
+                          return (
+                            <tr
+                              key={item.productId}
+                              className="border-b border-slate-100 last:border-b-0"
+                            >
+                              <td className="px-5 py-4">
+                                <p className="text-sm font-semibold text-slate-900">
+                                  {item.productName}
                                 </p>
-                              )}
-                            </td>
 
-                            <td className="px-5 py-4">
-                              <span className="font-mono text-xs font-semibold text-slate-600">
-                                {item.sku}
-                              </span>
-                            </td>
+                                {item.notes && (
+                                  <p className="mt-0.5 text-xs text-slate-400">
+                                    {item.notes}
+                                  </p>
+                                )}
+                              </td>
 
-                            <td className="px-5 py-4 text-right">
-                              <input
-                                type="number"
-                                min="1"
-                                step="1"
-                                value={item.quantity || ""}
-                                onChange={(event) =>
-                                  handleQuantityChange(
-                                    index,
-                                    event.target.value,
-                                  )
-                                }
-                                disabled={submitting}
-                                className="h-9 w-24 rounded-lg border border-slate-200 bg-white px-3 text-right text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
-                              />
-
-                              <p className="mt-1 text-xs text-slate-400">
-                                {item.unit}
-                              </p>
-                            </td>
-
-                            <td className="px-5 py-4 text-right">
-                              <div className="relative ml-auto w-32">
-                                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
-                                  ₱
+                              <td className="px-5 py-4">
+                                <span className="font-mono text-xs font-semibold text-slate-600">
+                                  {item.sku}
                                 </span>
+                              </td>
 
+                              <td className="px-5 py-4 text-right">
                                 <input
                                   type="number"
-                                  min="0"
-                                  step="0.01"
-                                  value={item.unitCost}
+                                  min="1"
+                                  step="1"
+                                  value={item.quantity || ""}
                                   onChange={(event) =>
-                                    handleUnitCostChange(
+                                    handleQuantityChange(
                                       index,
                                       event.target.value,
                                     )
                                   }
-                                  placeholder="0.00"
                                   disabled={submitting}
-                                  className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-7 pr-3 text-right text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                                  className="h-9 w-24 rounded-lg border border-slate-200 bg-white px-3 text-right text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
                                 />
-                              </div>
-                            </td>
 
-                            <td className="px-5 py-4 text-right">
-                              <span className="text-sm font-semibold text-slate-900">
-                                {formatCurrency(lineSubtotal)}
-                              </span>
-                            </td>
+                                <p className="mt-1 text-xs text-slate-400">
+                                  {item.unit}
+                                </p>
+                              </td>
 
-                            <td className="px-5 py-4 text-right">
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveItem(index)}
-                                disabled={submitting}
-                                className="inline-flex items-center rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 transition hover:border-rose-200 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
-                              >
-                                Remove
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                              <td className="px-5 py-4 text-right">
+                                <div className="relative ml-auto w-32">
+                                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+                                    ₱
+                                  </span>
 
-                {/* TOTAL */}
-                <div className="border-t border-slate-100 bg-slate-50/50">
-                  <div className="ml-auto max-w-sm px-5 py-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-slate-500">
-                        Quotation Total
-                      </span>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={item.unitCost}
+                                    onChange={(event) =>
+                                      handleUnitCostChange(
+                                        index,
+                                        event.target.value,
+                                      )
+                                    }
+                                    placeholder="0.00"
+                                    disabled={submitting}
+                                    className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-7 pr-3 text-right text-sm text-slate-800 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+                                  />
+                                </div>
+                              </td>
 
-                      <span className="text-lg font-bold text-slate-950">
-                        {formatCurrency(subtotal)}
-                      </span>
+                              <td className="px-5 py-4 text-right">
+                                <span className="text-sm font-semibold text-slate-900">
+                                  {formatCurrency(lineSubtotal)}
+                                </span>
+                              </td>
+
+                              <td className="px-5 py-4 text-right">
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveItem(index)}
+                                  disabled={submitting}
+                                  className="inline-flex items-center rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 transition hover:border-rose-200 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
+                                >
+                                  Remove
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* TOTAL */}
+                  <div className="border-t border-slate-100 bg-slate-50/50">
+                    <div className="ml-auto max-w-sm px-5 py-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-slate-500">
+                          Quotation Total
+                        </span>
+
+                        <span className="text-lg font-bold text-slate-950">
+                          {formatCurrency(subtotal)}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
-          </section>
-
-          {/* ========================================================= */}
-          {/* ACTIONS                                                    */}
-          {/* ========================================================= */}
-          <section className="flex flex-col-reverse gap-3 pt-1 sm:flex-row sm:items-center sm:justify-end">
-            <Link
-              href="/supplier-quotations"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
-            >
-              Cancel
-            </Link>
-
-            <button
-              type="submit"
-              disabled={
-                submitting ||
-                loadingReferences ||
-                loadingPurchaseRequest ||
-                !purchaseRequest ||
-                items.length === 0
-              }
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {submitting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
+                </>
               )}
-              Create Supplier Quotation
-            </button>
-          </section>
-        </form>
-      </div>
-    </AppShell>
+            </section>
+
+            {/* ========================================================= */}
+            {/* ACTIONS                                                    */}
+            {/* ========================================================= */}
+            <section className="flex flex-col-reverse gap-3 pt-1 sm:flex-row sm:items-center sm:justify-end">
+              <Link
+                href="/supplier-quotations"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
+              >
+                Cancel
+              </Link>
+
+              <button
+                type="submit"
+                disabled={
+                  submitting ||
+                  loadingReferences ||
+                  loadingPurchaseRequest ||
+                  !purchaseRequest ||
+                  items.length === 0
+                }
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {submitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                Create Supplier Quotation
+              </button>
+            </section>
+          </form>
+        </div>
+      </AppShell>
+
+      {quickCreateSupplierOpen ? (
+        <QuickCreateSupplierModal
+          submitting={quickCreateSupplierSubmitting}
+          error={quickCreateSupplierError}
+          onClose={closeQuickCreateSupplier}
+          onSubmit={handleQuickCreateSupplier}
+        />
+      ) : null}
+    </>
   );
 }
 
@@ -969,4 +1069,238 @@ function TableHeader({
       {children}
     </th>
   );
+}
+
+type QuickCreateSupplierModalProps = {
+  submitting: boolean;
+  error: string;
+  onClose: () => void;
+  onSubmit: (payload: CreateSupplierPayload) => Promise<void>;
+};
+
+function QuickCreateSupplierModal({
+  submitting,
+  error,
+  onClose,
+  onSubmit,
+}: QuickCreateSupplierModalProps) {
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [contactPerson, setContactPerson] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [taxId, setTaxId] = useState("");
+
+  async function handleCreate() {
+    if (!code.trim() || !name.trim()) {
+      return;
+    }
+
+    await onSubmit({
+      code: code.trim(),
+      name: name.trim(),
+      contactPerson: contactPerson.trim() || undefined,
+      contactNumber: contactNumber.trim() || undefined,
+      email: email.trim() || undefined,
+      address: address.trim() || undefined,
+      taxId: taxId.trim() || undefined,
+      isActive: true,
+    });
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !submitting) {
+          onClose();
+        }
+      }}
+    >
+      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+        <div className="flex items-start justify-between border-b border-slate-100 px-5 py-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-950">
+              Add New Supplier
+            </h2>
+
+            <p className="mt-1 text-xs text-slate-400">
+              Create a supplier without leaving this quotation.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="grid gap-4 p-5 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Supplier Code
+              <span className="ml-1 text-rose-500">*</span>
+            </label>
+
+            <input
+              value={code}
+              onChange={(event) => setCode(event.target.value)}
+              placeholder="SUP-002"
+              disabled={submitting}
+              className={quickCreateInputClassName()}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Supplier Name
+              <span className="ml-1 text-rose-500">*</span>
+            </label>
+
+            <input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="ABC Computer Supply"
+              disabled={submitting}
+              autoFocus
+              className={quickCreateInputClassName()}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Contact Person
+            </label>
+
+            <input
+              value={contactPerson}
+              onChange={(event) => setContactPerson(event.target.value)}
+              placeholder="Juan Supplier"
+              disabled={submitting}
+              className={quickCreateInputClassName()}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Contact Number
+            </label>
+
+            <input
+              value={contactNumber}
+              onChange={(event) => setContactNumber(event.target.value)}
+              placeholder="0917 000 0000"
+              disabled={submitting}
+              className={quickCreateInputClassName()}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Email
+            </label>
+
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="supplier@example.com"
+              disabled={submitting}
+              className={quickCreateInputClassName()}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Tax ID
+            </label>
+
+            <input
+              value={taxId}
+              onChange={(event) => setTaxId(event.target.value)}
+              placeholder="Optional"
+              disabled={submitting}
+              className={quickCreateInputClassName()}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Address
+            </label>
+
+            <textarea
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+              placeholder="Supplier address..."
+              rows={3}
+              disabled={submitting}
+              className="min-h-20 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50"
+            />
+          </div>
+
+          <div className="sm:col-span-2 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+            <p className="text-xs font-semibold text-blue-900">Quick add</p>
+
+            <p className="mt-1 text-xs leading-5 text-blue-700">
+              The supplier will be created as active and automatically selected
+              for this quotation.
+            </p>
+          </div>
+
+          {error ? (
+            <div className="sm:col-span-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              {error}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50/50 px-5 py-4 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={() => void handleCreate()}
+            disabled={submitting || !code.trim() || !name.trim()}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : (
+              <>
+                <Plus className="h-4 w-4" />
+                Create & Add Supplier
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function quickCreateInputClassName() {
+  return [
+    "h-10 w-full rounded-xl border border-slate-200 bg-white px-3",
+    "text-sm text-slate-800 outline-none transition",
+    "placeholder:text-slate-400",
+    "focus:border-primary/40 focus:ring-2 focus:ring-primary/10",
+    "disabled:bg-slate-50",
+  ].join(" ");
 }

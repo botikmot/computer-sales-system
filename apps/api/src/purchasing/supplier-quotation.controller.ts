@@ -9,6 +9,7 @@ import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 
 import { CreateSupplierQuotationDto } from './dto/create-supplier-quotation.dto.js';
 import { SupplierQuotationQueryDto } from './dto/supplier-quotation-query.dto.js';
+import type { PurchaseRequestListResponse } from './purchase-request.types.js';
 
 import type {
   SupplierQuotationRecord,
@@ -40,6 +41,18 @@ export class SupplierQuotationController {
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<SupplierQuotationListResponse> {
     return this.supplierQuotationService.findAll(query, user);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
+  @Get('awaiting-purchase-requests')
+  findAwaitingPurchaseRequests(
+    @Query() query: SupplierQuotationQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<PurchaseRequestListResponse> {
+    return this.supplierQuotationService.findAwaitingPurchaseRequests(
+      query,
+      user,
+    );
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)

@@ -22,11 +22,14 @@ import {
 import { PageHeader } from "@/components/ui/page-header";
 
 import {
+  getPurchaseRequestsAwaitingSupplierQuotation,
   getSupplierQuotations,
   type SupplierQuotation,
   type SupplierQuotationListResponse,
   type SupplierQuotationStatus,
 } from "@/features/purchasing/supplier-quotations-api";
+
+import type { PurchaseRequest } from "@/features/purchasing/purchase-requests-api";
 
 const PAGE_SIZE = 10;
 
@@ -205,12 +208,23 @@ function getTotalItems(quotation: SupplierQuotation) {
   return quotation.items.reduce((total, item) => total + item.quantity, 0);
 }
 
+function getPurchaseRequestItemCount(request: PurchaseRequest) {
+  return request.items.reduce((total, item) => total + item.quantity, 0);
+}
+
 export default function SupplierQuotationsPage() {
   const [quotations, setQuotations] = useState<SupplierQuotation[]>([]);
 
   const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState("");
+
+  const [awaitingRequests, setAwaitingRequests] = useState<PurchaseRequest[]>(
+    [],
+  );
+  const [awaitingRequestsTotal, setAwaitingRequestsTotal] = useState(0);
+  const [awaitingRequestsLoading, setAwaitingRequestsLoading] = useState(true);
+  const [awaitingRequestsError, setAwaitingRequestsError] = useState("");
 
   const [searchInput, setSearchInput] = useState("");
 
@@ -228,6 +242,49 @@ export default function SupplierQuotationsPage() {
     total: 0,
     pages: 0,
   });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchAwaitingRequests() {
+      try {
+        setAwaitingRequestsLoading(true);
+        setAwaitingRequestsError("");
+
+        const result = await getPurchaseRequestsAwaitingSupplierQuotation({
+          page: 1,
+          limit: 5,
+        });
+
+        if (cancelled) {
+          return;
+        }
+
+        setAwaitingRequests(result.data);
+        setAwaitingRequestsTotal(result.total);
+      } catch (err) {
+        if (cancelled) {
+          return;
+        }
+
+        setAwaitingRequestsError(
+          err instanceof Error
+            ? err.message
+            : "Unable to load purchase requests awaiting supplier quotation.",
+        );
+      } finally {
+        if (!cancelled) {
+          setAwaitingRequestsLoading(false);
+        }
+      }
+    }
+
+    void fetchAwaitingRequests();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -369,6 +426,123 @@ export default function SupplierQuotationsPage() {
           }
         />
 
+        {awaitingRequestsLoading ? (
+          <section className="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+            <div className="flex items-center gap-3 text-sm text-slate-500">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading purchase requests awaiting supplier quotation...
+            </div>
+          </section>
+        ) : awaitingRequestsError ? (
+          <section className="rounded-2xl border border-rose-100 bg-rose-50 px-5 py-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+
+              <div>
+                <p className="text-sm font-semibold text-rose-800">
+                  Unable to load quotation queue
+                </p>
+
+                <p className="mt-1 text-xs text-rose-700">
+                  {awaitingRequestsError}
+                </p>
+              </div>
+            </div>
+          </section>
+        ) : awaitingRequests.length > 0 ? (
+          <section className="overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-sm">
+            <div className="border-b border-amber-100 bg-amber-50/60 px-5 py-4">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                      <FileText className="h-4 w-4" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">
+                        Purchase Requests Awaiting Supplier Quotation
+                      </p>
+
+                      <p className="text-xs text-slate-500">
+                        Approved requests that still need supplier pricing.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <span className="inline-flex w-fit items-center rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                  {awaitingRequestsTotal}{" "}
+                  {awaitingRequestsTotal === 1 ? "awaiting" : "awaiting"}
+                </span>
+              </div>
+            </div>
+
+            <div className="divide-y divide-slate-100">
+              {awaitingRequests.map((request) => (
+                <div
+                  key={request.id}
+                  className="flex flex-col gap-4 px-5 py-4 transition hover:bg-slate-50/60 lg:flex-row lg:items-center lg:justify-between"
+                >
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link
+                        href={`/purchase-requests/${request.id}`}
+                        className="text-sm font-semibold text-slate-900 transition hover:text-primary"
+                      >
+                        {request.requestNo}
+                      </Link>
+
+                      <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+                        Approved
+                      </span>
+                    </div>
+
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
+                      <span>{request.purpose || "No purpose"}</span>
+
+                      <span className="text-slate-300">•</span>
+
+                      <span>{request.branch?.name || "—"}</span>
+
+                      <span className="text-slate-300">•</span>
+
+                      <span>
+                        {request.items.length}{" "}
+                        {request.items.length === 1
+                          ? "line item"
+                          : "line items"}
+                      </span>
+
+                      <span className="text-slate-300">•</span>
+
+                      <span>
+                        {getPurchaseRequestItemCount(request)} total qty
+                      </span>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={`/supplier-quotations/new?purchaseRequestId=${request.id}`}
+                    className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg bg-primary px-3.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90"
+                  >
+                    Create Quotation
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {awaitingRequestsTotal > awaitingRequests.length && (
+              <div className="border-t border-slate-100 bg-slate-50/40 px-5 py-3">
+                <p className="text-xs text-slate-400">
+                  Showing {awaitingRequests.length} of {awaitingRequestsTotal}{" "}
+                  awaiting requests.
+                </p>
+              </div>
+            )}
+          </section>
+        ) : null}
+
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
             <div className="flex flex-col gap-4">
@@ -499,7 +673,8 @@ export default function SupplierQuotationsPage() {
                 </p>
 
                 <p className="mt-1 max-w-md text-xs text-slate-400">
-                  Create a supplier quotation from an approved purchase request.
+                  Supplier quotations will appear here once created from
+                  approved purchase requests.
                 </p>
               </div>
             )}

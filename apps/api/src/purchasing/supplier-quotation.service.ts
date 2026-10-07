@@ -14,6 +14,7 @@ import { PrismaService } from '../database/prisma.service.js';
 
 import { CreateSupplierQuotationDto } from './dto/create-supplier-quotation.dto.js';
 import { SupplierQuotationQueryDto } from './dto/supplier-quotation-query.dto.js';
+import type { PurchaseRequestListResponse } from './purchase-request.types.js';
 
 import type {
   SupplierQuotationListResponse,
@@ -452,5 +453,99 @@ export class SupplierQuotationService {
         status: 'CANCELLED',
       },
     });
+  }
+
+  async findAwaitingPurchaseRequests(
+    query: SupplierQuotationQueryDto,
+    user: AuthenticatedUser,
+  ): Promise<PurchaseRequestListResponse> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    this.branchAccessService.assertCanAccessOptionalBranch(
+      user,
+      user.role === UserRole.ADMIN ? query.branchId : user.branchId,
+    );
+
+    const where: Prisma.PurchaseRequestWhereInput = {
+      status: 'APPROVED',
+
+      supplierQuotations: {
+        none: {
+          status: {
+            in: ['DRAFT', 'RECEIVED', 'ACCEPTED'],
+          },
+        },
+      },
+    };
+
+    if (query.search?.trim()) {
+      const search = query.search.trim();
+
+      where.OR = [
+        {
+          requestNo: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          purpose: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          notes: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+    if (user.role === UserRole.ADMIN) {
+      if (query.branchId) {
+        where.branchId = query.branchId;
+      }
+    } else {
+      where.branchId = user.branchId!;
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.purchaseRequest.findMany({
+        where,
+
+        orderBy: {
+          createdAt: 'desc',
+        },
+
+        skip,
+        take: limit,
+
+        include: {
+          branch: true,
+
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+
+      this.prisma.purchaseRequest.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

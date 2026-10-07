@@ -11,10 +11,12 @@ import {
   Search,
   Truck,
   X,
+  ShoppingCart,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import {
+  getPurchaseOrdersAwaitingReceiving,
   getReceivings,
   type Receiving,
   type ReceivingListResponse,
@@ -23,6 +25,8 @@ import {
   SearchableSelect,
   type SelectOption,
 } from "@/components/ui/searchable-select";
+
+import type { PurchaseOrder } from "@/features/purchasing/purchase-orders-api";
 
 const PAGE_SIZE = 10;
 
@@ -122,6 +126,19 @@ export default function ReceivingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [awaitingPurchaseOrders, setAwaitingPurchaseOrders] = useState<
+    PurchaseOrder[]
+  >([]);
+
+  const [awaitingPurchaseOrdersTotal, setAwaitingPurchaseOrdersTotal] =
+    useState(0);
+
+  const [awaitingPurchaseOrdersLoading, setAwaitingPurchaseOrdersLoading] =
+    useState(true);
+
+  const [awaitingPurchaseOrdersError, setAwaitingPurchaseOrdersError] =
+    useState("");
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
@@ -134,6 +151,49 @@ export default function ReceivingPage() {
     total: 0,
     pages: 0,
   });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchAwaitingPurchaseOrders() {
+      try {
+        setAwaitingPurchaseOrdersLoading(true);
+        setAwaitingPurchaseOrdersError("");
+
+        const result = await getPurchaseOrdersAwaitingReceiving({
+          page: 1,
+          limit: 5,
+        });
+
+        if (cancelled) {
+          return;
+        }
+
+        setAwaitingPurchaseOrders(result.data);
+        setAwaitingPurchaseOrdersTotal(result.total);
+      } catch (err) {
+        if (cancelled) {
+          return;
+        }
+
+        setAwaitingPurchaseOrdersError(
+          err instanceof Error
+            ? err.message
+            : "Unable to load purchase orders awaiting receiving.",
+        );
+      } finally {
+        if (!cancelled) {
+          setAwaitingPurchaseOrdersLoading(false);
+        }
+      }
+    }
+
+    void fetchAwaitingPurchaseOrders();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -266,6 +326,13 @@ export default function ReceivingPage() {
     pagination.total,
   );
 
+  function getTotalUnits(order: PurchaseOrder) {
+    return order.items.reduce(
+      (total, item) => total + Number(item.quantity || 0),
+      0,
+    );
+  }
+
   return (
     <AppShell>
       <div className="space-y-6 pb-10">
@@ -292,6 +359,129 @@ export default function ReceivingPage() {
             New Receiving
           </Link>
         </section>
+
+        {awaitingPurchaseOrdersLoading ? (
+          <section className="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+            <div className="flex items-center gap-3 text-sm text-slate-500">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading purchase orders awaiting receiving...
+            </div>
+          </section>
+        ) : awaitingPurchaseOrdersError ? (
+          <section className="rounded-2xl border border-rose-100 bg-rose-50 px-5 py-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+
+              <div>
+                <p className="text-sm font-semibold text-rose-800">
+                  Unable to load receiving queue
+                </p>
+
+                <p className="mt-1 text-xs text-rose-700">
+                  {awaitingPurchaseOrdersError}
+                </p>
+              </div>
+            </div>
+          </section>
+        ) : awaitingPurchaseOrders.length > 0 ? (
+          <section className="overflow-hidden rounded-2xl border border-blue-200 bg-white shadow-sm">
+            <div className="border-b border-blue-100 bg-blue-50/60 px-5 py-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+                    <Truck className="h-5 w-5" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900">
+                      Purchase Orders Awaiting Receiving
+                    </p>
+
+                    <p className="text-xs text-slate-500">
+                      Sent purchase orders that still need supplier delivery
+                      receiving.
+                    </p>
+                  </div>
+                </div>
+
+                <span className="inline-flex rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                  {awaitingPurchaseOrdersTotal} awaiting
+                </span>
+              </div>
+            </div>
+
+            <div className="divide-y divide-slate-100">
+              {awaitingPurchaseOrders.map((order) => (
+                <div
+                  key={order.id}
+                  className="flex flex-col gap-4 px-5 py-4 transition hover:bg-slate-50/60 lg:flex-row lg:items-center lg:justify-between"
+                >
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link
+                        href={`/purchase-orders/${order.id}`}
+                        className="text-sm font-semibold text-slate-900 transition hover:text-primary"
+                      >
+                        {order.poNumber}
+                      </Link>
+
+                      <span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700">
+                        {order.status === "PARTIALLY_RECEIVED"
+                          ? "Partially Received"
+                          : "Sent"}
+                      </span>
+                    </div>
+
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
+                      <span>{order.supplier?.name || "—"}</span>
+
+                      <span>•</span>
+
+                      <span>{order.branch?.name || "—"}</span>
+
+                      <span>•</span>
+
+                      <span>
+                        {order.items.length}{" "}
+                        {order.items.length === 1 ? "line item" : "line items"}
+                      </span>
+
+                      <span>•</span>
+
+                      <span>{getTotalUnits(order)} total units</span>
+
+                      <span>•</span>
+
+                      <span>
+                        {new Intl.NumberFormat("en-PH", {
+                          style: "currency",
+                          currency: "PHP",
+                          maximumFractionDigits: 2,
+                        }).format(Number(order.total))}
+                      </span>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={`/receiving/new?purchaseOrderId=${order.id}`}
+                    className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg bg-primary px-3.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90"
+                  >
+                    Create Receiving
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {awaitingPurchaseOrdersTotal > awaitingPurchaseOrders.length && (
+              <div className="border-t border-slate-100 bg-slate-50/40 px-5 py-3">
+                <p className="text-xs text-slate-400">
+                  Showing {awaitingPurchaseOrders.length} of{" "}
+                  {awaitingPurchaseOrdersTotal} awaiting purchase orders.
+                </p>
+              </div>
+            )}
+          </section>
+        ) : null}
 
         {/* ERROR */}
         {error && (

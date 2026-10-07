@@ -19,7 +19,7 @@ export class CustomerPaymentController {
     private readonly customerPaymentService: CustomerPaymentService,
   ) {}
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
   @Post()
   create(
     @Body() dto: CreateCustomerPaymentDto,
@@ -28,7 +28,7 @@ export class CustomerPaymentController {
     return this.customerPaymentService.create(dto, user);
   }
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
   @Get()
   findAll(
     @Query() query: SalesListQueryDto,
@@ -37,7 +37,7 @@ export class CustomerPaymentController {
     return this.customerPaymentService.findAll(user, query);
   }
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.CASHIER)
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
     return this.customerPaymentService.findOne(id, user);
