@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
   ArrowLeft,
@@ -81,6 +81,10 @@ function getPaymentModeLabel(value?: string | null) {
 export default function NewSupplierPaymentPage() {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
+  const initialAccountsPayableId = searchParams.get("accountsPayableId");
+
   const [accountsPayable, setAccountsPayable] = useState<AccountsPayable[]>([]);
   const [cashBankAccounts, setCashBankAccounts] = useState<CashBankAccount[]>(
     [],
@@ -124,6 +128,33 @@ export default function NewSupplierPaymentPage() {
         setAccountsPayable(apResult.items);
         setCashBankAccounts(accountResult);
         setError("");
+
+        const outstandingAccountsPayable = apResult.items.filter((item) => {
+          const balance = Number(item.balanceDue);
+
+          return (
+            item.status !== "CANCELLED" &&
+            Number.isFinite(balance) &&
+            balance > 0
+          );
+        });
+
+        if (initialAccountsPayableId) {
+          const requestedAccountsPayable =
+            outstandingAccountsPayable.find(
+              (item) => item.id === initialAccountsPayableId,
+            ) ?? null;
+
+          if (requestedAccountsPayable) {
+            setSelectedAccountsPayableId(requestedAccountsPayable.id);
+            setAmount(Number(requestedAccountsPayable.balanceDue).toFixed(2));
+          } else {
+            setSubmitError(
+              "The selected Accounts Payable is no longer outstanding or could not be found.",
+            );
+          }
+        }
+
         setLoading(false);
       } catch (err) {
         if (cancelled) return;
@@ -133,6 +164,7 @@ export default function NewSupplierPaymentPage() {
             ? err.message
             : "Unable to load supplier payment data.",
         );
+
         setLoading(false);
       }
     }
@@ -142,7 +174,7 @@ export default function NewSupplierPaymentPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialAccountsPayableId]);
 
   const outstandingAccountsPayable = accountsPayable.filter((item) => {
     const balance = Number(item.balanceDue);
@@ -188,15 +220,11 @@ export default function NewSupplierPaymentPage() {
 
     if (!nextAp) {
       setAmount("");
+      setSelectedAccountId("");
       return;
     }
 
     setAmount(Number(nextAp.balanceDue).toFixed(2));
-
-    if (!nextAp) {
-      setSelectedAccountId("");
-      return;
-    }
 
     const currentAccountStillValid = availableCashBankAccounts.some(
       (account) =>

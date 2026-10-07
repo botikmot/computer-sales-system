@@ -16,6 +16,23 @@ export type CashBankAccount = {
   updatedAt: string;
 };
 
+export type CreateCashBankAccountPayload = {
+  branchId: string;
+  accountType: "CASH" | "BANK";
+  name: string;
+  accountNumber?: string;
+  openingBalance?: number;
+};
+
+export async function createCashBankAccount(
+  payload: CreateCashBankAccountPayload,
+): Promise<CashBankAccount> {
+  return apiFetch<CashBankAccount>("/cash-bank/accounts", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function getCashBankAccounts(): Promise<CashBankAccount[]> {
   return apiFetch<CashBankAccount[]>("/cash-bank/accounts");
 }

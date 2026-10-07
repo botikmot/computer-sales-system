@@ -144,8 +144,11 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "sales.payments",
 
     "finance.ar",
+    "finance.ap",
     "finance.cash-bank",
     "finance.petty-cash",
+
+    "purchasing.payments",
   ],
 };
 

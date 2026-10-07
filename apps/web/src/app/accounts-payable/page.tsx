@@ -6,10 +6,13 @@ import {
   AlertCircle,
   ArrowDown,
   ArrowUp,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   FileText,
   Loader2,
+  Plus,
+  Receipt,
   Search,
 } from "lucide-react";
 
@@ -17,10 +20,13 @@ import { AppShell } from "@/components/layout/app-shell";
 
 import {
   getAccountsPayable,
+  getAccountsPayableAwaitingInvoices,
   type AccountsPayable,
   type AccountsPayableSortField,
   type AccountsPayableStatus,
+  type AwaitingAccountsPayableInvoice,
 } from "@/features/purchasing/accounts-payable-api";
+import { getCurrentUser } from "@/lib/auth/session";
 
 import {
   SearchableSelect,
@@ -162,6 +168,23 @@ function formatPaymentMode(value: string) {
 }
 
 export default function AccountsPayablePage() {
+  const currentUser = getCurrentUser();
+
+  const canCreateAccountsPayable =
+    currentUser?.role === "ADMIN" ||
+    currentUser?.role === "MANAGER" ||
+    currentUser?.role === "CASHIER";
+
+  const [awaitingInvoices, setAwaitingInvoices] = useState<
+    AwaitingAccountsPayableInvoice[]
+  >([]);
+
+  const [awaitingLoading, setAwaitingLoading] = useState(
+    canCreateAccountsPayable,
+  );
+
+  const [awaitingError, setAwaitingError] = useState("");
+
   const [records, setRecords] = useState<AccountsPayable[]>([]);
 
   const [page, setPage] = useState(1);
@@ -179,6 +202,49 @@ export default function AccountsPayablePage() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!canCreateAccountsPayable) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadAwaitingInvoices() {
+      try {
+        setAwaitingLoading(true);
+        setAwaitingError("");
+
+        const result = await getAccountsPayableAwaitingInvoices();
+
+        console.log("AWAT::", result);
+
+        if (cancelled) {
+          return;
+        }
+
+        setAwaitingInvoices(result);
+      } catch (err) {
+        if (!cancelled) {
+          setAwaitingError(
+            err instanceof Error
+              ? err.message
+              : "Unable to load supplier invoices awaiting A/P.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setAwaitingLoading(false);
+        }
+      }
+    }
+
+    void loadAwaitingInvoices();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [canCreateAccountsPayable]);
 
   useEffect(() => {
     let cancelled = false;
@@ -285,6 +351,149 @@ export default function AccountsPayablePage() {
             Track outstanding supplier balances from purchase invoices.
           </p>
         </section>
+
+        {/* SUPPLIER INVOICES AWAITING A/P */}
+        {canCreateAccountsPayable && (
+          <section className="overflow-hidden rounded-2xl border border-violet-200 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+            <div className="flex flex-col gap-3 border-b border-violet-100 bg-violet-50/40 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
+                  <Receipt className="h-5 w-5" />
+                </div>
+
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-950">
+                    Supplier Invoices Awaiting A/P
+                  </h2>
+
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    Posted supplier invoices that still need an accounts payable
+                    record.
+                  </p>
+                </div>
+              </div>
+
+              <span className="inline-flex w-fit items-center rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700">
+                {awaitingInvoices.length} awaiting
+              </span>
+            </div>
+
+            {awaitingLoading ? (
+              <div className="flex min-h-[120px] items-center justify-center px-5">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading supplier invoices...
+                </div>
+              </div>
+            ) : awaitingError ? (
+              <div className="p-5">
+                <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+
+                  <div>
+                    <p className="text-sm font-semibold text-rose-800">
+                      Unable to load awaiting invoices
+                    </p>
+
+                    <p className="mt-0.5 text-sm text-rose-700">
+                      {awaitingError}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : awaitingInvoices.length === 0 ? (
+              <div className="flex min-h-[120px] items-center justify-center px-5 text-center">
+                <div>
+                  <CheckCircle2 className="mx-auto h-6 w-6 text-emerald-500" />
+
+                  <p className="mt-2 text-sm font-semibold text-slate-900">
+                    No supplier invoices awaiting A/P
+                  </p>
+
+                  <p className="mt-1 text-xs text-slate-500">
+                    All posted supplier invoices have already been recorded in
+                    Accounts Payable.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="divide-y divide-slate-100">
+                {awaitingInvoices.map((invoice) => (
+                  <div
+                    key={invoice.id}
+                    className="flex flex-col gap-4 px-5 py-4 transition hover:bg-slate-50/60 lg:flex-row lg:items-center lg:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-sm font-bold text-slate-950">
+                          {invoice.invoiceNo}
+                        </span>
+
+                        <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700">
+                          POSTED
+                        </span>
+                      </div>
+
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+                        <span>{invoice.supplier.name}</span>
+
+                        <span>•</span>
+
+                        <span>
+                          {invoice.branch.code} — {invoice.branch.name}
+                        </span>
+
+                        {invoice.purchaseOrder?.poNumber && (
+                          <>
+                            <span>•</span>
+                            <span>{invoice.purchaseOrder.poNumber}</span>
+                          </>
+                        )}
+
+                        {invoice.receiving?.receivingNo && (
+                          <>
+                            <span>•</span>
+                            <span>{invoice.receiving.receivingNo}</span>
+                          </>
+                        )}
+                      </div>
+
+                      {invoice.supplierInvoiceNo && (
+                        <p className="mt-1 text-xs text-slate-400">
+                          Supplier Invoice #: {invoice.supplierInvoiceNo}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <div className="text-left sm:text-right">
+                        <p className="text-sm font-bold text-slate-950">
+                          {formatCurrency(invoice.balanceDue)}
+                        </p>
+
+                        <p className="mt-0.5 text-xs text-slate-500">
+                          Balance due
+                          {invoice.dueDate
+                            ? ` • Due ${formatDate(invoice.dueDate)}`
+                            : ""}
+                        </p>
+                      </div>
+
+                      <Link
+                        href={`/accounts-payable/new?purchaseInvoiceId=${invoice.id}`}
+                        className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Create A/P
+                        <ChevronRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         {/* TOOLBAR */}
         <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">

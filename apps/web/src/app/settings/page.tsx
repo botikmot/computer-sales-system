@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   ShoppingBag,
   UsersRound,
+  WalletCards,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -180,6 +181,35 @@ export default function SettingsPage() {
               title="Products"
               description="Manage product master data, pricing, and inventory settings."
               href="/products"
+              available
+            />
+          </div>
+        </section>
+
+        <section>
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
+              <WalletCards className="h-4 w-4" />
+            </div>
+
+            <div>
+              <h2 className="text-base font-semibold text-slate-950">
+                Finance
+              </h2>
+
+              <p className="text-xs text-slate-500">
+                Manage financial accounts used for cash, bank, and payment
+                transactions.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <SettingsItem
+              icon={<WalletCards className="h-5 w-5" />}
+              title="Cash & Bank Accounts"
+              description="Create and manage the cash and bank accounts used for payments and financial transactions."
+              href="/cash-bank"
               available
             />
           </div>

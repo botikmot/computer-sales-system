@@ -238,4 +238,40 @@ export class AccountsPayableService {
       },
     };
   }
+
+  async findAwaitingInvoices(user: AuthenticatedUser) {
+    this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const where: Prisma.PurchaseInvoiceWhereInput =
+      user.role === UserRole.ADMIN
+        ? {
+            status: 'POSTED',
+            balanceDue: {
+              gt: 0,
+            },
+            accountsPayable: null,
+          }
+        : {
+            branchId: user.branchId!,
+            status: 'POSTED',
+            balanceDue: {
+              gt: 0,
+            },
+            accountsPayable: null,
+          };
+
+    return this.prisma.purchaseInvoice.findMany({
+      where,
+      orderBy: {
+        invoiceDate: 'asc',
+      },
+      take: 10,
+      include: {
+        branch: true,
+        supplier: true,
+        purchaseOrder: true,
+        receiving: true,
+      },
+    });
+  }
 }

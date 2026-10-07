@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-//import Link from "next/link";
+import Link from "next/link";
 import {
   ArrowDown,
   ArrowUp,
@@ -13,6 +13,7 @@ import {
   CreditCard,
   FileText,
   Loader2,
+  Plus,
   Search,
   WalletCards,
 } from "lucide-react";
@@ -502,15 +503,28 @@ export default function CashBankPage() {
       <div className="space-y-6 pb-10">
         {/* HEADER */}
         <section>
-          <p className="text-sm font-semibold text-primary">Finance</p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-primary">Finance</p>
 
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-            Cash &amp; Bank
-          </h1>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+                Cash &amp; Bank
+              </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Monitor cash and bank balances and review every financial movement.
-          </p>
+              <p className="mt-1 text-sm text-slate-500">
+                Monitor cash and bank balances and review every financial
+                movement.
+              </p>
+            </div>
+
+            <Link
+              href="/cash-bank/accounts/new"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+              <Plus className="h-4 w-4" />
+              Add Account
+            </Link>
+          </div>
         </section>
 
         {/* BALANCE SUMMARY */}

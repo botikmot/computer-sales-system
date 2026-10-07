@@ -20,7 +20,7 @@ export class AccountsPayableController {
     private readonly accountsPayableService: AccountsPayableService,
   ) {}
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.PURCHASING)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @Post()
   create(
     @Body() dto: CreateAccountsPayableDto,
@@ -41,6 +41,12 @@ export class AccountsPayableController {
     @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.accountsPayableService.findAll(user, query);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
+  @Get('awaiting-invoices')
+  findAwaitingInvoices(@CurrentUser() user: AuthenticatedUser) {
+    return this.accountsPayableService.findAwaitingInvoices(user);
   }
 
   @Roles(

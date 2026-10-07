@@ -98,6 +98,43 @@ export type AccountsPayableListResponse = {
   };
 };
 
+export type AwaitingAccountsPayableInvoice = {
+  id: string;
+  invoiceNo: string;
+  supplierInvoiceNo?: string | null;
+
+  invoiceDate: string;
+  dueDate?: string | null;
+
+  paymentMode: string;
+
+  total: string;
+  amountPaid: string;
+  balanceDue: string;
+
+  branch: {
+    id: string;
+    code: string;
+    name: string;
+  };
+
+  supplier: {
+    id: string;
+    code: string;
+    name: string;
+  };
+
+  purchaseOrder?: {
+    id: string;
+    poNumber: string;
+  } | null;
+
+  receiving?: {
+    id: string;
+    receivingNo: string;
+  } | null;
+};
+
 export async function getAccountsPayable(
   query: AccountsPayableQuery = {},
 ): Promise<AccountsPayableListResponse> {
@@ -127,6 +164,28 @@ export async function getAccountsPayable(
   );
 }
 
+export type CreateAccountsPayablePayload = {
+  purchaseInvoiceId: string;
+  notes?: string;
+};
+
+export async function createAccountsPayable(
+  payload: CreateAccountsPayablePayload,
+): Promise<AccountsPayable> {
+  return apiFetch<AccountsPayable>("/accounts-payable", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function getAccountPayable(id: string): Promise<AccountsPayable> {
   return apiFetch<AccountsPayable>(`/accounts-payable/${id}`);
+}
+
+export async function getAccountsPayableAwaitingInvoices(): Promise<
+  AwaitingAccountsPayableInvoice[]
+> {
+  return apiFetch<AwaitingAccountsPayableInvoice[]>(
+    "/accounts-payable/awaiting-invoices",
+  );
 }
