@@ -416,6 +416,8 @@ export default function PettyCashFundDetailPage() {
       const refreshedFund = await getPettyCashFund(fundId);
       setFund(refreshedFund);
     } catch (err) {
+      setErrorTitle("Unable to post replenishment");
+
       setError(
         err instanceof Error ? err.message : "Unable to post replenishment.",
       );
@@ -727,13 +729,31 @@ export default function PettyCashFundDetailPage() {
               </div>
 
               <p className="mt-1 text-sm text-slate-500">
-                Posted replenishments added back to this fund.
+                Petty cash replenishments added back to this fund.
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {replenishments.some(
+                (replenishment) => replenishment.status === "DRAFT",
+              ) && (
+                <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                  {
+                    replenishments.filter(
+                      (replenishment) => replenishment.status === "DRAFT",
+                    ).length
+                  }{" "}
+                  draft
+                  {replenishments.filter(
+                    (replenishment) => replenishment.status === "DRAFT",
+                  ).length !== 1
+                    ? "s"
+                    : ""}
+                </span>
+              )}
+
               <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-500">
-                {replenishments.length} posted
+                {postedReplenishments.length} posted
               </span>
 
               {fund.status === "ACTIVE" && (
@@ -748,17 +768,18 @@ export default function PettyCashFundDetailPage() {
             </div>
           </div>
 
-          <div className="mt-4 max-h-[360px] space-y-3 overflow-y-auto pr-2">
-            {postedReplenishments.length === 0 ? (
+          <div className="mt-4 max-h-[500px] space-y-3 overflow-y-auto pr-2">
+            {replenishments.length === 0 ? (
               <div className="rounded-xl border border-dashed border-slate-300 bg-white px-5 py-10 text-center">
                 <CircleDollarSign className="mx-auto h-7 w-7 text-slate-300" />
 
                 <p className="mt-3 text-sm font-semibold text-slate-900">
-                  No posted replenishments
+                  No replenishments yet
                 </p>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  No petty cash replenishments have been posted for this fund.
+                  No petty cash replenishment records have been created for this
+                  fund.
                 </p>
               </div>
             ) : (

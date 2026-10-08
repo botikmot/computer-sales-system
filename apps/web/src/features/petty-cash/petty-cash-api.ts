@@ -63,6 +63,13 @@ export type PettyCashVoucher = {
   fund?: PettyCashFund;
 };
 
+export type CreatePettyCashFundPayload = {
+  branchId: string;
+  name: string;
+  openingBalance: string;
+  custodianId?: string | null;
+};
+
 export type CreatePettyCashVoucherPayload = {
   expenseDate: string;
   description: string;
@@ -125,6 +132,15 @@ export async function getPettyCashFunds(
   return apiFetch<PettyCashFund[]>(
     `/petty-cash/funds${queryString ? `?${queryString}` : ""}`,
   );
+}
+
+export async function createPettyCashFund(
+  payload: CreatePettyCashFundPayload,
+): Promise<PettyCashFund> {
+  return apiFetch<PettyCashFund>("/petty-cash/funds", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function getPettyCashFund(id: string): Promise<PettyCashFund> {

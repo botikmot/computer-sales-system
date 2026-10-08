@@ -8,6 +8,7 @@ import {
   CircleDollarSign,
   ClipboardList,
   Loader2,
+  Plus,
   WalletCards,
 } from "lucide-react";
 
@@ -239,15 +240,27 @@ export default function PettyCashPage() {
       <div className="space-y-6 pb-10">
         {/* HEADER */}
         <section>
-          <p className="text-sm font-semibold text-primary">Finance</p>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-primary">Finance</p>
 
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-            Petty Cash
-          </h1>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+                Petty Cash
+              </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Manage petty cash funds, balances, and fund activity.
-          </p>
+              <p className="mt-1 text-sm text-slate-500">
+                Manage petty cash funds, balances, and fund activity.
+              </p>
+            </div>
+
+            <Link
+              href="/petty-cash/funds/new"
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+              <Plus className="h-4 w-4" />
+              Add Fund
+            </Link>
+          </div>
         </section>
 
         {/* SUMMARY */}
