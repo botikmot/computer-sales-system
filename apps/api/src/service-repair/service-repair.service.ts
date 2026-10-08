@@ -408,14 +408,31 @@ export class ServiceRepairService {
       );
     }
 
+    const balance = await this.prisma.inventoryBalance.findUnique({
+      where: {
+        branchId_productId: {
+          branchId: job.branchId,
+          productId: dto.productId,
+        },
+      },
+    });
+
+    const estimatedUnitCost =
+      balance?.averageCost ?? product.defaultCostPrice ?? new Prisma.Decimal(0);
+
+    const estimatedTotalCost = estimatedUnitCost.mul(dto.requiredQuantity);
+
     return this.prisma.serviceJobPart.create({
       data: {
         serviceJobId: id,
         productId: dto.productId,
         requiredQuantity: dto.requiredQuantity,
         issuedQuantity: 0,
-        unitCost: 0,
-        totalCost: 0,
+
+        // Estimated cost before actual issue.
+        unitCost: estimatedUnitCost,
+        totalCost: estimatedTotalCost,
+
         notes: dto.notes,
       },
       include: {
@@ -645,7 +662,13 @@ export class ServiceRepairService {
 
           const additionalCost = currentCost.mul(requested.quantity);
 
-          const newTotalCost = jobPart.totalCost.plus(additionalCost);
+          // When the first quantity is issued, replace the
+          // pre-issue estimate with the actual inventory cost.
+          // For subsequent partial issues, keep accumulating actual cost.
+          const newTotalCost =
+            jobPart.issuedQuantity === 0
+              ? additionalCost
+              : jobPart.totalCost.plus(additionalCost);
 
           const newUnitCost =
             newIssuedQuantity > 0

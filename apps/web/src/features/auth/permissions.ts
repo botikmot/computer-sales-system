@@ -110,6 +110,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "sales.returns",
 
     "services.invoices",
+    "inventory.stock",
   ],
 
   PURCHASING: [

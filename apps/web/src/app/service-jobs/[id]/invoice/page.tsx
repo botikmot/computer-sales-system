@@ -411,7 +411,7 @@ export default function GenerateServiceInvoicePage() {
               </Link>
 
               <button
-                type="button"
+                type="submit"
                 disabled={
                   submitting ||
                   job.status !== "COMPLETED" ||

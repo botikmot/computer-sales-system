@@ -26,7 +26,7 @@ import { ServiceInvoiceQueryDto } from './dto/service-invoice-query.dto.js';
 export class ServiceInvoiceController {
   constructor(private readonly serviceInvoiceService: ServiceInvoiceService) {}
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.TECHNICIAN)
   @Post('from-job/:serviceJobId')
   createFromJob(
     @Param('serviceJobId', new ParseUUIDPipe())

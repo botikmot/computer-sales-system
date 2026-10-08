@@ -15,7 +15,7 @@ import { InventoryReportQueryDto } from './dto/inventory-report-query.dto.js';
 export class InventoryReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.INVENTORY, UserRole.SALES)
   @Get('stock')
   inventoryStock(
     @Query() query: InventoryReportQueryDto,

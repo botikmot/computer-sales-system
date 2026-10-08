@@ -152,16 +152,46 @@ export type AddServiceJobPartPayload = {
   notes?: string;
 };
 
-export type IssueServicePartsPayload = {
-  items: Array<{
-    productId: string;
-    quantity: number;
-  }>;
-};
-
 export type AssignServiceTechnicianPayload = {
   technicianId: string;
 };
+
+export type IssueServicePartItem = {
+  productId: string;
+  quantity: number;
+};
+
+export type IssueServicePartsPayload = {
+  items: IssueServicePartItem[];
+};
+
+export type IssueServicePartsResponse = {
+  serviceJobId: string;
+  jobNo: string;
+  issued: Array<{
+    productId: string;
+    quantityIssued: number;
+    unitCost: string;
+    totalCost: string;
+    balanceAfter: number;
+  }>;
+};
+
+export async function issueServiceParts(
+  serviceJobId: string,
+  payload: IssueServicePartsPayload,
+): Promise<IssueServicePartsResponse> {
+  return apiFetch<IssueServicePartsResponse>(
+    `/service-repair/jobs/${serviceJobId}/issue-parts`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+}
 
 export async function getServiceJobs(
   query: ServiceJobQuery = {},
@@ -241,26 +271,6 @@ export async function approveServiceJob(id: string): Promise<ServiceJob> {
 export async function startServiceJob(id: string): Promise<ServiceJob> {
   return apiFetch<ServiceJob>(`/service-repair/jobs/${id}/start`, {
     method: "POST",
-  });
-}
-
-export async function issueServiceParts(
-  id: string,
-  payload: IssueServicePartsPayload,
-): Promise<{
-  serviceJobId: string;
-  jobNo: string;
-  issued: Array<{
-    productId: string;
-    quantityIssued: number;
-    unitCost: string;
-    totalCost: string;
-    balanceAfter: number;
-  }>;
-}> {
-  return apiFetch(`/service-repair/jobs/${id}/issue-parts`, {
-    method: "POST",
-    body: JSON.stringify(payload),
   });
 }
 

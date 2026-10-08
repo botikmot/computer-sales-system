@@ -20,6 +20,7 @@ import {
   UserCog,
   Wrench,
   XCircle,
+  Plus,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -30,6 +31,8 @@ import {
 } from "@/components/ui/searchable-select";
 
 import {
+  addServiceJobPart,
+  issueServiceParts,
   approveServiceJob,
   cancelServiceJob,
   completeServiceJob,
@@ -42,6 +45,8 @@ import {
   type ServiceJobStatus,
   type ServiceJobTechnician,
 } from "@/features/service-repair/service-jobs-api";
+
+import { getProducts, type Product } from "@/features/products/products-api";
 
 function formatCurrency(value: string | number | null | undefined) {
   const amount = Number(value);
@@ -57,24 +62,6 @@ function formatCurrency(value: string | number | null | undefined) {
     maximumFractionDigits: 2,
   }).format(amount);
 }
-
-/* function formatDate(value?: string | null) {
-  if (!value) {
-    return "—";
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "—";
-  }
-
-  return new Intl.DateTimeFormat("en-PH", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-} */
 
 function formatDateTime(value?: string | null) {
   if (!value) {
@@ -160,6 +147,16 @@ function DetailItem({
   );
 }
 
+type IssuePartFormItem = {
+  productId: string;
+  name: string;
+  sku: string;
+  requiredQuantity: number;
+  issuedQuantity: number;
+  remainingQuantity: number;
+  quantity: string;
+};
+
 export default function ServiceJobDetailPage() {
   const params = useParams<{ id: string }>();
   //const router = useRouter();
@@ -180,6 +177,12 @@ export default function ServiceJobDetailPage() {
   const canComplete =
     role === "ADMIN" || role === "MANAGER" || role === "TECHNICIAN";
 
+  const canAddPart =
+    role === "ADMIN" ||
+    role === "MANAGER" ||
+    role === "TECHNICIAN" ||
+    role === "INVENTORY";
+
   const canCancel = role === "ADMIN" || role === "MANAGER";
 
   const [job, setJob] = useState<ServiceJob | null>(null);
@@ -199,6 +202,20 @@ export default function ServiceJobDetailPage() {
   const [selectedTechnicianId, setSelectedTechnicianId] = useState("");
   const [technicianLoading, setTechnicianLoading] = useState(false);
   const [assignSubmitting, setAssignSubmitting] = useState(false);
+
+  const [addPartOpen, setAddPartOpen] = useState(false);
+  const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
+  const [selectedPartProductId, setSelectedPartProductId] = useState("");
+  const [requiredPartQuantity, setRequiredPartQuantity] = useState("1");
+  const [partNotes, setPartNotes] = useState("");
+  const [partLoading, setPartLoading] = useState(false);
+  const [partSubmitting, setPartSubmitting] = useState(false);
+  const [partError, setPartError] = useState("");
+
+  const [issuePartsOpen, setIssuePartsOpen] = useState(false);
+  const [issuePartItems, setIssuePartItems] = useState<IssuePartFormItem[]>([]);
+  const [issueSubmitting, setIssueSubmitting] = useState(false);
+  const [issueError, setIssueError] = useState("");
 
   const jobId = params.id;
 
@@ -356,6 +373,215 @@ export default function ServiceJobDetailPage() {
       );
     } finally {
       setAssignSubmitting(false);
+    }
+  }
+
+  async function openAddPart() {
+    if (!job) {
+      return;
+    }
+
+    if (!canAddPart) {
+      return;
+    }
+
+    if (job.status !== "DRAFT" && job.status !== "AWAITING_APPROVAL") {
+      return;
+    }
+
+    try {
+      setPartLoading(true);
+      setPartError("");
+
+      const result = await getProducts({
+        page: 1,
+        limit: 100,
+        isActive: true,
+        sortBy: "name",
+        sortOrder: "asc",
+      });
+
+      const trackedProducts = result.items.filter(
+        (product) => product.trackInventory,
+      );
+
+      setAvailableProducts(trackedProducts);
+      setSelectedPartProductId("");
+      setRequiredPartQuantity("1");
+      setPartNotes("");
+      setAddPartOpen(true);
+    } catch (err) {
+      setPartError(
+        err instanceof Error
+          ? err.message
+          : "Unable to load available repair parts.",
+      );
+    } finally {
+      setPartLoading(false);
+    }
+  }
+
+  function closeAddPart() {
+    if (partSubmitting) {
+      return;
+    }
+
+    setAddPartOpen(false);
+    setPartError("");
+  }
+
+  async function handleAddPartSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!job) {
+      return;
+    }
+
+    if (!selectedPartProductId) {
+      setPartError("Please select a product.");
+      return;
+    }
+
+    const quantity = Number(requiredPartQuantity);
+
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      setPartError("Required quantity must be at least 1.");
+      return;
+    }
+
+    try {
+      setPartSubmitting(true);
+      setPartError("");
+      setError("");
+
+      await addServiceJobPart(job.id, {
+        productId: selectedPartProductId,
+        requiredQuantity: quantity,
+        notes: partNotes.trim() || undefined,
+      });
+
+      await refreshJob();
+
+      setAddPartOpen(false);
+      setSelectedPartProductId("");
+      setRequiredPartQuantity("1");
+      setPartNotes("");
+    } catch (err) {
+      setPartError(
+        err instanceof Error ? err.message : "Unable to add repair part.",
+      );
+    } finally {
+      setPartSubmitting(false);
+    }
+  }
+
+  function openIssueParts() {
+    if (!job) {
+      return;
+    }
+
+    if (job.status !== "IN_PROGRESS") {
+      return;
+    }
+
+    const remainingItems = job.parts
+      .map((part) => ({
+        productId: part.productId,
+        name: part.product.name,
+        sku: part.product.sku,
+        requiredQuantity: part.requiredQuantity,
+        issuedQuantity: part.issuedQuantity,
+        remainingQuantity: part.requiredQuantity - part.issuedQuantity,
+        quantity: String(
+          Math.max(0, part.requiredQuantity - part.issuedQuantity),
+        ),
+      }))
+      .filter((part) => part.remainingQuantity > 0);
+
+    setIssuePartItems(remainingItems);
+    setIssueError("");
+    setIssuePartsOpen(remainingItems.length > 0);
+  }
+
+  function closeIssueParts() {
+    if (issueSubmitting) {
+      return;
+    }
+
+    setIssuePartsOpen(false);
+    setIssueError("");
+  }
+
+  function updateIssueQuantity(productId: string, quantity: string) {
+    setIssuePartItems((current) =>
+      current.map((item) =>
+        item.productId === productId
+          ? {
+              ...item,
+              quantity,
+            }
+          : item,
+      ),
+    );
+  }
+
+  async function handleIssuePartsSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+
+    if (!job) {
+      return;
+    }
+
+    const items = issuePartItems
+      .map((item) => ({
+        productId: item.productId,
+        quantity: Number(item.quantity),
+        remainingQuantity: item.remainingQuantity,
+      }))
+      .filter((item) => item.quantity > 0);
+
+    if (items.length === 0) {
+      setIssueError("Enter at least one quantity to issue.");
+      return;
+    }
+
+    const invalidItem = items.find(
+      (item) =>
+        !Number.isInteger(item.quantity) ||
+        item.quantity > item.remainingQuantity,
+    );
+
+    if (invalidItem) {
+      setIssueError(
+        "Issued quantity cannot exceed the remaining required quantity.",
+      );
+      return;
+    }
+
+    try {
+      setIssueSubmitting(true);
+      setIssueError("");
+      setError("");
+
+      await issueServiceParts(job.id, {
+        items: items.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
+      });
+
+      await refreshJob();
+
+      setIssuePartsOpen(false);
+      setIssuePartItems([]);
+    } catch (err) {
+      setIssueError(
+        err instanceof Error ? err.message : "Unable to issue repair parts.",
+      );
+    } finally {
+      setIssueSubmitting(false);
     }
   }
 
@@ -749,6 +975,22 @@ export default function ServiceJobDetailPage() {
                 </button>
               )}
 
+              {job.status === "IN_PROGRESS" &&
+                canAddPart &&
+                job.parts.some(
+                  (part) => part.issuedQuantity < part.requiredQuantity,
+                ) && (
+                  <button
+                    type="button"
+                    onClick={openIssueParts}
+                    disabled={issueSubmitting || actionLoading !== null}
+                    className="inline-flex items-center gap-2 rounded-lg bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <Package className="h-4 w-4" />
+                    Issue Parts
+                  </button>
+                )}
+
               {job.status === "COMPLETED" && !job.invoice && (
                 <Link
                   href={`/service-jobs/${job.id}/invoice`}
@@ -777,9 +1019,354 @@ export default function ServiceJobDetailPage() {
             </div>
           </section>
 
-          {assignOpen && (
+          {addPartOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 py-6">
               <div className="w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+                <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600">
+                      <Package className="h-5 w-5" />
+                    </div>
+
+                    <div>
+                      <h2 className="text-base font-semibold text-slate-950">
+                        Add Repair Part
+                      </h2>
+
+                      <p className="mt-1 text-sm text-slate-500">
+                        Add a required inventory part for this repair job.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={closeAddPart}
+                    disabled={partSubmitting}
+                    className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label="Close add repair part"
+                  >
+                    <XCircle className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleAddPartSubmit}>
+                  <div className="space-y-5 px-6 py-6">
+                    {partError && (
+                      <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                        <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+
+                        <div>
+                          <p className="font-semibold">
+                            Unable to add repair part
+                          </p>
+
+                          <p className="mt-1">{partError}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                        Service Job
+                      </p>
+
+                      <p className="mt-1 font-mono text-sm font-semibold text-slate-800">
+                        {job.jobNo}
+                      </p>
+
+                      <p className="mt-1 text-xs text-slate-500">
+                        {job.customer.name || job.customer.code} •{" "}
+                        {job.branch.name}
+                      </p>
+                    </div>
+
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-medium text-slate-700">
+                        Product <span className="text-red-500">*</span>
+                      </span>
+
+                      <SearchableSelect
+                        value={selectedPartProductId}
+                        onChange={setSelectedPartProductId}
+                        options={availableProducts.map<SelectOption>(
+                          (product) => ({
+                            value: product.id,
+                            label: product.name,
+                            description: `${product.sku}${
+                              product.brand ? ` • ${product.brand}` : ""
+                            }`,
+                          }),
+                        )}
+                        placeholder="Search product..."
+                        searchPlaceholder="Search SKU or product..."
+                        emptyMessage="No active inventory-tracked products found."
+                        disabled={partSubmitting}
+                      />
+                    </label>
+
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-medium text-slate-700">
+                        Required Quantity{" "}
+                        <span className="text-red-500">*</span>
+                      </span>
+
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={requiredPartQuantity}
+                        onChange={(event) =>
+                          setRequiredPartQuantity(event.target.value)
+                        }
+                        disabled={partSubmitting}
+                        className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                      />
+
+                      <p className="mt-1.5 text-xs text-slate-400">
+                        This is the quantity required for the repair. Inventory
+                        is not deducted yet.
+                      </p>
+                    </label>
+
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-medium text-slate-700">
+                        Part Notes
+                      </span>
+
+                      <textarea
+                        value={partNotes}
+                        onChange={(event) => setPartNotes(event.target.value)}
+                        maxLength={1000}
+                        rows={3}
+                        disabled={partSubmitting}
+                        placeholder="Optional notes, e.g. replacement RAM or damaged component..."
+                        className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                      />
+                    </label>
+
+                    <div className="rounded-xl border border-cyan-100 bg-cyan-50 px-4 py-3">
+                      <p className="text-sm font-semibold text-cyan-900">
+                        Inventory note
+                      </p>
+
+                      <p className="mt-1 text-sm leading-6 text-cyan-800">
+                        Adding a required part only records the repair
+                        requirement. Inventory will be deducted later when the
+                        part is actually issued to the repair.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col-reverse gap-3 border-t border-slate-100 px-6 py-4 sm:flex-row sm:justify-end">
+                    <button
+                      type="button"
+                      onClick={closeAddPart}
+                      disabled={partSubmitting}
+                      className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={partSubmitting || !selectedPartProductId}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-5 text-sm font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {partSubmitting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Plus className="h-4 w-4" />
+                      )}
+
+                      {partSubmitting ? "Adding Part..." : "Add Part"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {issuePartsOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 py-6">
+              <div className="w-full max-w-2xl overflow-visible rounded-2xl bg-white shadow-2xl">
+                <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600">
+                      <Package className="h-5 w-5" />
+                    </div>
+
+                    <div>
+                      <h2 className="text-base font-semibold text-slate-950">
+                        Issue Repair Parts
+                      </h2>
+
+                      <p className="mt-1 text-sm text-slate-500">
+                        Issue the required inventory parts to this repair job.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={closeIssueParts}
+                    disabled={issueSubmitting}
+                    className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label="Close issue parts"
+                  >
+                    <XCircle className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleIssuePartsSubmit}>
+                  <div className="space-y-4 px-6 py-6">
+                    {issueError && (
+                      <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                        <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+
+                        <div>
+                          <p className="font-semibold">Unable to issue parts</p>
+
+                          <p className="mt-1">{issueError}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+                      <p className="text-sm font-semibold text-blue-900">
+                        Inventory will be deducted now
+                      </p>
+
+                      <p className="mt-1 text-sm leading-6 text-blue-800">
+                        Only the quantities entered below will be issued. The
+                        system will use the current inventory average cost for
+                        the actual repair cost.
+                      </p>
+                    </div>
+
+                    <div className="overflow-x-auto rounded-xl border border-slate-200">
+                      <table className="w-full min-w-[620px]">
+                        <thead>
+                          <tr className="border-b border-slate-100 bg-slate-50/70">
+                            <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                              Product
+                            </th>
+
+                            <th className="px-4 py-3 text-center text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                              Required
+                            </th>
+
+                            <th className="px-4 py-3 text-center text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                              Issued
+                            </th>
+
+                            <th className="px-4 py-3 text-center text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                              Remaining
+                            </th>
+
+                            <th className="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                              Issue
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody className="divide-y divide-slate-100">
+                          {issuePartItems.map((item) => (
+                            <tr key={item.productId}>
+                              <td className="px-4 py-4">
+                                <p className="text-sm font-semibold text-slate-800">
+                                  {item.name}
+                                </p>
+
+                                <p className="mt-1 font-mono text-[11px] text-slate-400">
+                                  {item.sku}
+                                </p>
+                              </td>
+
+                              <td className="px-4 py-4 text-center text-sm font-semibold text-slate-700">
+                                {item.requiredQuantity}
+                              </td>
+
+                              <td className="px-4 py-4 text-center text-sm text-slate-500">
+                                {item.issuedQuantity}
+                              </td>
+
+                              <td className="px-4 py-4 text-center">
+                                <span className="inline-flex rounded-lg bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700">
+                                  {item.remainingQuantity}
+                                </span>
+                              </td>
+
+                              <td className="px-4 py-4">
+                                <input
+                                  type="number"
+                                  min={0}
+                                  max={item.remainingQuantity}
+                                  step={1}
+                                  value={item.quantity}
+                                  onChange={(event) =>
+                                    updateIssueQuantity(
+                                      item.productId,
+                                      event.target.value,
+                                    )
+                                  }
+                                  disabled={issueSubmitting}
+                                  className="h-10 w-24 rounded-xl border border-slate-200 bg-white px-3 text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <p className="text-xs font-medium leading-5 text-slate-500">
+                        Parts with quantity 0 will be skipped. Remaining
+                        quantities can be issued later, but the service job
+                        cannot be completed until all required quantities have
+                        been issued.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col-reverse gap-3 border-t border-slate-100 px-6 py-4 sm:flex-row sm:justify-end">
+                    <button
+                      type="button"
+                      onClick={closeIssueParts}
+                      disabled={issueSubmitting}
+                      className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={
+                        issueSubmitting ||
+                        !issuePartItems.some(
+                          (item) => Number(item.quantity) > 0,
+                        )
+                      }
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-5 text-sm font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {issueSubmitting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Package className="h-4 w-4" />
+                      )}
+
+                      {issueSubmitting ? "Issuing Parts..." : "Issue Parts"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {assignOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 py-6">
+              <div className="w-full max-w-xl overflow-visible rounded-2xl bg-white shadow-2xl">
                 <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
                   <div className="flex items-start gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
@@ -1091,10 +1678,30 @@ export default function ServiceJobDetailPage() {
                   </div>
                 </div>
 
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
-                  {job.parts.length} part
-                  {job.parts.length === 1 ? "" : "s"}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
+                    {job.parts.length} part
+                    {job.parts.length === 1 ? "" : "s"}
+                  </span>
+
+                  {canAddPart &&
+                    (job.status === "DRAFT" ||
+                      job.status === "AWAITING_APPROVAL") && (
+                      <button
+                        type="button"
+                        onClick={() => void openAddPart()}
+                        disabled={partLoading}
+                        className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-cyan-600 px-3 text-xs font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {partLoading ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Plus className="h-3.5 w-3.5" />
+                        )}
+                        Add Part
+                      </button>
+                    )}
+                </div>
               </div>
 
               {job.parts.length ? (

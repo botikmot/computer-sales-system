@@ -590,6 +590,11 @@ export class AssemblyService {
           billOfMaterial: {
             include: {
               product: true,
+              items: {
+                include: {
+                  componentProduct: true,
+                },
+              },
             },
           },
 

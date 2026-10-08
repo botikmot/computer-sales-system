@@ -140,7 +140,10 @@ export default function SalesInvoicesPage() {
   );
 
   const canRecordPayment =
-    userRole === "ADMIN" || userRole === "MANAGER" || userRole === "CASHIER";
+    userRole === "ADMIN" ||
+    userRole === "MANAGER" ||
+    userRole === "CASHIER" ||
+    userRole === "SALES";
 
   useEffect(() => {
     let cancelled = false;

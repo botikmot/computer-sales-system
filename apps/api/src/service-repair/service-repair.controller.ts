@@ -30,7 +30,7 @@ import { ServiceJobQueryDto } from './dto/service-job-query.dto.js';
 export class ServiceRepairController {
   constructor(private readonly serviceRepairService: ServiceRepairService) {}
 
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES, UserRole.TECHNICIAN)
   @Post()
   create(
     @Body() dto: CreateServiceJobDto,
