@@ -111,6 +111,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
 
     "services.invoices",
     "inventory.stock",
+    "settings",
   ],
 
   PURCHASING: [
@@ -124,6 +125,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "purchasing.payments",
 
     "inventory.receiving",
+    "settings",
   ],
 
   INVENTORY: [
@@ -134,9 +136,10 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.receiving",
     "inventory.assembly",
     "inventory.adjustments",
+    "settings",
   ],
 
-  TECHNICIAN: ["dashboard", "services.jobs", "services.invoices"],
+  TECHNICIAN: ["dashboard", "services.jobs", "services.invoices", "settings"],
 
   CASHIER: [
     "dashboard",
@@ -150,6 +153,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "finance.petty-cash",
 
     "purchasing.payments",
+    "settings",
   ],
 };
 
