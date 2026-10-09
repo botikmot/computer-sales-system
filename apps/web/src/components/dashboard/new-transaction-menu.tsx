@@ -32,19 +32,16 @@ const actions: TransactionAction[] = [
     href: "/sales/inquiries",
   },
   {
-    label: "New Sales Order",
-    description: "Create a confirmed sales order",
-    icon: ShoppingCart,
-  },
-  {
     label: "New Service Job",
     description: "Start a repair or service job",
     icon: Wrench,
+    href: "/service-jobs/new",
   },
   {
     label: "Receive Stock",
     description: "Record incoming inventory",
     icon: Package,
+    href: "/receiving/new",
   },
 ];
 
