@@ -23,6 +23,7 @@ import type { DashboardData } from "./dashboard-api";
 import { getDashboardData } from "./dashboard-api";
 
 import { NewTransactionMenu } from "@/components/dashboard/new-transaction-menu";
+import Link from "next/link";
 
 function formatCurrency(value: number | null) {
   if (value === null) {
@@ -355,31 +356,34 @@ export default function DashboardPage() {
                     label: "New Quotation",
                     description: "Prepare a customer quote",
                     icon: ClipboardList,
+                    href: "/sales/inquiries",
                   },
                   {
                     label: "New Sales Order",
                     description: "Create a confirmed order",
                     icon: ShoppingCart,
+                    href: "/sales/orders",
                   },
                   {
                     label: "Receive Stock",
                     description: "Record incoming inventory",
                     icon: Package,
+                    href: "/receiving/new",
                   },
                   {
                     label: "New Service Job",
                     description: "Start a repair job",
                     icon: Wrench,
+                    href: "/service-jobs/new",
                   },
                 ].map((action) => {
                   const Icon = action.icon;
 
-                  return (
-                    <button
-                      key={action.label}
-                      type="button"
-                      className="group flex min-h-[72px] items-center gap-4 rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 text-left transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50/60 hover:shadow-sm"
-                    >
+                  const className =
+                    "group flex min-h-[72px] items-center gap-4 rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 text-left transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50/60 hover:shadow-sm";
+
+                  const content = (
+                    <>
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-600 shadow-sm ring-1 ring-slate-100 transition group-hover:bg-blue-100 group-hover:text-primary">
                         <Icon className="h-4.5 w-4.5" />
                       </div>
@@ -394,8 +398,24 @@ export default function DashboardPage() {
                         </p>
                       </div>
 
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:text-primary" />
-                    </button>
+                      {action.href && (
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:text-primary" />
+                      )}
+                    </>
+                  );
+
+                  return action.href ? (
+                    <Link
+                      key={action.label}
+                      href={action.href}
+                      className={className}
+                    >
+                      {content}
+                    </Link>
+                  ) : (
+                    <div key={action.label} className={className}>
+                      {content}
+                    </div>
                   );
                 })}
               </div>
