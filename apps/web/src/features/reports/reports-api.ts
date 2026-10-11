@@ -10,6 +10,8 @@ export type AccountsPayableReportQuery = {
   from?: string;
   to?: string;
   asOfDate?: string;
+  page?: number;
+  limit?: number;
 };
 
 export type AccountsReceivableReportQuery = {
@@ -18,6 +20,8 @@ export type AccountsReceivableReportQuery = {
   from?: string;
   to?: string;
   asOfDate?: string;
+  page?: number;
+  limit?: number;
 };
 
 export type CashBankReportQuery = {
@@ -84,6 +88,8 @@ export type ServiceReportQuery = {
   productId?: string;
   from?: string;
   to?: string;
+  page?: number;
+  limit?: number;
 };
 
 /* =========================================================
@@ -144,34 +150,154 @@ export type TransactionsReport<T = ReportRecord> = {
  * Accounts Payable
  * ======================================================= */
 
+export type AccountsPayableSupplierBalanceRow = {
+  supplier: ReportRecord & {
+    id: string;
+    code?: string | null;
+    name: string;
+    isActive?: boolean;
+  };
+  payableCount: number;
+  originalAmount: string | number;
+  amountPaid: string | number;
+  balanceDue: string | number;
+};
+
 export type AccountsPayableSupplierBalancesResponse = {
   count: number;
-  suppliers: ReportRecord[];
+  suppliers: AccountsPayableSupplierBalanceRow[];
+
+  totals: {
+    supplierCount: number;
+    payableCount: number;
+    originalAmount: string | number;
+    amountPaid: string | number;
+    balanceDue: string | number;
+  };
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type AccountsPayableOutstandingRecord = {
+  id: string;
+  status: string;
+  paymentMode: string;
+
+  dueDate: string | null;
+  originalAmount: string | number;
+  amountPaid: string | number;
+  balanceDue: string | number;
+
+  supplier: {
+    id: string;
+    code: string;
+    name: string;
+  };
+
+  purchaseInvoice: {
+    id: string;
+    invoiceNo: string;
+    supplierInvoiceNo: string | null;
+    invoiceDate: string;
+    total: string | number;
+  };
+
+  payments?: ReportRecord[];
 };
 
 export type AccountsPayableOutstandingResponse = {
   count: number;
   total: string | number;
-  records: ReportRecord[];
+  records: AccountsPayableOutstandingRecord[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type AccountsPayablePayablesBucket = {
+  count: number;
+  total: string | number;
+  records: AccountsPayableOutstandingRecord[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
 
 export type AccountsPayableDueOverdueResponse = {
   asOfDate: string;
-  due: {
-    count: number;
-    total: string | number;
-    records: ReportRecord[];
+  overdue: AccountsPayablePayablesBucket;
+  due: AccountsPayablePayablesBucket;
+  noDueDate: AccountsPayablePayablesBucket;
+};
+
+export type AccountsPayablePaymentHistoryRecord = {
+  id: string;
+  paymentNo: string;
+  paymentDate: string;
+  amount: string | number;
+  status: string;
+  accountType: string;
+  referenceNo: string | null;
+  notes: string | null;
+  createdAt: string;
+
+  supplier: {
+    id: string;
+    code: string;
+    name: string;
   };
-  overdue: {
-    count: number;
-    total: string | number;
-    records: ReportRecord[];
+
+  accountsPayable: {
+    id: string;
+    originalAmount: string | number;
+    amountPaid: string | number;
+    balanceDue: string | number;
+
+    purchaseInvoice: {
+      id: string;
+      invoiceNo: string;
+      supplierInvoiceNo: string | null;
+      invoiceDate: string;
+      total: string | number;
+    };
   };
-  noDueDate: {
-    count: number;
-    total: string | number;
-    records: ReportRecord[];
+
+  account: {
+    id: string;
+    name: string;
+    accountNumber: string | null;
+    accountType: string;
   };
+
+  cashBankTransaction: {
+    id: string;
+    accountName: string;
+    transactionDate: string;
+    referenceNo: string | null;
+    amount: string | number;
+  } | null;
+
+  paymentVoucher: {
+    id: string;
+    voucherNo: string;
+    voucherDate: string;
+    payeeName: string;
+    amount: string | number;
+    purpose: string | null;
+  } | null;
 };
 
 export type AccountsPayablePaymentHistoryResponse = {
@@ -179,7 +305,15 @@ export type AccountsPayablePaymentHistoryResponse = {
   to: string | null;
   count: number;
   total: string | number;
-  payments: ReportRecord[];
+
+  payments: AccountsPayablePaymentHistoryRecord[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
 
 export async function getAccountsPayableSupplierBalances(
@@ -210,15 +344,102 @@ export async function getAccountsPayablePaymentHistory(
  * Accounts Receivable
  * ======================================================= */
 
+export type AccountsReceivableCustomerBalanceRow = {
+  customer: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+    isActive: boolean;
+  };
+
+  invoiceCount: number;
+  originalAmount: string | number;
+  amountPaid: string | number;
+  balanceDue: string | number;
+};
+
 export type AccountsReceivableCustomerBalancesResponse = {
   count: number;
-  customers: ReportRecord[];
+  customers: AccountsReceivableCustomerBalanceRow[];
+
+  totals: {
+    customerCount: number;
+    receivableCount: number;
+    originalAmount: string | number;
+    amountPaid: string | number;
+    balanceDue: string | number;
+  };
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type AccountsReceivableOutstandingRow = ReportRecord & {
+  id: string;
+  customer: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
+  salesInvoice?:
+    | (ReportRecord & {
+        invoiceNo: string;
+      })
+    | null;
+  serviceInvoice?:
+    | (ReportRecord & {
+        invoiceNo: string;
+      })
+    | null;
+  originalAmount: string | number;
+  amountPaid: string | number;
+  balanceDue: string | number;
+  dueDate: string | null;
+  status: string;
+  createdAt?: string;
 };
 
 export type AccountsReceivableOutstandingResponse = {
   count: number;
   total: string | number;
-  records: ReportRecord[];
+  records: AccountsReceivableOutstandingRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type AccountsReceivableAgingBucket =
+  "CURRENT" | "1_30" | "31_60" | "61_90" | "91_PLUS" | "NO_DUE_DATE";
+
+export type AccountsReceivableAgingRow = ReportRecord & {
+  id: string;
+  customer: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
+  salesInvoice?:
+    | (ReportRecord & {
+        invoiceNo: string;
+      })
+    | null;
+  serviceInvoice?:
+    | (ReportRecord & {
+        invoiceNo: string;
+      })
+    | null;
+  dueDate: string | null;
+  balanceDue: string | number;
+  status: string;
+  agingBucket: AccountsReceivableAgingBucket;
+  overdueDays: number;
 };
 
 export type AccountsReceivableAgingResponse = {
@@ -233,7 +454,50 @@ export type AccountsReceivableAgingResponse = {
     noDueDate: string | number;
   };
   count: number;
-  items: ReportRecord[];
+  items: AccountsReceivableAgingRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type AccountsReceivableCollectionRow = ReportRecord & {
+  id: string;
+  paymentNo: string;
+  amount: string | number;
+  paymentDate: string;
+  referenceNo?: string | null;
+  notes?: string | null;
+  status: string;
+  customer: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
+  branch?: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
+  salesInvoice?:
+    | (ReportRecord & {
+        id: string;
+        invoiceNo: string;
+      })
+    | null;
+  serviceInvoice?:
+    | (ReportRecord & {
+        id: string;
+        invoiceNo: string;
+      })
+    | null;
+  account: ReportRecord & {
+    id: string;
+    name: string;
+    accountType: string;
+  };
 };
 
 export type AccountsReceivableCollectionsResponse = {
@@ -241,7 +505,13 @@ export type AccountsReceivableCollectionsResponse = {
   to: string | null;
   count: number;
   total: string | number;
-  collections: ReportRecord[];
+  collections: AccountsReceivableCollectionRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
 
 export async function getAccountsReceivableCustomerBalances(
@@ -1016,17 +1286,245 @@ export async function getSalesReturns(
  * Service / Repair
  * ======================================================= */
 
-export type OpenServiceJobsResponse = ReportRecord;
+export type OpenServiceJobReportItem = {
+  id: string;
+  jobNo: string;
+  branchId: string;
+  customerId: string;
+  technicianId: string | null;
+  status: string;
+  laborCharge: string | number;
+  customerApproved: boolean;
+  customerApprovedAt: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
 
-export type CompletedRepairsResponse = ReportRecord;
+  branch: {
+    id: string;
+    code: string;
+    name: string;
+  };
 
-export type PendingRepairsResponse = ReportRecord;
+  customer: {
+    id: string;
+    code: string;
+    name: string;
+  };
 
-export type ServicePartsUsedResponse = ReportRecord;
+  technician: {
+    id: string;
+    username: string;
+    fullName: string;
+    role: string;
+  } | null;
 
-export type ServiceRevenueResponse = ReportRecord;
+  parts: {
+    id: string;
+    requiredQuantity: number;
+    issuedQuantity: number;
+    product: {
+      id: string;
+      sku: string | null;
+      name: string;
+    };
+  }[];
 
-export type TechnicianPerformanceResponse = ReportRecord;
+  invoice: {
+    id: string;
+    invoiceNo: string;
+    status: string;
+    total: string | number;
+  } | null;
+};
+
+export type OpenServiceJobsResponse = {
+  from: string | null;
+  to: string | null;
+  count: number;
+  jobs: OpenServiceJobReportItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type CompletedRepairsResponse = OpenServiceJobsResponse;
+
+export type PendingRepairsResponse = OpenServiceJobsResponse;
+
+export type ServicePartUsedReportItem = {
+  id: string;
+  serviceJobId: string;
+  productId: string;
+  requiredQuantity: number;
+  issuedQuantity: number;
+  unitCost: string | number;
+  totalCost: string | number;
+  notes: string | null;
+
+  product: {
+    id: string;
+    sku: string;
+    name: string;
+    unit: string;
+  };
+
+  serviceJob: {
+    id: string;
+    jobNo: string;
+    branchId: string;
+    customerId: string;
+    technicianId: string | null;
+    status: string;
+    createdAt: string;
+
+    branch: {
+      id: string;
+      code: string;
+      name: string;
+    };
+
+    customer: {
+      id: string;
+      code: string;
+      name: string;
+    };
+
+    technician: {
+      id: string;
+      username: string;
+      fullName: string;
+    } | null;
+  };
+};
+
+export type ServicePartsUsedResponse = {
+  from: string | null;
+  to: string | null;
+  count: number;
+  totalQuantity: number;
+  totalCost: string | number;
+  parts: ServicePartUsedReportItem[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type ServiceRevenueInvoiceItem = {
+  id: string;
+  itemType: "LABOR" | "PART" | "OTHER";
+  description: string;
+  quantity: string | number;
+  unitPrice: string | number;
+  subtotal: string | number;
+};
+
+export type ServiceRevenueInvoice = {
+  id: string;
+  invoiceNo: string;
+  status: string;
+  paymentMode: string;
+  invoiceDate: string;
+  subtotal: string | number;
+  discount: string | number;
+  tax: string | number;
+  total: string | number;
+
+  branch: {
+    id: string;
+    code: string;
+    name: string;
+  };
+
+  customer: {
+    id: string;
+    code: string;
+    name: string;
+  };
+
+  serviceJob: {
+    id: string;
+    jobNo: string;
+    technician: {
+      id: string;
+      username: string;
+      fullName: string;
+    } | null;
+  };
+
+  items: ServiceRevenueInvoiceItem[];
+};
+
+export type ServiceRevenueResponse = {
+  from: string | null;
+  to: string | null;
+  invoiceCount: number;
+  totalRevenue: string | number;
+  laborRevenue: string | number;
+  partsRevenue: string | number;
+  otherRevenue: string | number;
+  invoices: ServiceRevenueInvoice[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type TechnicianPerformanceRow = {
+  technician: {
+    id: string;
+    username: string;
+    email: string | null;
+    fullName: string;
+    role: string;
+    status: string;
+    branchId: string | null;
+  };
+
+  totalJobs: number;
+  completedJobs: number;
+  activeJobs: number;
+  cancelledJobs: number;
+  completionRate: number;
+  serviceRevenue: string | number;
+};
+
+export type TechnicianPerformanceResponse = {
+  from: string | null;
+  to: string | null;
+  count: number;
+
+  totals: {
+    totalTechnicians: number;
+    totalJobs: number;
+    completedJobs: number;
+    activeJobs: number;
+    cancelledJobs: number;
+    serviceRevenue: string | number;
+    completionRate: number;
+  };
+
+  technicians: TechnicianPerformanceRow[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
 
 export async function getOpenServiceJobs(
   query: ServiceReportQuery = {},

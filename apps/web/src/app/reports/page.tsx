@@ -228,6 +228,27 @@ export default function ReportsPage() {
       "Inventory Movement": "/reports/inventory/movement",
       "Physical Count / Adjustment Report": "/reports/inventory/adjustments",
     },
+    service: {
+      "Open Job Orders": "/reports/service/open-jobs",
+      "Completed Repairs": "/reports/service/completed-repairs",
+      "Pending Repairs": "/reports/service/pending-repairs",
+      "Parts Used": "/reports/service/parts-used",
+      "Service Revenue": "/reports/service/revenue",
+      "Technician Performance / Job Summary":
+        "/reports/service/technician-performance",
+    },
+    "accounts-payable": {
+      "Supplier Balances": "/reports/accounts-payable/supplier-balances",
+      "Outstanding Payables": "/reports/accounts-payable/outstanding",
+      "Due / Overdue Payables": "/reports/accounts-payable/due-overdue",
+      "Payment History": "/reports/accounts-payable/payment-history",
+    },
+    "accounts-receivable": {
+      "Customer Balances": "/reports/accounts-receivable/customer-balances",
+      "Outstanding Receivables": "/reports/accounts-receivable/outstanding",
+      "Aging of Receivables": "/reports/accounts-receivable/aging",
+      "Collection Report": "/reports/accounts-receivable/collections",
+    },
   };
 
   return (

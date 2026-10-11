@@ -953,69 +953,126 @@ export class ReportsService {
     user: AuthenticatedUser,
   ) {
     query = this.scopeReportQuery(query, user);
-    const records = await this.prisma.accountsReceivable.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
 
-        ...(query.customerId ? { customerId: query.customerId } : {}),
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
+
+    const receivableWhere: Prisma.AccountsReceivableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+    };
+
+    const customerWhere: Prisma.CustomerWhereInput = {
+      ...(query.customerId ? { id: query.customerId } : {}),
+
+      accountsReceivables: {
+        some: {
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+        },
       },
+    };
 
-      include: {
-        customer: true,
-      },
+    const [customers, customerCount, receivableTotals] = await Promise.all([
+      this.prisma.customer.findMany({
+        where: customerWhere,
 
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
+        orderBy: [{ name: 'asc' }, { id: 'asc' }],
 
-    const grouped = new Map<
-      string,
-      {
-        customer: (typeof records)[number]['customer'];
-        originalAmount: Prisma.Decimal;
-        amountPaid: Prisma.Decimal;
-        balanceDue: Prisma.Decimal;
-        invoiceCount: number;
-      }
-    >();
+        skip,
+        take: limit,
+      }),
 
-    for (const record of records) {
-      const existing = grouped.get(record.customerId);
+      this.prisma.customer.count({
+        where: customerWhere,
+      }),
 
-      if (!existing) {
-        grouped.set(record.customerId, {
-          customer: record.customer,
-          originalAmount: record.originalAmount,
-          amountPaid: record.amountPaid,
-          balanceDue: record.balanceDue,
-          invoiceCount: 1,
-        });
-        continue;
-      }
+      this.prisma.accountsReceivable.aggregate({
+        where: receivableWhere,
 
-      existing.originalAmount = existing.originalAmount.add(
-        record.originalAmount,
-      );
+        _count: {
+          _all: true,
+        },
 
-      existing.amountPaid = existing.amountPaid.add(record.amountPaid);
+        _sum: {
+          originalAmount: true,
+          amountPaid: true,
+          balanceDue: true,
+        },
+      }),
+    ]);
 
-      existing.balanceDue = existing.balanceDue.add(record.balanceDue);
+    const customerIds = customers.map((customer) => customer.id);
 
-      existing.invoiceCount += 1;
+    const grouped = customerIds.length
+      ? await this.prisma.accountsReceivable.groupBy({
+          by: ['customerId'],
+
+          where: {
+            ...receivableWhere,
+            customerId: {
+              in: customerIds,
+            },
+          },
+
+          _count: {
+            _all: true,
+          },
+
+          _sum: {
+            originalAmount: true,
+            amountPaid: true,
+            balanceDue: true,
+          },
+        })
+      : [];
+
+    const groupedByCustomer = new Map<string, (typeof grouped)[number]>();
+
+    for (const item of grouped) {
+      groupedByCustomer.set(item.customerId, item);
     }
 
-    const customers = Array.from(grouped.values()).map((item) => ({
-      customer: item.customer,
-      invoiceCount: item.invoiceCount,
-      originalAmount: item.originalAmount.toDecimalPlaces(2),
-      amountPaid: item.amountPaid.toDecimalPlaces(2),
-      balanceDue: item.balanceDue.toDecimalPlaces(2),
-    }));
+    const toMoney = (value: Prisma.Decimal | null | undefined) =>
+      (value ?? new Prisma.Decimal(0)).toDecimalPlaces(2);
+
+    const customerRows = customers.map((customer) => {
+      const aggregate = groupedByCustomer.get(customer.id);
+
+      return {
+        customer,
+
+        invoiceCount: aggregate?._count._all ?? 0,
+
+        originalAmount: toMoney(aggregate?._sum.originalAmount),
+
+        amountPaid: toMoney(aggregate?._sum.amountPaid),
+
+        balanceDue: toMoney(aggregate?._sum.balanceDue),
+      };
+    });
 
     return {
-      count: customers.length,
-      customers,
+      count: customerCount,
+      customers: customerRows,
+
+      totals: {
+        customerCount,
+        receivableCount: receivableTotals._count._all,
+
+        originalAmount: toMoney(receivableTotals._sum.originalAmount),
+
+        amountPaid: toMoney(receivableTotals._sum.amountPaid),
+
+        balanceDue: toMoney(receivableTotals._sum.balanceDue),
+      },
+
+      pagination: {
+        page,
+        limit,
+        total: customerCount,
+        pages: Math.max(1, Math.ceil(customerCount / limit)),
+      },
     };
   }
 
@@ -1024,46 +1081,68 @@ export class ReportsService {
     user: AuthenticatedUser,
   ) {
     query = this.scopeReportQuery(query, user);
-    const records = await this.prisma.accountsReceivable.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
 
-        ...(query.customerId ? { customerId: query.customerId } : {}),
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-        status: {
-          in: ['OPEN', 'PARTIALLY_PAID'],
-        },
-
-        balanceDue: {
-          gt: 0,
-        },
+    const where: Prisma.AccountsReceivableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      status: {
+        in: ['OPEN', 'PARTIALLY_PAID'],
       },
-
-      include: {
-        customer: true,
-        salesInvoice: true,
-        serviceInvoice: true,
+      balanceDue: {
+        gt: 0,
       },
+    };
 
-      orderBy: [
-        {
-          dueDate: 'asc',
+    const [records, count, aggregate] = await Promise.all([
+      this.prisma.accountsReceivable.findMany({
+        where,
+        include: {
+          customer: true,
+          salesInvoice: true,
+          serviceInvoice: true,
         },
-        {
-          createdAt: 'asc',
-        },
-      ],
-    });
+        orderBy: [
+          {
+            dueDate: 'asc',
+          },
+          {
+            createdAt: 'asc',
+          },
+        ],
+        skip,
+        take: limit,
+      }),
 
-    const total = records.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
+      this.prisma.accountsReceivable.count({
+        where,
+      }),
+
+      this.prisma.accountsReceivable.aggregate({
+        where,
+        _sum: {
+          balanceDue: true,
+        },
+      }),
+    ]);
+
+    const total = (
+      aggregate._sum.balanceDue ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
-      count: records.length,
-      total: total.toDecimalPlaces(2),
+      count,
+      total,
       records,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -1074,108 +1153,197 @@ export class ReportsService {
     query = this.scopeReportQuery(query, user);
 
     const asOfDate = query.asOfDate
-      ? new Date(`${query.asOfDate}T23:59:59.999Z`)
-      : new Date();
+      ? query.asOfDate.slice(0, 10)
+      : new Date().toISOString().slice(0, 10);
 
-    if (Number.isNaN(asOfDate.getTime())) {
+    const asOfStart = new Date(`${asOfDate}T00:00:00.000Z`);
+
+    if (
+      Number.isNaN(asOfStart.getTime()) ||
+      asOfStart.toISOString().slice(0, 10) !== asOfDate
+    ) {
       throw new BadRequestException('Invalid asOfDate.');
     }
 
-    const records = await this.prisma.accountsReceivable.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-
-        ...(query.customerId ? { customerId: query.customerId } : {}),
-
-        status: {
-          in: ['OPEN', 'PARTIALLY_PAID'],
-        },
-
-        balanceDue: {
-          gt: 0,
-        },
-      },
-
-      include: {
-        customer: true,
-        salesInvoice: true,
-        serviceInvoice: true,
-      },
-
-      orderBy: {
-        dueDate: 'asc',
-      },
-    });
-
-    const buckets = {
-      current: new Prisma.Decimal(0),
-      days1To30: new Prisma.Decimal(0),
-      days31To60: new Prisma.Decimal(0),
-      days61To90: new Prisma.Decimal(0),
-      days91Plus: new Prisma.Decimal(0),
-      noDueDate: new Prisma.Decimal(0),
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
+    const shiftDays = (days: number) => {
+      const date = new Date(asOfStart);
+      date.setUTCDate(date.getUTCDate() + days);
+      return date;
     };
 
+    const days30Ago = shiftDays(-30);
+    const days60Ago = shiftDays(-60);
+    const days90Ago = shiftDays(-90);
+
+    const where: Prisma.AccountsReceivableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      status: {
+        in: ['OPEN', 'PARTIALLY_PAID'],
+      },
+      balanceDue: {
+        gt: 0,
+      },
+    };
+
+    const sumByBucket = async (
+      bucketWhere: Prisma.AccountsReceivableWhereInput,
+    ) => {
+      const result = await this.prisma.accountsReceivable.aggregate({
+        where: {
+          ...where,
+          ...bucketWhere,
+        },
+        _sum: {
+          balanceDue: true,
+        },
+      });
+
+      return (result._sum.balanceDue ?? new Prisma.Decimal(0)).toDecimalPlaces(
+        2,
+      );
+    };
+
+    const [
+      records,
+      count,
+      totalAggregate,
+      current,
+      days1To30,
+      days31To60,
+      days61To90,
+      days91Plus,
+      noDueDate,
+    ] = await Promise.all([
+      this.prisma.accountsReceivable.findMany({
+        where,
+        include: {
+          customer: true,
+          salesInvoice: true,
+          serviceInvoice: true,
+        },
+        orderBy: [{ dueDate: 'asc' }, { createdAt: 'asc' }],
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.accountsReceivable.count({ where }),
+
+      this.prisma.accountsReceivable.aggregate({
+        where,
+        _sum: {
+          balanceDue: true,
+        },
+      }),
+
+      sumByBucket({
+        dueDate: {
+          gte: asOfStart,
+        },
+      }),
+
+      sumByBucket({
+        dueDate: {
+          gte: days30Ago,
+          lt: asOfStart,
+        },
+      }),
+
+      sumByBucket({
+        dueDate: {
+          gte: days60Ago,
+          lt: days30Ago,
+        },
+      }),
+
+      sumByBucket({
+        dueDate: {
+          gte: days90Ago,
+          lt: days60Ago,
+        },
+      }),
+
+      sumByBucket({
+        dueDate: {
+          lt: days90Ago,
+        },
+      }),
+
+      sumByBucket({
+        dueDate: null,
+      }),
+    ]);
+
     const items = records.map((record) => {
-      let bucket:
+      let agingBucket:
         'CURRENT' | '1_30' | '31_60' | '61_90' | '91_PLUS' | 'NO_DUE_DATE';
 
       let overdueDays = 0;
 
       if (!record.dueDate) {
-        bucket = 'NO_DUE_DATE';
-        buckets.noDueDate = buckets.noDueDate.add(record.balanceDue);
-      } else if (record.dueDate >= asOfDate) {
-        bucket = 'CURRENT';
-        buckets.current = buckets.current.add(record.balanceDue);
+        agingBucket = 'NO_DUE_DATE';
       } else {
-        overdueDays = Math.floor(
-          (asOfDate.getTime() - record.dueDate.getTime()) /
-            (1000 * 60 * 60 * 24),
+        const dueStart = new Date(
+          Date.UTC(
+            record.dueDate.getUTCFullYear(),
+            record.dueDate.getUTCMonth(),
+            record.dueDate.getUTCDate(),
+          ),
         );
 
-        if (overdueDays <= 30) {
-          bucket = '1_30';
-          buckets.days1To30 = buckets.days1To30.add(record.balanceDue);
+        overdueDays = Math.max(
+          0,
+          Math.floor(
+            (asOfStart.getTime() - dueStart.getTime()) / (1000 * 60 * 60 * 24),
+          ),
+        );
+
+        if (dueStart >= asOfStart) {
+          agingBucket = 'CURRENT';
+        } else if (overdueDays <= 30) {
+          agingBucket = '1_30';
         } else if (overdueDays <= 60) {
-          bucket = '31_60';
-          buckets.days31To60 = buckets.days31To60.add(record.balanceDue);
+          agingBucket = '31_60';
         } else if (overdueDays <= 90) {
-          bucket = '61_90';
-          buckets.days61To90 = buckets.days61To90.add(record.balanceDue);
+          agingBucket = '61_90';
         } else {
-          bucket = '91_PLUS';
-          buckets.days91Plus = buckets.days91Plus.add(record.balanceDue);
+          agingBucket = '91_PLUS';
         }
       }
 
       return {
         ...record,
-        agingBucket: bucket,
+        agingBucket,
         overdueDays,
       };
     });
 
-    const totalOutstanding = records.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
+    const totalOutstanding = (
+      totalAggregate._sum.balanceDue ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
       asOfDate,
-      totalOutstanding: totalOutstanding.toDecimalPlaces(2),
-
+      totalOutstanding,
       summary: {
-        current: buckets.current.toDecimalPlaces(2),
-        days1To30: buckets.days1To30.toDecimalPlaces(2),
-        days31To60: buckets.days31To60.toDecimalPlaces(2),
-        days61To90: buckets.days61To90.toDecimalPlaces(2),
-        days91Plus: buckets.days91Plus.toDecimalPlaces(2),
-        noDueDate: buckets.noDueDate.toDecimalPlaces(2),
+        current,
+        days1To30,
+        days31To60,
+        days61To90,
+        days91Plus,
+        noDueDate,
       },
-
-      count: items.length,
+      count,
       items,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -1185,6 +1353,16 @@ export class ReportsService {
   ) {
     query = this.scopeReportQuery(query, user);
 
+    if (query.from && query.to && query.from > query.to) {
+      throw new BadRequestException(
+        'The from date must be on or before the to date.',
+      );
+    }
+
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
+
     const paymentDate =
       query.from || query.to
         ? {
@@ -1193,7 +1371,6 @@ export class ReportsService {
                   gte: new Date(`${query.from}T00:00:00.000Z`),
                 }
               : {}),
-
             ...(query.to
               ? {
                   lte: new Date(`${query.to}T23:59:59.999Z`),
@@ -1202,58 +1379,73 @@ export class ReportsService {
           }
         : undefined;
 
-    const payments = await this.prisma.customerPayment.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-
-        ...(query.customerId ? { customerId: query.customerId } : {}),
-
-        status: 'POSTED',
-
-        ...(paymentDate ? { paymentDate } : {}),
-
-        OR: [
-          {
-            salesInvoice: {
-              is: {
-                paymentMode: 'CREDIT',
-              },
+    const where: Prisma.CustomerPaymentWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      status: 'POSTED',
+      ...(paymentDate ? { paymentDate } : {}),
+      OR: [
+        {
+          salesInvoice: {
+            is: {
+              paymentMode: 'CREDIT',
             },
           },
-          {
-            serviceInvoice: {
-              is: {
-                paymentMode: 'CREDIT',
-              },
+        },
+        {
+          serviceInvoice: {
+            is: {
+              paymentMode: 'CREDIT',
             },
           },
-        ],
-      },
+        },
+      ],
+    };
 
-      include: {
-        customer: true,
-        salesInvoice: true,
-        serviceInvoice: true,
-        account: true,
-        cashBankTransaction: true,
-      },
+    const [payments, count, aggregate] = await Promise.all([
+      this.prisma.customerPayment.findMany({
+        where,
+        include: {
+          customer: true,
+          branch: true,
+          salesInvoice: true,
+          serviceInvoice: true,
+          account: true,
+          cashBankTransaction: true,
+        },
+        orderBy: [{ paymentDate: 'desc' }, { createdAt: 'desc' }],
+        skip,
+        take: limit,
+      }),
 
-      orderBy: {
-        paymentDate: 'asc',
-      },
-    });
+      this.prisma.customerPayment.count({
+        where,
+      }),
 
-    const total = payments.reduce(
-      (sum, payment) => sum.add(payment.amount),
-      new Prisma.Decimal(0),
-    );
+      this.prisma.customerPayment.aggregate({
+        where,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const total = (
+      aggregate._sum.amount ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: payments.length,
-      total: total.toDecimalPlaces(2),
+      count,
+      total,
       collections: payments,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -1263,67 +1455,110 @@ export class ReportsService {
   ) {
     query = this.scopeReportQuery(query, user);
 
-    const records = await this.prisma.accountsPayable.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+    const payableWhere: Prisma.AccountsPayableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+    };
+
+    const supplierWhere: Prisma.SupplierWhereInput = {
+      ...(query.supplierId ? { id: query.supplierId } : {}),
+      accountsPayables: {
+        some: {
+          ...(query.branchId ? { branchId: query.branchId } : {}),
+        },
       },
+    };
 
-      include: {
-        supplier: true,
-      },
+    const [suppliers, totalSuppliers, payableTotals] = await Promise.all([
+      this.prisma.supplier.findMany({
+        where: supplierWhere,
+        orderBy: [{ name: 'asc' }, { id: 'asc' }],
+        skip,
+        take: limit,
+      }),
 
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
+      this.prisma.supplier.count({
+        where: supplierWhere,
+      }),
 
-    const grouped = new Map<
-      string,
-      {
-        supplier: (typeof records)[number]['supplier'];
-        payableCount: number;
-        originalAmount: Prisma.Decimal;
-        amountPaid: Prisma.Decimal;
-        balanceDue: Prisma.Decimal;
-      }
-    >();
+      this.prisma.accountsPayable.aggregate({
+        where: payableWhere,
+        _count: {
+          _all: true,
+        },
+        _sum: {
+          originalAmount: true,
+          amountPaid: true,
+          balanceDue: true,
+        },
+      }),
+    ]);
 
-    for (const record of records) {
-      const existing = grouped.get(record.supplierId);
+    const supplierIds = suppliers.map((supplier) => supplier.id);
 
-      if (!existing) {
-        grouped.set(record.supplierId, {
-          supplier: record.supplier,
-          payableCount: 1,
-          originalAmount: record.originalAmount,
-          amountPaid: record.amountPaid,
-          balanceDue: record.balanceDue,
-        });
+    const grouped = supplierIds.length
+      ? await this.prisma.accountsPayable.groupBy({
+          by: ['supplierId'],
+          where: {
+            ...payableWhere,
+            supplierId: {
+              in: supplierIds,
+            },
+          },
+          _count: {
+            _all: true,
+          },
+          _sum: {
+            originalAmount: true,
+            amountPaid: true,
+            balanceDue: true,
+          },
+        })
+      : [];
 
-        continue;
-      }
+    const groupedBySupplier = new Map<string, (typeof grouped)[number]>();
 
-      existing.payableCount += 1;
-      existing.originalAmount = existing.originalAmount.add(
-        record.originalAmount,
-      );
-      existing.amountPaid = existing.amountPaid.add(record.amountPaid);
-      existing.balanceDue = existing.balanceDue.add(record.balanceDue);
+    for (const item of grouped) {
+      groupedBySupplier.set(item.supplierId, item);
     }
 
-    const suppliers = Array.from(grouped.values()).map((item) => ({
-      supplier: item.supplier,
-      payableCount: item.payableCount,
-      originalAmount: item.originalAmount.toDecimalPlaces(2),
-      amountPaid: item.amountPaid.toDecimalPlaces(2),
-      balanceDue: item.balanceDue.toDecimalPlaces(2),
-    }));
+    const toMoney = (value: Prisma.Decimal | null | undefined) =>
+      (value ?? new Prisma.Decimal(0)).toDecimalPlaces(2);
+
+    const supplierRows = suppliers.map((supplier) => {
+      const aggregate = groupedBySupplier.get(supplier.id);
+
+      return {
+        supplier,
+        payableCount: aggregate?._count._all ?? 0,
+        originalAmount: toMoney(aggregate?._sum.originalAmount),
+        amountPaid: toMoney(aggregate?._sum.amountPaid),
+        balanceDue: toMoney(aggregate?._sum.balanceDue),
+      };
+    });
 
     return {
-      count: suppliers.length,
-      suppliers,
+      count: totalSuppliers,
+      suppliers: supplierRows,
+
+      totals: {
+        supplierCount: totalSuppliers,
+        payableCount: payableTotals._count._all,
+        originalAmount: toMoney(payableTotals._sum.originalAmount),
+        amountPaid: toMoney(payableTotals._sum.amountPaid),
+        balanceDue: toMoney(payableTotals._sum.balanceDue),
+      },
+
+      pagination: {
+        page,
+        limit,
+        total: totalSuppliers,
+        pages: Math.max(1, Math.ceil(totalSuppliers / limit)),
+      },
     };
   }
 
@@ -1332,53 +1567,83 @@ export class ReportsService {
     user: AuthenticatedUser,
   ) {
     query = this.scopeReportQuery(query, user);
-    const records = await this.prisma.accountsPayable.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
 
-        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-        status: {
-          in: ['OPEN', 'PARTIALLY_PAID'],
-        },
+    const where: Prisma.AccountsPayableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.supplierId ? { supplierId: query.supplierId } : {}),
 
-        balanceDue: {
-          gt: 0,
-        },
+      status: {
+        in: ['OPEN', 'PARTIALLY_PAID'],
       },
 
-      include: {
-        supplier: true,
-        purchaseInvoice: true,
-        payments: {
-          where: {
-            status: 'POSTED',
-          },
-          orderBy: {
-            paymentDate: 'asc',
-          },
-        },
+      balanceDue: {
+        gt: 0,
       },
+    };
 
-      orderBy: [
-        {
-          dueDate: 'asc',
-        },
-        {
-          createdAt: 'asc',
-        },
-      ],
-    });
+    const [records, count, aggregate] = await Promise.all([
+      this.prisma.accountsPayable.findMany({
+        where,
 
-    const total = records.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
+        include: {
+          supplier: true,
+          purchaseInvoice: true,
+
+          payments: {
+            where: {
+              status: 'POSTED',
+            },
+            orderBy: {
+              paymentDate: 'asc',
+            },
+          },
+        },
+
+        orderBy: [
+          {
+            dueDate: 'asc',
+          },
+          {
+            createdAt: 'asc',
+          },
+        ],
+
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.accountsPayable.count({
+        where,
+      }),
+
+      this.prisma.accountsPayable.aggregate({
+        where,
+
+        _sum: {
+          balanceDue: true,
+        },
+      }),
+    ]);
+
+    const total = (
+      aggregate._sum.balanceDue ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
-      count: records.length,
-      total: total.toDecimalPlaces(2),
+      count,
+      total,
       records,
+
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -1387,6 +1652,11 @@ export class ReportsService {
     user: AuthenticatedUser,
   ) {
     query = this.scopeReportQuery(query, user);
+
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
+
     const asOfDate = query.asOfDate
       ? new Date(`${query.asOfDate}T23:59:59.999Z`)
       : new Date();
@@ -1395,88 +1665,106 @@ export class ReportsService {
       throw new BadRequestException('Invalid asOfDate.');
     }
 
-    const records = await this.prisma.accountsPayable.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
+    // Compare due dates by calendar day so invoices due today
+    // are not prematurely classified as overdue.
+    const startOfAsOfDate = new Date(
+      Date.UTC(
+        asOfDate.getUTCFullYear(),
+        asOfDate.getUTCMonth(),
+        asOfDate.getUTCDate(),
+      ),
+    );
 
-        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+    const baseWhere: Prisma.AccountsPayableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.supplierId ? { supplierId: query.supplierId } : {}),
 
-        status: {
-          in: ['OPEN', 'PARTIALLY_PAID'],
-        },
-
-        balanceDue: {
-          gt: 0,
-        },
+      status: {
+        in: ['OPEN', 'PARTIALLY_PAID'],
       },
 
-      include: {
-        supplier: true,
-        purchaseInvoice: true,
+      balanceDue: {
+        gt: 0,
       },
+    };
 
-      orderBy: [
-        {
-          dueDate: 'asc',
+    const overdueWhere: Prisma.AccountsPayableWhereInput = {
+      ...baseWhere,
+      dueDate: {
+        lt: startOfAsOfDate,
+      },
+    };
+
+    const dueWhere: Prisma.AccountsPayableWhereInput = {
+      ...baseWhere,
+      dueDate: {
+        gte: startOfAsOfDate,
+      },
+    };
+
+    const noDueDateWhere: Prisma.AccountsPayableWhereInput = {
+      ...baseWhere,
+      dueDate: null,
+    };
+
+    const loadBucket = async (where: Prisma.AccountsPayableWhereInput) => {
+      const [records, count, aggregate] = await Promise.all([
+        this.prisma.accountsPayable.findMany({
+          where,
+
+          include: {
+            supplier: true,
+            purchaseInvoice: true,
+          },
+
+          orderBy: [{ dueDate: 'asc' }, { createdAt: 'asc' }],
+
+          skip,
+          take: limit,
+        }),
+
+        this.prisma.accountsPayable.count({
+          where,
+        }),
+
+        this.prisma.accountsPayable.aggregate({
+          where,
+
+          _sum: {
+            balanceDue: true,
+          },
+        }),
+      ]);
+
+      const total = (
+        aggregate._sum.balanceDue ?? new Prisma.Decimal(0)
+      ).toDecimalPlaces(2);
+
+      return {
+        count,
+        total,
+        records,
+
+        pagination: {
+          page,
+          limit,
+          total: count,
+          pages: Math.max(1, Math.ceil(count / limit)),
         },
-        {
-          createdAt: 'asc',
-        },
-      ],
-    });
+      };
+    };
 
-    const due: typeof records = [];
-    const overdue: typeof records = [];
-    const noDueDate: typeof records = [];
-
-    for (const record of records) {
-      if (!record.dueDate) {
-        noDueDate.push(record);
-        continue;
-      }
-
-      if (record.dueDate < asOfDate) {
-        overdue.push(record);
-      } else {
-        due.push(record);
-      }
-    }
-
-    const dueTotal = due.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
-
-    const overdueTotal = overdue.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
-
-    const noDueDateTotal = noDueDate.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
+    const [overdue, due, noDueDate] = await Promise.all([
+      loadBucket(overdueWhere),
+      loadBucket(dueWhere),
+      loadBucket(noDueDateWhere),
+    ]);
 
     return {
-      asOfDate,
-
-      due: {
-        count: due.length,
-        total: dueTotal.toDecimalPlaces(2),
-        records: due,
-      },
-
-      overdue: {
-        count: overdue.length,
-        total: overdueTotal.toDecimalPlaces(2),
-        records: overdue,
-      },
-
-      noDueDate: {
-        count: noDueDate.length,
-        total: noDueDateTotal.toDecimalPlaces(2),
-        records: noDueDate,
-      },
+      asOfDate: asOfDate.toISOString(),
+      overdue,
+      due,
+      noDueDate,
     };
   }
 
@@ -1486,58 +1774,95 @@ export class ReportsService {
   ) {
     query = this.scopeReportQuery(query, user);
 
-    const paymentDate =
-      query.from || query.to
-        ? {
-            ...(query.from
-              ? {
-                  gte: new Date(`${query.from}T00:00:00.000Z`),
-                }
-              : {}),
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-            ...(query.to
-              ? {
-                  lte: new Date(`${query.to}T23:59:59.999Z`),
-                }
-              : {}),
+    const fromDate = query.from
+      ? new Date(`${query.from}T00:00:00.000Z`)
+      : undefined;
+
+    const toDate = query.to ? new Date(`${query.to}T23:59:59.999Z`) : undefined;
+
+    if (fromDate && toDate && fromDate.getTime() > toDate.getTime()) {
+      throw new BadRequestException(
+        'The from date must be on or before the to date.',
+      );
+    }
+
+    const paymentDate =
+      fromDate || toDate
+        ? {
+            ...(fromDate ? { gte: fromDate } : {}),
+            ...(toDate ? { lte: toDate } : {}),
           }
         : undefined;
 
-    const payments = await this.prisma.supplierPayment.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
+    const where: Prisma.SupplierPaymentWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.supplierId ? { supplierId: query.supplierId } : {}),
 
-        ...(query.supplierId ? { supplierId: query.supplierId } : {}),
+      status: 'POSTED',
 
-        status: 'POSTED',
+      ...(paymentDate ? { paymentDate } : {}),
+    };
 
-        ...(paymentDate ? { paymentDate } : {}),
-      },
+    const [payments, count, aggregate] = await Promise.all([
+      this.prisma.supplierPayment.findMany({
+        where,
 
-      include: {
-        supplier: true,
-        accountsPayable: true,
-        account: true,
-        cashBankTransaction: true,
-        paymentVoucher: true,
-      },
+        include: {
+          supplier: true,
 
-      orderBy: {
-        paymentDate: 'asc',
-      },
-    });
+          accountsPayable: {
+            include: {
+              purchaseInvoice: true,
+            },
+          },
 
-    const total = payments.reduce(
-      (sum, payment) => sum.add(payment.amount),
-      new Prisma.Decimal(0),
-    );
+          account: true,
+          cashBankTransaction: true,
+          paymentVoucher: true,
+        },
+
+        // Most recent payments first.
+        orderBy: [{ paymentDate: 'desc' }, { createdAt: 'desc' }],
+
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.supplierPayment.count({
+        where,
+      }),
+
+      this.prisma.supplierPayment.aggregate({
+        where,
+
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const total = (
+      aggregate._sum.amount ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: payments.length,
-      total: total.toDecimalPlaces(2),
+
+      count,
+      total,
       payments,
+
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -2059,49 +2384,75 @@ export class ReportsService {
 
   async openServiceJobs(query: ServiceReportQueryDto, user: AuthenticatedUser) {
     query = this.scopeReportQuery(query, user);
+
     const createdAt = this.getServiceDateRange(query);
 
-    const jobs = await this.prisma.serviceJob.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-        ...(query.customerId ? { customerId: query.customerId } : {}),
-        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
-        status: {
-          notIn: ['COMPLETED', 'CANCELLED'],
-        },
-        ...(Object.keys(createdAt).length ? { createdAt } : {}),
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.ServiceJobWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+      status: {
+        notIn: ['COMPLETED', 'CANCELLED'],
       },
-      include: {
-        branch: true,
-        customer: true,
-        technician: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            fullName: true,
-            role: true,
-            status: true,
-            branchId: true,
+      ...(Object.keys(createdAt).length ? { createdAt } : {}),
+    };
+
+    const [jobs, total] = await Promise.all([
+      this.prisma.serviceJob.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          branch: true,
+          customer: true,
+          technician: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              fullName: true,
+              role: true,
+              status: true,
+              branchId: true,
+            },
           },
-        },
-        parts: {
-          include: {
-            product: true,
+          parts: {
+            include: {
+              product: true,
+            },
           },
+          invoice: true,
         },
-        invoice: true,
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
+        orderBy: [
+          {
+            createdAt: 'asc',
+          },
+          {
+            id: 'asc',
+          },
+        ],
+      }),
+
+      this.prisma.serviceJob.count({
+        where,
+      }),
+    ]);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: jobs.length,
+      count: total,
       jobs,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
     };
   }
 
@@ -2112,50 +2463,61 @@ export class ReportsService {
     query = this.scopeReportQuery(query, user);
 
     const completedAt = this.getServiceDateRange(query);
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const jobs = await this.prisma.serviceJob.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-        ...(query.customerId ? { customerId: query.customerId } : {}),
-        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
-        status: 'COMPLETED',
-        ...(Object.keys(completedAt).length
-          ? {
-              completedAt: completedAt,
-            }
-          : {}),
-      },
-      include: {
-        branch: true,
-        customer: true,
-        technician: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            fullName: true,
-            role: true,
-            status: true,
-            branchId: true,
+    const where: Prisma.ServiceJobWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+      status: 'COMPLETED',
+      ...(Object.keys(completedAt).length ? { completedAt } : {}),
+    };
+
+    const [jobs, total] = await Promise.all([
+      this.prisma.serviceJob.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          branch: true,
+          customer: true,
+          technician: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              fullName: true,
+              role: true,
+              status: true,
+              branchId: true,
+            },
           },
-        },
-        parts: {
-          include: {
-            product: true,
+          parts: {
+            include: {
+              product: true,
+            },
           },
+          invoice: true,
         },
-        invoice: true,
-      },
-      orderBy: {
-        completedAt: 'asc',
-      },
-    });
+        orderBy: [{ completedAt: 'desc' }, { id: 'desc' }],
+      }),
+
+      this.prisma.serviceJob.count({ where }),
+    ]);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: jobs.length,
+      count: total,
       jobs,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
     };
   }
 
@@ -2163,53 +2525,68 @@ export class ReportsService {
     query = this.scopeReportQuery(query, user);
 
     const createdAt = this.getServiceDateRange(query);
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const jobs = await this.prisma.serviceJob.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-        ...(query.customerId ? { customerId: query.customerId } : {}),
-        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
-        status: {
-          in: [
-            'AWAITING_APPROVAL',
-            'APPROVED',
-            'IN_PROGRESS',
-            'READY_FOR_RELEASE',
-          ],
-        },
-        ...(Object.keys(createdAt).length ? { createdAt } : {}),
+    const where: Prisma.ServiceJobWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+      status: {
+        in: [
+          'AWAITING_APPROVAL',
+          'APPROVED',
+          'IN_PROGRESS',
+          'READY_FOR_RELEASE',
+        ],
       },
-      include: {
-        branch: true,
-        customer: true,
-        technician: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            fullName: true,
-            role: true,
-            status: true,
-            branchId: true,
+      ...(Object.keys(createdAt).length ? { createdAt } : {}),
+    };
+
+    const [jobs, total] = await Promise.all([
+      this.prisma.serviceJob.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          branch: true,
+          customer: true,
+          technician: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              fullName: true,
+              role: true,
+              status: true,
+              branchId: true,
+            },
           },
-        },
-        parts: {
-          include: {
-            product: true,
+          parts: {
+            include: {
+              product: true,
+            },
           },
+          invoice: true,
         },
-        invoice: true,
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      }),
+
+      this.prisma.serviceJob.count({ where }),
+    ]);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: jobs.length,
+      count: total,
       jobs,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
     };
   }
 
@@ -2220,85 +2597,90 @@ export class ReportsService {
     query = this.scopeReportQuery(query, user);
 
     const createdAt = this.getServiceDateRange(query);
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const parts = await this.prisma.serviceJobPart.findMany({
-      where: {
-        issuedQuantity: {
-          gt: 0,
-        },
-        ...(query.productId ? { productId: query.productId } : {}),
-        ...(query.branchId
-          ? {
-              serviceJob: {
-                branchId: query.branchId,
-              },
-            }
-          : {}),
-        ...(query.customerId
-          ? {
-              serviceJob: {
-                customerId: query.customerId,
-              },
-            }
-          : {}),
-        ...(query.technicianId
-          ? {
-              serviceJob: {
-                technicianId: query.technicianId,
-              },
-            }
-          : {}),
-        ...(Object.keys(createdAt).length
-          ? {
-              serviceJob: {
-                createdAt,
-              },
-            }
-          : {}),
+    const serviceJobWhere: Prisma.ServiceJobWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      ...(query.technicianId ? { technicianId: query.technicianId } : {}),
+      ...(Object.keys(createdAt).length ? { createdAt } : {}),
+    };
+
+    const where: Prisma.ServiceJobPartWhereInput = {
+      issuedQuantity: {
+        gt: 0,
       },
-      include: {
-        product: true,
-        serviceJob: {
-          include: {
-            customer: true,
-            technician: {
-              select: {
-                id: true,
-                username: true,
-                email: true,
-                fullName: true,
-                role: true,
-                status: true,
-                branchId: true,
+      ...(query.productId ? { productId: query.productId } : {}),
+      serviceJob: serviceJobWhere,
+    };
+
+    const [parts, total, aggregate] = await Promise.all([
+      this.prisma.serviceJobPart.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          product: true,
+          serviceJob: {
+            include: {
+              branch: true,
+              customer: true,
+              technician: {
+                select: {
+                  id: true,
+                  username: true,
+                  email: true,
+                  fullName: true,
+                  role: true,
+                  status: true,
+                  branchId: true,
+                },
               },
             },
           },
         },
-      },
-      orderBy: {
-        serviceJob: {
-          createdAt: 'asc',
+        orderBy: [
+          {
+            serviceJob: {
+              createdAt: 'desc',
+            },
+          },
+          {
+            id: 'desc',
+          },
+        ],
+      }),
+
+      this.prisma.serviceJobPart.count({
+        where,
+      }),
+
+      this.prisma.serviceJobPart.aggregate({
+        where,
+        _sum: {
+          issuedQuantity: true,
+          totalCost: true,
         },
-      },
-    });
+      }),
+    ]);
 
-    const totalCost = parts.reduce(
-      (sum, part) => sum.add(part.totalCost),
-      new Prisma.Decimal(0),
-    );
-
-    const totalQuantity = parts.reduce(
-      (sum, part) => sum + part.issuedQuantity,
-      0,
-    );
+    const totalCost = aggregate._sum.totalCost ?? new Prisma.Decimal(0);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: parts.length,
-      totalQuantity,
+      count: total,
+      totalQuantity: aggregate._sum.issuedQuantity ?? 0,
       totalCost: totalCost.toDecimalPlaces(2),
       parts,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
     };
   }
 
@@ -2306,68 +2688,122 @@ export class ReportsService {
     query = this.scopeReportQuery(query, user);
 
     const invoiceDate = this.getServiceDateRange(query);
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const invoices = await this.prisma.serviceInvoice.findMany({
-      where: {
-        status: 'POSTED',
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-        ...(query.customerId ? { customerId: query.customerId } : {}),
-        ...(Object.keys(invoiceDate).length ? { invoiceDate } : {}),
-      },
-      include: {
-        branch: true,
-        customer: true,
-        serviceJob: {
-          include: {
-            technician: {
-              select: {
-                id: true,
-                username: true,
-                email: true,
-                fullName: true,
-                role: true,
-                status: true,
-                branchId: true,
+    const where: Prisma.ServiceInvoiceWhereInput = {
+      status: 'POSTED',
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.customerId ? { customerId: query.customerId } : {}),
+      ...(query.technicianId
+        ? {
+            serviceJob: {
+              technicianId: query.technicianId,
+            },
+          }
+        : {}),
+      ...(Object.keys(invoiceDate).length ? { invoiceDate } : {}),
+    };
+
+    const [
+      invoices,
+      total,
+      invoiceTotals,
+      laborTotals,
+      partsTotals,
+      otherTotals,
+    ] = await Promise.all([
+      this.prisma.serviceInvoice.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          branch: true,
+          customer: true,
+          serviceJob: {
+            include: {
+              technician: {
+                select: {
+                  id: true,
+                  username: true,
+                  email: true,
+                  fullName: true,
+                  role: true,
+                  status: true,
+                  branchId: true,
+                },
               },
             },
           },
+          items: true,
         },
-        items: true,
-      },
-      orderBy: {
-        invoiceDate: 'asc',
-      },
-    });
+        orderBy: [{ invoiceDate: 'desc' }, { id: 'desc' }],
+      }),
 
-    const totalRevenue = invoices.reduce(
-      (sum, invoice) => sum.add(invoice.total),
-      new Prisma.Decimal(0),
-    );
+      this.prisma.serviceInvoice.count({ where }),
 
-    const laborRevenue = invoices
-      .flatMap((invoice) => invoice.items)
-      .filter((item) => item.itemType === 'LABOR')
-      .reduce((sum, item) => sum.add(item.subtotal), new Prisma.Decimal(0));
+      this.prisma.serviceInvoice.aggregate({
+        where,
+        _sum: {
+          total: true,
+        },
+      }),
 
-    const partsRevenue = invoices
-      .flatMap((invoice) => invoice.items)
-      .filter((item) => item.itemType === 'PART')
-      .reduce((sum, item) => sum.add(item.subtotal), new Prisma.Decimal(0));
+      this.prisma.serviceInvoiceItem.aggregate({
+        where: {
+          itemType: 'LABOR',
+          serviceInvoice: where,
+        },
+        _sum: {
+          subtotal: true,
+        },
+      }),
 
-    const otherRevenue = invoices
-      .flatMap((invoice) => invoice.items)
-      .filter((item) => item.itemType === 'OTHER')
-      .reduce((sum, item) => sum.add(item.subtotal), new Prisma.Decimal(0));
+      this.prisma.serviceInvoiceItem.aggregate({
+        where: {
+          itemType: 'PART',
+          serviceInvoice: where,
+        },
+        _sum: {
+          subtotal: true,
+        },
+      }),
+
+      this.prisma.serviceInvoiceItem.aggregate({
+        where: {
+          itemType: 'OTHER',
+          serviceInvoice: where,
+        },
+        _sum: {
+          subtotal: true,
+        },
+      }),
+    ]);
+
+    const totalRevenue = invoiceTotals._sum.total ?? new Prisma.Decimal(0);
+
+    const laborRevenue = laborTotals._sum.subtotal ?? new Prisma.Decimal(0);
+
+    const partsRevenue = partsTotals._sum.subtotal ?? new Prisma.Decimal(0);
+
+    const otherRevenue = otherTotals._sum.subtotal ?? new Prisma.Decimal(0);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      invoiceCount: invoices.length,
+      invoiceCount: total,
       totalRevenue: totalRevenue.toDecimalPlaces(2),
       laborRevenue: laborRevenue.toDecimalPlaces(2),
       partsRevenue: partsRevenue.toDecimalPlaces(2),
       otherRevenue: otherRevenue.toDecimalPlaces(2),
       invoices,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
     };
   }
 
@@ -2378,18 +2814,32 @@ export class ReportsService {
     query = this.scopeReportQuery(query, user);
 
     const createdAt = this.getServiceDateRange(query);
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const jobs = await this.prisma.serviceJob.findMany({
-      where: {
-        technicianId: {
-          not: null,
-        },
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-        ...(query.technicianId ? { technicianId: query.technicianId } : {}),
-        ...(Object.keys(createdAt).length ? { createdAt } : {}),
+    const jobWhere: Prisma.ServiceJobWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.technicianId
+        ? { technicianId: query.technicianId }
+        : { technicianId: { not: null } }),
+      ...(Object.keys(createdAt).length ? { createdAt } : {}),
+    };
+
+    const technicianWhere: Prisma.UserWhereInput = {
+      ...(query.technicianId ? { id: query.technicianId } : {}),
+      serviceJobsAsTechnician: {
+        some: jobWhere,
       },
-      include: {
-        technician: {
+    };
+
+    const [pageTechnicians, totalTechnicians, jobGroups, revenueSummary] =
+      await Promise.all([
+        this.prisma.user.findMany({
+          where: technicianWhere,
+          skip,
+          take: limit,
+          orderBy: [{ fullName: 'asc' }, { id: 'asc' }],
           select: {
             id: true,
             username: true,
@@ -2399,89 +2849,186 @@ export class ReportsService {
             status: true,
             branchId: true,
           },
-        },
-        invoice: {
-          select: {
-            status: true,
+        }),
+
+        this.prisma.user.count({
+          where: technicianWhere,
+        }),
+
+        this.prisma.serviceJob.groupBy({
+          by: ['technicianId', 'status'],
+          where: jobWhere,
+          _count: {
+            _all: true,
+          },
+        }),
+
+        this.prisma.serviceInvoice.aggregate({
+          where: {
+            status: 'POSTED',
+            serviceJob: {
+              is: jobWhere,
+            },
+          },
+          _sum: {
             total: true,
           },
-        },
-      },
-    });
+        }),
+      ]);
 
-    const grouped = new Map<
+    const totalRevenue = revenueSummary._sum.total ?? new Prisma.Decimal(0);
+
+    const overallTotals = jobGroups.reduce(
+      (totals, group) => {
+        const count = group._count._all;
+
+        totals.totalJobs += count;
+
+        if (group.status === 'COMPLETED') {
+          totals.completedJobs += count;
+        } else if (group.status === 'CANCELLED') {
+          totals.cancelledJobs += count;
+        } else {
+          totals.activeJobs += count;
+        }
+
+        return totals;
+      },
+      {
+        totalJobs: 0,
+        completedJobs: 0,
+        activeJobs: 0,
+        cancelledJobs: 0,
+      },
+    );
+
+    const technicianIds = pageTechnicians.map((technician) => technician.id);
+
+    const revenueInvoices =
+      technicianIds.length > 0
+        ? await this.prisma.serviceInvoice.findMany({
+            where: {
+              status: 'POSTED',
+              serviceJob: {
+                is: {
+                  ...jobWhere,
+                  technicianId: {
+                    in: technicianIds,
+                  },
+                },
+              },
+            },
+            select: {
+              total: true,
+              serviceJob: {
+                select: {
+                  technicianId: true,
+                },
+              },
+            },
+          })
+        : [];
+
+    const revenueByTechnician = new Map<string, Prisma.Decimal>();
+
+    for (const invoice of revenueInvoices) {
+      const technicianId = invoice.serviceJob.technicianId;
+
+      if (!technicianId) {
+        continue;
+      }
+
+      const current =
+        revenueByTechnician.get(technicianId) ?? new Prisma.Decimal(0);
+
+      revenueByTechnician.set(technicianId, current.add(invoice.total));
+    }
+
+    const technicianTotals = new Map<
       string,
       {
-        technician: NonNullable<(typeof jobs)[number]['technician']>;
         totalJobs: number;
         completedJobs: number;
         activeJobs: number;
         cancelledJobs: number;
-        serviceRevenue: Prisma.Decimal;
       }
     >();
 
-    for (const job of jobs) {
-      if (!job.technician) {
+    for (const group of jobGroups) {
+      const technicianId = group.technicianId;
+
+      if (!technicianId) {
         continue;
       }
 
-      const existing = grouped.get(job.technician.id);
+      const current = technicianTotals.get(technicianId) ?? {
+        totalJobs: 0,
+        completedJobs: 0,
+        activeJobs: 0,
+        cancelledJobs: 0,
+      };
 
-      const revenue =
-        job.invoice?.status === 'POSTED'
-          ? job.invoice.total
-          : new Prisma.Decimal(0);
+      const count = group._count._all;
+      current.totalJobs += count;
 
-      if (!existing) {
-        grouped.set(job.technician.id, {
-          technician: job.technician,
-          totalJobs: 1,
-          completedJobs: job.status === 'COMPLETED' ? 1 : 0,
-          activeJobs:
-            job.status !== 'COMPLETED' && job.status !== 'CANCELLED' ? 1 : 0,
-          cancelledJobs: job.status === 'CANCELLED' ? 1 : 0,
-          serviceRevenue: revenue,
-        });
-
-        continue;
+      if (group.status === 'COMPLETED') {
+        current.completedJobs += count;
+      } else if (group.status === 'CANCELLED') {
+        current.cancelledJobs += count;
+      } else {
+        current.activeJobs += count;
       }
 
-      existing.totalJobs += 1;
-
-      if (job.status === 'COMPLETED') {
-        existing.completedJobs += 1;
-      }
-
-      if (job.status !== 'COMPLETED' && job.status !== 'CANCELLED') {
-        existing.activeJobs += 1;
-      }
-
-      if (job.status === 'CANCELLED') {
-        existing.cancelledJobs += 1;
-      }
-
-      existing.serviceRevenue = existing.serviceRevenue.add(revenue);
+      technicianTotals.set(technicianId, current);
     }
 
-    const technicians = Array.from(grouped.values()).map((item) => ({
-      technician: item.technician,
-      totalJobs: item.totalJobs,
-      completedJobs: item.completedJobs,
-      activeJobs: item.activeJobs,
-      cancelledJobs: item.cancelledJobs,
-      completionRate:
-        item.totalJobs > 0
-          ? Number(((item.completedJobs / item.totalJobs) * 100).toFixed(2))
-          : 0,
-      serviceRevenue: item.serviceRevenue.toDecimalPlaces(2),
-    }));
+    const technicians = pageTechnicians.map((technician) => {
+      const stats = technicianTotals.get(technician.id) ?? {
+        totalJobs: 0,
+        completedJobs: 0,
+        activeJobs: 0,
+        cancelledJobs: 0,
+      };
+
+      const serviceRevenue =
+        revenueByTechnician.get(technician.id) ?? new Prisma.Decimal(0);
+
+      return {
+        technician,
+        ...stats,
+        completionRate:
+          stats.totalJobs > 0
+            ? Number(((stats.completedJobs / stats.totalJobs) * 100).toFixed(2))
+            : 0,
+        serviceRevenue: serviceRevenue.toDecimalPlaces(2),
+      };
+    });
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: technicians.length,
+      count: totalTechnicians,
+      totals: {
+        totalTechnicians,
+        ...overallTotals,
+        serviceRevenue: totalRevenue.toDecimalPlaces(2),
+        completionRate:
+          overallTotals.totalJobs > 0
+            ? Number(
+                (
+                  (overallTotals.completedJobs / overallTotals.totalJobs) *
+                  100
+                ).toFixed(2),
+              )
+            : 0,
+      },
       technicians,
+      pagination: {
+        page,
+        limit,
+        total: totalTechnicians,
+        pages: Math.ceil(totalTechnicians / limit),
+      },
     };
   }
 
