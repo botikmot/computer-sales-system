@@ -249,6 +249,28 @@ export default function ReportsPage() {
       "Aging of Receivables": "/reports/accounts-receivable/aging",
       "Collection Report": "/reports/accounts-receivable/collections",
     },
+    "cash-bank": {
+      "Daily Cash Report": "/reports/cash-bank/daily",
+      "Cash Receipts": "/reports/cash-bank/receipts",
+      "Cash Disbursements": "/reports/cash-bank/disbursements",
+      "Bank Transactions": "/reports/cash-bank/transactions",
+      "Bank Reconciliation": "/reports/cash-bank/reconciliation",
+    },
+    "petty-cash": {
+      "Petty Cash Transactions": "/reports/petty-cash/transactions",
+      "Petty Cash Vouchers": "/reports/petty-cash/vouchers",
+      "Replenishment Report": "/reports/petty-cash/replenishments",
+      "Petty Cash Balance": "/reports/petty-cash/balance",
+    },
+    management: {
+      "Income Statement": "/reports/management/income-statement",
+      "Balance Sheet": "/reports/management/balance-sheet",
+      "Cash Flow Report": "/reports/management/cash-flow",
+      "Sales and Profitability Report":
+        "/reports/management/sales-profitability",
+      "Inventory Valuation": "/reports/management/inventory-valuation",
+      "A/R and A/P Aging": "/reports/management/ar-ap-aging",
+    },
   };
 
   return (

@@ -409,103 +409,201 @@ export class ReportsService {
 
     const { start, end } = this.getDayRange(query.date);
 
-    const accounts = await this.prisma.cashBankAccount.findMany({
-      where: {
-        accountType: 'CASH',
-        isActive: true,
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-        ...(query.accountId ? { id: query.accountId } : {}),
-      },
-      select: {
-        id: true,
-        branchId: true,
-        name: true,
-        accountNumber: true,
-        openingBalance: true,
-      },
-    });
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    let openingBalance = new Prisma.Decimal(0);
-    let cashReceipts = new Prisma.Decimal(0);
-    let cashDisbursements = new Prisma.Decimal(0);
+    const accountWhere: Prisma.CashBankAccountWhereInput = {
+      accountType: 'CASH',
+      isActive: true,
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      ...(query.accountId ? { id: query.accountId } : {}),
+    };
 
-    for (const account of accounts) {
-      const [before, inToday, outToday] = await Promise.all([
-        this.prisma.cashBankTransaction.findMany({
-          where: {
-            accountId: account.id,
-            transactionDate: {
-              lt: start,
-            },
-          },
+    const [accountIds, accountCount, accounts, openingAggregate] =
+      await Promise.all([
+        this.prisma.cashBankAccount.findMany({
+          where: accountWhere,
           select: {
-            direction: true,
-            amount: true,
+            id: true,
           },
         }),
 
-        this.prisma.cashBankTransaction.aggregate({
-          where: {
-            accountId: account.id,
-            transactionDate: {
-              gte: start,
-              lte: end,
-            },
-            direction: 'IN',
-          },
-          _sum: {
-            amount: true,
-          },
+        this.prisma.cashBankAccount.count({
+          where: accountWhere,
         }),
 
-        this.prisma.cashBankTransaction.aggregate({
-          where: {
-            accountId: account.id,
-            transactionDate: {
-              gte: start,
-              lte: end,
+        this.prisma.cashBankAccount.findMany({
+          where: accountWhere,
+          select: {
+            id: true,
+            branchId: true,
+            name: true,
+            accountNumber: true,
+            openingBalance: true,
+            branch: {
+              select: {
+                id: true,
+                code: true,
+                name: true,
+              },
             },
-            direction: 'OUT',
           },
+          orderBy: [{ name: 'asc' }, { id: 'asc' }],
+          skip,
+          take: limit,
+        }),
+
+        this.prisma.cashBankAccount.aggregate({
+          where: accountWhere,
           _sum: {
-            amount: true,
+            openingBalance: true,
           },
         }),
       ]);
 
-      let accountOpening = account.openingBalance;
+    const allAccountIds = accountIds.map((account) => account.id);
+    const pageAccountIds = accounts.map((account) => account.id);
 
-      for (const transaction of before) {
-        if (transaction.direction === 'IN') {
-          accountOpening = accountOpening.add(transaction.amount);
-        } else {
-          accountOpening = accountOpening.sub(transaction.amount);
-        }
-      }
+    const [
+      historicalTotals,
+      dailyTotals,
+      accountHistoricalTotals,
+      accountDailyTotals,
+    ] = await Promise.all([
+      this.prisma.cashBankTransaction.groupBy({
+        by: ['direction'],
+        where: {
+          accountId: { in: allAccountIds },
+          transactionDate: { lt: start },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-      openingBalance = openingBalance.add(accountOpening);
+      this.prisma.cashBankTransaction.groupBy({
+        by: ['direction'],
+        where: {
+          accountId: { in: allAccountIds },
+          transactionDate: {
+            gte: start,
+            lte: end,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-      cashReceipts = cashReceipts.add(
-        inToday._sum.amount ?? new Prisma.Decimal(0),
-      );
+      this.prisma.cashBankTransaction.groupBy({
+        by: ['accountId', 'direction'],
+        where: {
+          accountId: { in: pageAccountIds },
+          transactionDate: { lt: start },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
 
-      cashDisbursements = cashDisbursements.add(
-        outToday._sum.amount ?? new Prisma.Decimal(0),
-      );
-    }
+      this.prisma.cashBankTransaction.groupBy({
+        by: ['accountId', 'direction'],
+        where: {
+          accountId: { in: pageAccountIds },
+          transactionDate: {
+            gte: start,
+            lte: end,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const amountByDirection = (
+      rows: typeof historicalTotals,
+      direction: 'IN' | 'OUT',
+    ) =>
+      rows.find((row) => row.direction === direction)?._sum.amount ??
+      new Prisma.Decimal(0);
+
+    const accountAmount = (
+      rows: typeof accountHistoricalTotals,
+      accountId: string,
+      direction: 'IN' | 'OUT',
+    ) =>
+      rows.find(
+        (row) => row.accountId === accountId && row.direction === direction,
+      )?._sum.amount ?? new Prisma.Decimal(0);
+
+    const openingBalance = (
+      openingAggregate._sum.openingBalance ?? new Prisma.Decimal(0)
+    )
+      .add(amountByDirection(historicalTotals, 'IN'))
+      .sub(amountByDirection(historicalTotals, 'OUT'))
+      .toDecimalPlaces(2);
+
+    const cashReceipts = amountByDirection(dailyTotals, 'IN').toDecimalPlaces(
+      2,
+    );
+
+    const cashDisbursements = amountByDirection(
+      dailyTotals,
+      'OUT',
+    ).toDecimalPlaces(2);
 
     const closingBalance = openingBalance
       .add(cashReceipts)
       .sub(cashDisbursements)
       .toDecimalPlaces(2);
 
+    const accountRows = accounts.map((account) => {
+      const opening = account.openingBalance
+        .add(accountAmount(accountHistoricalTotals, account.id, 'IN'))
+        .sub(accountAmount(accountHistoricalTotals, account.id, 'OUT'))
+        .toDecimalPlaces(2);
+
+      const receipts = accountAmount(
+        accountDailyTotals,
+        account.id,
+        'IN',
+      ).toDecimalPlaces(2);
+
+      const disbursements = accountAmount(
+        accountDailyTotals,
+        account.id,
+        'OUT',
+      ).toDecimalPlaces(2);
+
+      return {
+        ...account,
+        configuredOpeningBalance: account.openingBalance.toDecimalPlaces(2),
+        openingBalance: opening,
+        cashReceipts: receipts,
+        cashDisbursements: disbursements,
+        closingBalance: opening
+          .add(receipts)
+          .sub(disbursements)
+          .toDecimalPlaces(2),
+      };
+    });
+
     return {
-      date: query.date,
-      openingBalance: openingBalance.toDecimalPlaces(2),
-      cashReceipts: cashReceipts.toDecimalPlaces(2),
-      cashDisbursements: cashDisbursements.toDecimalPlaces(2),
+      date: query.date ?? start.toISOString().slice(0, 10),
+      openingBalance,
+      cashReceipts,
+      cashDisbursements,
       closingBalance,
-      accounts,
+      count: accountCount,
+      accounts: accountRows,
+      pagination: {
+        page,
+        limit,
+        total: accountCount,
+        pages: Math.max(1, Math.ceil(accountCount / limit)),
+      },
     };
   }
 
@@ -514,28 +612,52 @@ export class ReportsService {
 
     const { start, end } = this.getDateRange(query);
 
-    const transactions = await this.prisma.cashBankTransaction.findMany({
-      where: this.buildTransactionWhere(query, start, end, 'IN', 'CASH'),
-      include: {
-        account: true,
-        branch: true,
-      },
-      orderBy: {
-        transactionDate: 'asc',
-      },
-    });
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const total = transactions.reduce(
-      (sum, transaction) => sum.add(transaction.amount),
-      new Prisma.Decimal(0),
-    );
+    const where = this.buildTransactionWhere(query, start, end, 'IN', 'CASH');
+
+    const [transactions, count, aggregate] = await Promise.all([
+      this.prisma.cashBankTransaction.findMany({
+        where,
+        include: {
+          account: true,
+          branch: true,
+        },
+        orderBy: [{ transactionDate: 'asc' }, { createdAt: 'asc' }],
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.cashBankTransaction.count({
+        where,
+      }),
+
+      this.prisma.cashBankTransaction.aggregate({
+        where,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const total = (
+      aggregate._sum.amount ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
-      from: query.from,
-      to: query.to,
-      count: transactions.length,
-      total: total.toDecimalPlaces(2),
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count,
+      total,
       transactions,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -547,28 +669,52 @@ export class ReportsService {
 
     const { start, end } = this.getDateRange(query);
 
-    const transactions = await this.prisma.cashBankTransaction.findMany({
-      where: this.buildTransactionWhere(query, start, end, 'OUT', 'CASH'),
-      include: {
-        account: true,
-        branch: true,
-      },
-      orderBy: {
-        transactionDate: 'asc',
-      },
-    });
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const total = transactions.reduce(
-      (sum, transaction) => sum.add(transaction.amount),
-      new Prisma.Decimal(0),
-    );
+    const where = this.buildTransactionWhere(query, start, end, 'OUT', 'CASH');
+
+    const [transactions, count, aggregate] = await Promise.all([
+      this.prisma.cashBankTransaction.findMany({
+        where,
+        include: {
+          account: true,
+          branch: true,
+        },
+        orderBy: [{ transactionDate: 'asc' }, { createdAt: 'asc' }],
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.cashBankTransaction.count({
+        where,
+      }),
+
+      this.prisma.cashBankTransaction.aggregate({
+        where,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const total = (
+      aggregate._sum.amount ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
-      from: query.from,
-      to: query.to,
-      count: transactions.length,
-      total: total.toDecimalPlaces(2),
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count,
+      total,
       transactions,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -580,39 +726,78 @@ export class ReportsService {
 
     const { start, end } = this.getDateRange(query);
 
-    const transactions = await this.prisma.cashBankTransaction.findMany({
-      where: this.buildTransactionWhere(query, start, end, undefined, 'BANK'),
-      include: {
-        account: true,
-        branch: true,
-      },
-      orderBy: {
-        transactionDate: 'asc',
-      },
-    });
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
 
-    const totalIn = transactions
-      .filter((transaction) => transaction.direction === 'IN')
-      .reduce(
-        (sum, transaction) => sum.add(transaction.amount),
-        new Prisma.Decimal(0),
-      );
+    const where = this.buildTransactionWhere(
+      query,
+      start,
+      end,
+      undefined,
+      'BANK',
+    );
 
-    const totalOut = transactions
-      .filter((transaction) => transaction.direction === 'OUT')
-      .reduce(
-        (sum, transaction) => sum.add(transaction.amount),
-        new Prisma.Decimal(0),
-      );
+    const inWhere = this.buildTransactionWhere(query, start, end, 'IN', 'BANK');
+
+    const outWhere = this.buildTransactionWhere(
+      query,
+      start,
+      end,
+      'OUT',
+      'BANK',
+    );
+
+    const [transactions, count, totalInAggregate, totalOutAggregate] =
+      await Promise.all([
+        this.prisma.cashBankTransaction.findMany({
+          where,
+          include: {
+            account: true,
+            branch: true,
+          },
+          orderBy: [{ transactionDate: 'asc' }, { createdAt: 'asc' }],
+          skip,
+          take: limit,
+        }),
+
+        this.prisma.cashBankTransaction.count({ where }),
+
+        this.prisma.cashBankTransaction.aggregate({
+          where: inWhere,
+          _sum: { amount: true },
+        }),
+
+        this.prisma.cashBankTransaction.aggregate({
+          where: outWhere,
+          _sum: { amount: true },
+        }),
+      ]);
+
+    const totalIn = (
+      totalInAggregate._sum.amount ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
+
+    const totalOut = (
+      totalOutAggregate._sum.amount ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
+
+    const net = totalIn.sub(totalOut).toDecimalPlaces(2);
 
     return {
-      from: query.from,
-      to: query.to,
-      count: transactions.length,
-      totalIn: totalIn.toDecimalPlaces(2),
-      totalOut: totalOut.toDecimalPlaces(2),
-      net: totalIn.sub(totalOut).toDecimalPlaces(2),
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count,
+      totalIn,
+      totalOut,
+      net,
       transactions,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
+      },
     };
   }
 
@@ -622,9 +807,18 @@ export class ReportsService {
   ) {
     query = this.scopeReportQuery(query, user);
 
+    const page = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+    const skip = (page - 1) * limit;
+
     const where: Prisma.BankReconciliationWhereInput = {
       ...(query.branchId ? { branchId: query.branchId } : {}),
       ...(query.accountId ? { accountId: query.accountId } : {}),
+      account: {
+        is: {
+          accountType: 'BANK',
+        },
+      },
     };
 
     if (query.from || query.to) {
@@ -640,21 +834,53 @@ export class ReportsService {
       };
     }
 
-    return this.prisma.bankReconciliation.findMany({
-      where,
-      include: {
-        account: true,
-        branch: true,
-        items: {
-          include: {
-            cashBankTransaction: true,
+    const [reconciliations, count, statusGroups] = await Promise.all([
+      this.prisma.bankReconciliation.findMany({
+        where,
+        include: {
+          account: true,
+          branch: true,
+          items: {
+            include: {
+              cashBankTransaction: true,
+            },
+            orderBy: {
+              createdAt: 'asc',
+            },
           },
         },
+        orderBy: [{ statementDate: 'desc' }, { createdAt: 'desc' }],
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.bankReconciliation.count({ where }),
+
+      this.prisma.bankReconciliation.groupBy({
+        by: ['status'],
+        where,
+        _count: {
+          _all: true,
+        },
+      }),
+    ]);
+
+    return {
+      from: query.from ?? null,
+      to: query.to ?? null,
+      count,
+      reconciliations,
+      statusCounts: statusGroups.map((group) => ({
+        status: group.status,
+        count: group._count._all,
+      })),
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.max(1, Math.ceil(count / limit)),
       },
-      orderBy: {
-        statementDate: 'desc',
-      },
-    });
+    };
   }
 
   async pettyCashVouchers(
@@ -665,43 +891,70 @@ export class ReportsService {
 
     const expenseDate = this.getOptionalDateRange(query.from, query.to);
 
+    const where: Prisma.PettyCashVoucherWhereInput = {
+      status: 'POSTED',
+
+      ...(query.fundId ? { fundId: query.fundId } : {}),
+
+      ...(expenseDate ? { expenseDate } : {}),
+
+      ...(query.branchId
+        ? {
+            fund: {
+              branchId: query.branchId,
+            },
+          }
+        : {}),
+    };
+
+    const requestedPage = query.page ?? 1;
+    const limit = Math.min(query.limit ?? 10, 100);
+
+    const [count, aggregate] = await Promise.all([
+      this.prisma.pettyCashVoucher.count({ where }),
+
+      this.prisma.pettyCashVoucher.aggregate({
+        where,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const pages = Math.max(1, Math.ceil(count / limit));
+    const page = Math.min(requestedPage, pages);
+    const skip = (page - 1) * limit;
+
     const vouchers = await this.prisma.pettyCashVoucher.findMany({
-      where: {
-        status: 'POSTED',
-
-        ...(query.fundId ? { fundId: query.fundId } : {}),
-
-        ...(expenseDate ? { expenseDate } : {}),
-
-        ...(query.branchId
-          ? {
-              fund: {
-                branchId: query.branchId,
-              },
-            }
-          : {}),
-      },
-
+      where,
       include: {
-        fund: true,
+        fund: {
+          include: {
+            branch: true,
+          },
+        },
       },
-
-      orderBy: {
-        expenseDate: 'asc',
-      },
+      orderBy: [{ expenseDate: 'desc' }, { createdAt: 'desc' }],
+      skip,
+      take: limit,
     });
 
-    const total = vouchers.reduce(
-      (sum, voucher) => sum.add(voucher.amount),
-      new Prisma.Decimal(0),
-    );
+    const total = (
+      aggregate._sum.amount ?? new Prisma.Decimal(0)
+    ).toDecimalPlaces(2);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: vouchers.length,
-      total: total.toDecimalPlaces(2),
+      count,
+      total,
       vouchers,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages,
+      },
     };
   }
 
@@ -713,45 +966,81 @@ export class ReportsService {
 
     const replenishmentDate = this.getOptionalDateRange(query.from, query.to);
 
-    const replenishments = await this.prisma.pettyCashReplenishment.findMany({
-      where: {
-        status: 'POSTED',
+    // Normalize pagination and enforce the maximum page size.
+    const page = Math.max(1, Math.trunc(Number(query.page) || 1));
 
-        ...(query.fundId ? { fundId: query.fundId } : {}),
-
-        ...(replenishmentDate ? { replenishmentDate } : {}),
-
-        ...(query.branchId
-          ? {
-              fund: {
-                branchId: query.branchId,
-              },
-            }
-          : {}),
-      },
-
-      include: {
-        fund: true,
-        account: true,
-        cashBankTransaction: true,
-      },
-
-      orderBy: {
-        replenishmentDate: 'asc',
-      },
-    });
-
-    const total = replenishments.reduce(
-      (sum, replenishment) => sum.add(replenishment.amount),
-      new Prisma.Decimal(0),
+    const limit = Math.min(
+      100,
+      Math.max(1, Math.trunc(Number(query.limit) || 10)),
     );
+
+    const skip = (page - 1) * limit;
+
+    // Keep all existing report filters in one shared query.
+    const where = {
+      status: 'POSTED' as const,
+
+      ...(query.fundId ? { fundId: query.fundId } : {}),
+
+      ...(replenishmentDate ? { replenishmentDate } : {}),
+
+      ...(query.branchId
+        ? {
+            fund: {
+              branchId: query.branchId,
+            },
+          }
+        : {}),
+    };
+
+    // Fetch the current page, count all matching records,
+    // and aggregate the amount across all matching records.
+    const [replenishments, count, aggregate] = await Promise.all([
+      this.prisma.pettyCashReplenishment.findMany({
+        where,
+        include: {
+          fund: true,
+          account: true,
+          cashBankTransaction: true,
+        },
+        orderBy: [
+          {
+            replenishmentDate: 'asc',
+          },
+          {
+            id: 'asc',
+          },
+        ],
+        skip,
+        take: limit,
+      }),
+
+      this.prisma.pettyCashReplenishment.count({
+        where,
+      }),
+
+      this.prisma.pettyCashReplenishment.aggregate({
+        where,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const total = aggregate._sum.amount ?? new Prisma.Decimal(0);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: replenishments.length,
+      count,
       total: total.toDecimalPlaces(2),
       replenishments,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: Math.ceil(count / limit),
+      },
     };
   }
 
@@ -765,23 +1054,87 @@ export class ReportsService {
 
     const replenishmentDate = this.getOptionalDateRange(query.from, query.to);
 
+    const limit = Math.min(query.limit ?? 10, 100);
+    const requestedPage = query.page ?? 1;
+
+    const voucherWhere: Prisma.PettyCashVoucherWhereInput = {
+      status: 'POSTED',
+
+      ...(query.fundId ? { fundId: query.fundId } : {}),
+
+      ...(expenseDate ? { expenseDate } : {}),
+
+      ...(query.branchId
+        ? {
+            fund: {
+              branchId: query.branchId,
+            },
+          }
+        : {}),
+    };
+
+    const replenishmentWhere: Prisma.PettyCashReplenishmentWhereInput = {
+      status: 'POSTED',
+
+      ...(query.fundId ? { fundId: query.fundId } : {}),
+
+      ...(replenishmentDate ? { replenishmentDate } : {}),
+
+      ...(query.branchId
+        ? {
+            fund: {
+              branchId: query.branchId,
+            },
+          }
+        : {}),
+    };
+
+    // Counts and totals cover the full filtered dataset,
+    // not only the current page.
+    const [
+      voucherCount,
+      replenishmentCount,
+      voucherAggregate,
+      replenishmentAggregate,
+    ] = await Promise.all([
+      this.prisma.pettyCashVoucher.count({
+        where: voucherWhere,
+      }),
+
+      this.prisma.pettyCashReplenishment.count({
+        where: replenishmentWhere,
+      }),
+
+      this.prisma.pettyCashVoucher.aggregate({
+        where: voucherWhere,
+        _sum: {
+          amount: true,
+        },
+      }),
+
+      this.prisma.pettyCashReplenishment.aggregate({
+        where: replenishmentWhere,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
+
+    const count = voucherCount + replenishmentCount;
+    const totalPages = Math.max(1, Math.ceil(count / limit));
+    const page = Math.min(requestedPage, totalPages);
+    const offset = (page - 1) * limit;
+
+    /*
+     * Vouchers and replenishments are different Prisma models.
+     * Fetch only the rows needed to build the requested combined
+     * page, then merge and paginate on the server.
+     */
+    const fetchLimit = offset + limit;
+
     const [vouchers, replenishments] = await Promise.all([
       this.prisma.pettyCashVoucher.findMany({
-        where: {
-          status: 'POSTED',
-
-          ...(query.fundId ? { fundId: query.fundId } : {}),
-
-          ...(expenseDate ? { expenseDate } : {}),
-
-          ...(query.branchId
-            ? {
-                fund: {
-                  branchId: query.branchId,
-                },
-              }
-            : {}),
-        },
+        where: voucherWhere,
 
         select: {
           id: true,
@@ -793,25 +1146,29 @@ export class ReportsService {
           category: true,
           payee: true,
           referenceNo: true,
+
+          fund: {
+            select: {
+              fundNo: true,
+              name: true,
+              branchId: true,
+              branch: {
+                select: {
+                  code: true,
+                  name: true,
+                },
+              },
+            },
+          },
         },
+
+        orderBy: [{ expenseDate: 'desc' }, { id: 'asc' }],
+
+        take: fetchLimit,
       }),
 
       this.prisma.pettyCashReplenishment.findMany({
-        where: {
-          status: 'POSTED',
-
-          ...(query.fundId ? { fundId: query.fundId } : {}),
-
-          ...(replenishmentDate ? { replenishmentDate } : {}),
-
-          ...(query.branchId
-            ? {
-                fund: {
-                  branchId: query.branchId,
-                },
-              }
-            : {}),
-        },
+        where: replenishmentWhere,
 
         select: {
           id: true,
@@ -821,7 +1178,25 @@ export class ReportsService {
           amount: true,
           referenceNo: true,
           notes: true,
+
+          fund: {
+            select: {
+              fundNo: true,
+              name: true,
+              branchId: true,
+              branch: {
+                select: {
+                  code: true,
+                  name: true,
+                },
+              },
+            },
+          },
         },
+
+        orderBy: [{ replenishmentDate: 'desc' }, { id: 'asc' }],
+
+        take: fetchLimit,
       }),
     ]);
 
@@ -837,6 +1212,11 @@ export class ReportsService {
         amount: voucher.amount,
         direction: 'OUT' as const,
         fundId: voucher.fundId,
+        fundNo: voucher.fund.fundNo,
+        fundName: voucher.fund.name,
+        branchId: voucher.fund.branchId,
+        branchCode: voucher.fund.branch.code,
+        branchName: voucher.fund.branch.name,
         sourceReferenceNo: voucher.referenceNo,
       })),
 
@@ -853,32 +1233,39 @@ export class ReportsService {
         amount: replenishment.amount,
         direction: 'IN' as const,
         fundId: replenishment.fundId,
+        fundNo: replenishment.fund.fundNo,
+        fundName: replenishment.fund.name,
+        branchId: replenishment.fund.branchId,
+        branchCode: replenishment.fund.branch.code,
+        branchName: replenishment.fund.branch.name,
         sourceReferenceNo: replenishment.referenceNo,
       })),
-    ].sort((a, b) => a.date.getTime() - b.date.getTime());
+    ].sort(
+      (a, b) => b.date.getTime() - a.date.getTime() || a.id.localeCompare(b.id),
+    );
 
-    const totalIn = transactions
-      .filter((transaction) => transaction.direction === 'IN')
-      .reduce(
-        (sum, transaction) => sum.add(transaction.amount),
-        new Prisma.Decimal(0),
-      );
+    const paginatedTransactions = transactions.slice(offset, offset + limit);
 
-    const totalOut = transactions
-      .filter((transaction) => transaction.direction === 'OUT')
-      .reduce(
-        (sum, transaction) => sum.add(transaction.amount),
-        new Prisma.Decimal(0),
-      );
+    const totalIn = replenishmentAggregate._sum.amount ?? new Prisma.Decimal(0);
+
+    const totalOut = voucherAggregate._sum.amount ?? new Prisma.Decimal(0);
 
     return {
       from: query.from ?? null,
       to: query.to ?? null,
-      count: transactions.length,
+      count,
       totalIn: totalIn.toDecimalPlaces(2),
       totalOut: totalOut.toDecimalPlaces(2),
       net: totalIn.sub(totalOut).toDecimalPlaces(2),
-      transactions,
+
+      transactions: paginatedTransactions,
+
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages: totalPages,
+      },
     };
   }
 
@@ -888,17 +1275,76 @@ export class ReportsService {
   ) {
     query = this.scopeReportQuery(query, user);
 
-    const funds = await this.prisma.pettyCashFund.findMany({
-      where: {
-        ...(query.fundId ? { id: query.fundId } : {}),
+    const page = Math.max(1, Number(query.page ?? 1));
+    const limit = Math.min(100, Math.max(1, Number(query.limit ?? 10)));
+    const skip = (page - 1) * limit;
 
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-      },
+    const fundWhere: Prisma.PettyCashFundWhereInput = {
+      ...(query.fundId ? { id: query.fundId } : {}),
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+    };
 
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
+    const voucherWhere: Prisma.PettyCashVoucherWhereInput = {
+      status: 'POSTED',
+      ...(query.fundId ? { fundId: query.fundId } : {}),
+      ...(query.branchId
+        ? {
+            fund: {
+              branchId: query.branchId,
+            },
+          }
+        : {}),
+    };
+
+    const replenishmentWhere: Prisma.PettyCashReplenishmentWhereInput = {
+      status: 'POSTED',
+      ...(query.fundId ? { fundId: query.fundId } : {}),
+      ...(query.branchId
+        ? {
+            fund: {
+              branchId: query.branchId,
+            },
+          }
+        : {}),
+    };
+
+    const [funds, totalCount, fundTotals, voucherTotals, replenishmentTotals] =
+      await Promise.all([
+        this.prisma.pettyCashFund.findMany({
+          where: fundWhere,
+          orderBy: {
+            createdAt: 'asc',
+          },
+          skip,
+          take: limit,
+        }),
+
+        this.prisma.pettyCashFund.count({
+          where: fundWhere,
+        }),
+
+        this.prisma.pettyCashFund.aggregate({
+          where: fundWhere,
+          _sum: {
+            openingBalance: true,
+            currentBalance: true,
+          },
+        }),
+
+        this.prisma.pettyCashVoucher.aggregate({
+          where: voucherWhere,
+          _sum: {
+            amount: true,
+          },
+        }),
+
+        this.prisma.pettyCashReplenishment.aggregate({
+          where: replenishmentWhere,
+          _sum: {
+            amount: true,
+          },
+        }),
+      ]);
 
     const balances = await Promise.all(
       funds.map(async (fund) => {
@@ -924,27 +1370,52 @@ export class ReportsService {
           }),
         ]);
 
-        const totalExpenses = vouchers._sum.amount ?? new Prisma.Decimal(0);
-
-        const totalReplenishments =
-          replenishments._sum.amount ?? new Prisma.Decimal(0);
-
         return {
           fundId: fund.id,
           fundNo: fund.fundNo,
           name: fund.name,
           branchId: fund.branchId,
+          status: fund.status,
           openingBalance: fund.openingBalance,
           currentBalance: fund.currentBalance,
-          totalExpenses: totalExpenses.toDecimalPlaces(2),
-          totalReplenishments: totalReplenishments.toDecimalPlaces(2),
+          totalExpenses: (
+            vouchers._sum.amount ?? new Prisma.Decimal(0)
+          ).toDecimalPlaces(2),
+          totalReplenishments: (
+            replenishments._sum.amount ?? new Prisma.Decimal(0)
+          ).toDecimalPlaces(2),
         };
       }),
     );
 
     return {
-      count: balances.length,
+      count: totalCount,
       funds: balances,
+
+      summary: {
+        openingBalance: (
+          fundTotals._sum.openingBalance ?? new Prisma.Decimal(0)
+        ).toDecimalPlaces(2),
+
+        currentBalance: (
+          fundTotals._sum.currentBalance ?? new Prisma.Decimal(0)
+        ).toDecimalPlaces(2),
+
+        totalExpenses: (
+          voucherTotals._sum.amount ?? new Prisma.Decimal(0)
+        ).toDecimalPlaces(2),
+
+        totalReplenishments: (
+          replenishmentTotals._sum.amount ?? new Prisma.Decimal(0)
+        ).toDecimalPlaces(2),
+      },
+
+      pagination: {
+        page,
+        limit,
+        total: totalCount,
+        pages: Math.ceil(totalCount / limit),
+      },
     };
   }
 
@@ -3347,184 +3818,244 @@ export class ReportsService {
     user: AuthenticatedUser,
   ) {
     query = this.scopeReportQuery(query, user);
+
+    const requestedPage = Math.max(1, Math.trunc(Number(query.page) || 1));
+    const limit = Math.min(
+      100,
+      Math.max(1, Math.trunc(Number(query.limit) || 10)),
+    );
+
+    const where = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+    };
+
+    // Count all matching rows and fetch only the two fields needed to calculate
+    // cross-page quantity/value totals. Full product/branch records are fetched
+    // only for the requested page below.
+    const [count, valuationTotals] = await Promise.all([
+      this.prisma.inventoryBalance.count({ where }),
+      this.prisma.inventoryBalance.findMany({
+        where,
+        select: {
+          quantity: true,
+          averageCost: true,
+        },
+      }),
+    ]);
+
+    const pages = Math.max(1, Math.ceil(count / limit));
+    const page = Math.min(requestedPage, pages);
+    const skip = (page - 1) * limit;
+
     const balances = await this.prisma.inventoryBalance.findMany({
-      where: {
-        ...(query.branchId ? { branchId: query.branchId } : {}),
-      },
+      where,
       include: {
         branch: true,
         product: true,
       },
-      orderBy: {
-        updatedAt: 'asc',
-      },
+      orderBy: [{ updatedAt: 'asc' }, { id: 'asc' }],
+      skip,
+      take: limit,
     });
 
     const items = balances.map((balance) => ({
       branchId: balance.branchId,
       branchName: balance.branch.name,
-
       productId: balance.productId,
       sku: balance.product.sku,
       productName: balance.product.name,
-
       quantity: balance.quantity,
-
       averageCost: balance.averageCost.toDecimalPlaces(2),
-
       inventoryValue: balance.averageCost
         .mul(balance.quantity)
         .toDecimalPlaces(2),
     }));
 
-    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+    const totalQuantity = valuationTotals.reduce(
+      (sum, item) => sum + item.quantity,
+      0,
+    );
 
-    const totalValue = items.reduce(
-      (sum, item) => sum.add(item.inventoryValue),
+    const totalValue = valuationTotals.reduce(
+      (sum, item) => sum.add(item.averageCost.mul(item.quantity)),
       new Prisma.Decimal(0),
     );
 
     return {
       asOfDate: query.asOfDate ?? new Date().toISOString(),
-
-      count: items.length,
-
+      count,
       totalQuantity,
-
       totalValue: totalValue.toDecimalPlaces(2),
-
       items,
+      pagination: {
+        page,
+        limit,
+        total: count,
+        pages,
+      },
     };
   }
 
   async arApAging(query: ManagementReportQueryDto, user: AuthenticatedUser) {
     query = this.scopeReportQuery(query, user);
+
     const asOfDate = this.getManagementAsOfDate(query.asOfDate);
+    const dayMs = 24 * 60 * 60 * 1000;
+    const cutoff31 = new Date(asOfDate.getTime() - 31 * dayMs);
+    const cutoff61 = new Date(asOfDate.getTime() - 61 * dayMs);
+    const cutoff91 = new Date(asOfDate.getTime() - 91 * dayMs);
+
+    const requestedArPage = Math.max(1, Math.trunc(Number(query.arPage) || 1));
+    const requestedApPage = Math.max(1, Math.trunc(Number(query.apPage) || 1));
+    const limit = Math.min(
+      100,
+      Math.max(1, Math.trunc(Number(query.limit) || 10)),
+    );
+
+    const arWhere: Prisma.AccountsReceivableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      status: { in: ['OPEN', 'PARTIALLY_PAID'] },
+      balanceDue: { gt: 0 },
+    };
+
+    const apWhere: Prisma.AccountsPayableWhereInput = {
+      ...(query.branchId ? { branchId: query.branchId } : {}),
+      status: { in: ['OPEN', 'PARTIALLY_PAID'] },
+      balanceDue: { gt: 0 },
+    };
+
+    const [arBucketResults, apBucketResults] = await Promise.all([
+      Promise.all([
+        this.prisma.accountsReceivable.aggregate({
+          where: { ...arWhere, dueDate: { gte: asOfDate } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsReceivable.aggregate({
+          where: { ...arWhere, dueDate: { gt: cutoff31, lt: asOfDate } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsReceivable.aggregate({
+          where: { ...arWhere, dueDate: { gt: cutoff61, lte: cutoff31 } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsReceivable.aggregate({
+          where: { ...arWhere, dueDate: { gt: cutoff91, lte: cutoff61 } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsReceivable.aggregate({
+          where: { ...arWhere, dueDate: { lte: cutoff91 } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsReceivable.aggregate({
+          where: { ...arWhere, dueDate: null },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+      ]),
+      Promise.all([
+        this.prisma.accountsPayable.aggregate({
+          where: { ...apWhere, dueDate: { gte: asOfDate } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsPayable.aggregate({
+          where: { ...apWhere, dueDate: { gt: cutoff31, lt: asOfDate } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsPayable.aggregate({
+          where: { ...apWhere, dueDate: { gt: cutoff61, lte: cutoff31 } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsPayable.aggregate({
+          where: { ...apWhere, dueDate: { gt: cutoff91, lte: cutoff61 } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsPayable.aggregate({
+          where: { ...apWhere, dueDate: { lte: cutoff91 } },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+        this.prisma.accountsPayable.aggregate({
+          where: { ...apWhere, dueDate: null },
+          _count: { _all: true },
+          _sum: { balanceDue: true },
+        }),
+      ]),
+    ]);
+
+    const zero = () => new Prisma.Decimal(0);
+    const bucketTotal = (rows: typeof arBucketResults) =>
+      rows.reduce((sum, row) => sum.add(row._sum.balanceDue ?? zero()), zero());
+    const bucketCount = (rows: typeof arBucketResults) =>
+      rows.reduce((sum, row) => sum + row._count._all, 0);
+    const serializeBuckets = (rows: typeof arBucketResults) => ({
+      current: (rows[0]._sum.balanceDue ?? zero()).toDecimalPlaces(2),
+      '1_30': (rows[1]._sum.balanceDue ?? zero()).toDecimalPlaces(2),
+      '31_60': (rows[2]._sum.balanceDue ?? zero()).toDecimalPlaces(2),
+      '61_90': (rows[3]._sum.balanceDue ?? zero()).toDecimalPlaces(2),
+      '91_plus': (rows[4]._sum.balanceDue ?? zero()).toDecimalPlaces(2),
+      noDueDate: (rows[5]._sum.balanceDue ?? zero()).toDecimalPlaces(2),
+    });
+
+    const arCount = bucketCount(arBucketResults);
+    const apCount = bucketCount(apBucketResults);
+    const arTotal = bucketTotal(arBucketResults);
+    const apTotal = bucketTotal(apBucketResults);
+    const arPages = Math.max(1, Math.ceil(arCount / limit));
+    const apPages = Math.max(1, Math.ceil(apCount / limit));
+    const arPage = Math.min(requestedArPage, arPages);
+    const apPage = Math.min(requestedApPage, apPages);
 
     const [receivables, payables] = await Promise.all([
       this.prisma.accountsReceivable.findMany({
-        where: {
-          ...(query.branchId ? { branchId: query.branchId } : {}),
-          status: {
-            in: ['OPEN', 'PARTIALLY_PAID'],
-          },
-          balanceDue: {
-            gt: 0,
-          },
-        },
-        include: {
-          customer: true,
-        },
-        orderBy: {
-          dueDate: 'asc',
-        },
+        where: arWhere,
+        include: { customer: true },
+        orderBy: [{ dueDate: 'asc' }, { id: 'asc' }],
+        skip: (arPage - 1) * limit,
+        take: limit,
       }),
-
       this.prisma.accountsPayable.findMany({
-        where: {
-          ...(query.branchId ? { branchId: query.branchId } : {}),
-          status: {
-            in: ['OPEN', 'PARTIALLY_PAID'],
-          },
-          balanceDue: {
-            gt: 0,
-          },
-        },
-        include: {
-          supplier: true,
-        },
-        orderBy: {
-          dueDate: 'asc',
-        },
+        where: apWhere,
+        include: { supplier: true },
+        orderBy: [{ dueDate: 'asc' }, { id: 'asc' }],
+        skip: (apPage - 1) * limit,
+        take: limit,
       }),
     ]);
 
-    const bucket = (dueDate: Date | null) => {
-      if (!dueDate) {
-        return 'NO_DUE_DATE';
-      }
-
-      const diffMs = asOfDate.getTime() - dueDate.getTime();
-
-      if (diffMs <= 0) {
-        return 'CURRENT';
-      }
-
-      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-      if (days <= 30) {
-        return '1_30';
-      }
-
-      if (days <= 60) {
-        return '31_60';
-      }
-
-      if (days <= 90) {
-        return '61_90';
-      }
-
-      return '91_PLUS';
-    };
-
-    const createBuckets = () => ({
-      CURRENT: new Prisma.Decimal(0),
-      '1_30': new Prisma.Decimal(0),
-      '31_60': new Prisma.Decimal(0),
-      '61_90': new Prisma.Decimal(0),
-      '91_PLUS': new Prisma.Decimal(0),
-      NO_DUE_DATE: new Prisma.Decimal(0),
-    });
-
-    const arBuckets = createBuckets();
-    const apBuckets = createBuckets();
-
-    for (const record of receivables) {
-      const key = bucket(record.dueDate);
-
-      arBuckets[key] = arBuckets[key].add(record.balanceDue);
-    }
-
-    for (const record of payables) {
-      const key = bucket(record.dueDate);
-
-      apBuckets[key] = apBuckets[key].add(record.balanceDue);
-    }
-
-    const serializeBuckets = (buckets: ReturnType<typeof createBuckets>) => ({
-      current: buckets.CURRENT.toDecimalPlaces(2),
-      '1_30': buckets['1_30'].toDecimalPlaces(2),
-      '31_60': buckets['31_60'].toDecimalPlaces(2),
-      '61_90': buckets['61_90'].toDecimalPlaces(2),
-      '91_plus': buckets['91_PLUS'].toDecimalPlaces(2),
-      noDueDate: buckets.NO_DUE_DATE.toDecimalPlaces(2),
-    });
-
-    const arTotal = receivables.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
-
-    const apTotal = payables.reduce(
-      (sum, record) => sum.add(record.balanceDue),
-      new Prisma.Decimal(0),
-    );
-
     return {
       asOfDate,
-
       accountsReceivable: {
-        count: receivables.length,
+        count: arCount,
         total: arTotal.toDecimalPlaces(2),
-        aging: serializeBuckets(arBuckets),
+        aging: serializeBuckets(arBucketResults),
         records: receivables,
+        pagination: {
+          page: arPage,
+          limit,
+          total: arCount,
+          pages: arPages,
+        },
       },
-
       accountsPayable: {
-        count: payables.length,
+        count: apCount,
         total: apTotal.toDecimalPlaces(2),
-        aging: serializeBuckets(apBuckets),
+        aging: serializeBuckets(apBucketResults),
         records: payables,
+        pagination: {
+          page: apPage,
+          limit,
+          total: apCount,
+          pages: apPages,
+        },
       },
     };
   }

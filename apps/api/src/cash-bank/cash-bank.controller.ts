@@ -67,9 +67,11 @@ export class CashBankController {
   findAll(
     @Query('branchId') branchId: string | undefined,
     @Query('accountId') accountId: string | undefined,
+    @Query('page') page: string | undefined,
+    @Query('limit') limit: string | undefined,
     @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.cashBankService.findAll(branchId, accountId, user);
+    return this.cashBankService.findAll(branchId, accountId, user, page, limit);
   }
 
   @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)

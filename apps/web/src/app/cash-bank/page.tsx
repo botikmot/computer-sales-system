@@ -16,6 +16,7 @@ import {
   Plus,
   Search,
   WalletCards,
+  Scale,
 } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -517,13 +518,23 @@ export default function CashBankPage() {
               </p>
             </div>
 
-            <Link
-              href="/cash-bank/accounts/new"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
-            >
-              <Plus className="h-4 w-4" />
-              Add Account
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href="/cash-bank/reconciliations"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                <Scale className="h-4 w-4" />
+                Reconcile Bank
+              </Link>
+
+              <Link
+                href="/cash-bank/accounts/new"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+              >
+                <Plus className="h-4 w-4" />
+                Add Account
+              </Link>
+            </div>
           </div>
         </section>
 

@@ -323,46 +323,65 @@ export class CashBankService {
     branchId: string | undefined,
     accountId: string | undefined,
     user: AuthenticatedUser,
+    pageValue?: string,
+    limitValue?: string,
   ) {
     this.branchAccessService.assertCanAccessOptionalBranch(user, user.branchId);
+
+    const requestedPage = Number(pageValue);
+    const requestedLimit = Number(limitValue);
+
+    const page =
+      Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+
+    const limit =
+      Number.isInteger(requestedLimit) && requestedLimit > 0
+        ? Math.min(requestedLimit, 100)
+        : 10;
 
     const where =
       user.role === UserRole.ADMIN
         ? {
-            ...(branchId
-              ? {
-                  branchId,
-                }
-              : {}),
-
-            ...(accountId
-              ? {
-                  accountId,
-                }
-              : {}),
+            ...(branchId ? { branchId } : {}),
+            ...(accountId ? { accountId } : {}),
           }
         : {
             branchId: user.branchId!,
-
-            ...(accountId
-              ? {
-                  accountId,
-                }
-              : {}),
+            ...(accountId ? { accountId } : {}),
           };
 
-    return this.prisma.bankReconciliation.findMany({
-      where,
+    const [items, total] = await Promise.all([
+      this.prisma.bankReconciliation.findMany({
+        where,
+        include: {
+          branch: true,
+          account: true,
+          items: {
+            include: {
+              cashBankTransaction: true,
+            },
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+        },
+        orderBy: [{ statementDate: 'desc' }, { createdAt: 'desc' }],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
 
-      include: {
-        account: true,
-        items: true,
-      },
+      this.prisma.bankReconciliation.count({ where }),
+    ]);
 
-      orderBy: {
-        statementDate: 'desc',
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.max(1, Math.ceil(total / limit)),
       },
-    });
+    };
   }
 
   async findOne(id: string, user: AuthenticatedUser) {

@@ -30,6 +30,8 @@ export type CashBankReportQuery = {
   date?: string;
   from?: string;
   to?: string;
+  page?: number;
+  limit?: number;
 };
 
 export type InventoryReportQuery = {
@@ -52,6 +54,10 @@ export type ManagementReportQuery = {
   from?: string;
   to?: string;
   asOfDate?: string;
+  page?: number;
+  limit?: number;
+  arPage?: number;
+  apPage?: number;
 };
 
 export type PettyCashReportQuery = {
@@ -59,6 +65,8 @@ export type PettyCashReportQuery = {
   fundId?: string;
   from?: string;
   to?: string;
+  page?: number;
+  limit?: number;
 };
 
 export type PurchasingReportQuery = {
@@ -542,42 +550,229 @@ export async function getAccountsReceivableCollections(
  * Cash / Bank
  * ======================================================= */
 
+export type DailyCashAccountRow = {
+  id: string;
+  branchId: string;
+  name: string;
+  accountNumber: string | null;
+  branch: {
+    id: string;
+    code: string;
+    name: string;
+  };
+  configuredOpeningBalance: string | number;
+  openingBalance: string | number;
+  cashReceipts: string | number;
+  cashDisbursements: string | number;
+  closingBalance: string | number;
+};
+
 export type DailyCashReportResponse = {
   date: string;
   openingBalance: string | number;
   cashReceipts: string | number;
   cashDisbursements: string | number;
   closingBalance: string | number;
-  accounts: ReportRecord[];
+  count: number;
+  accounts: DailyCashAccountRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type CashReceiptTransactionRow = ReportRecord & {
+  id: string;
+  accountName: string;
+  accountType: string;
+  transactionType: string;
+  direction: string;
+  amount: string | number;
+  transactionDate: string;
+  referenceNo?: string | null;
+  notes?: string | null;
+  account: ReportRecord & {
+    id: string;
+    name: string;
+    accountType: string;
+    accountNumber?: string | null;
+  };
+  branch: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
 };
 
 export type CashReceiptsResponse = {
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
   count: number;
   total: string | number;
-  transactions: ReportRecord[];
+  transactions: CashReceiptTransactionRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type CashDisbursementTransactionRow = ReportRecord & {
+  id: string;
+  accountName: string;
+  accountType: string;
+  transactionType: string;
+  direction: string;
+  amount: string | number;
+  transactionDate: string;
+  referenceNo?: string | null;
+  notes?: string | null;
+  account: ReportRecord & {
+    id: string;
+    name: string;
+    accountType: string;
+    accountNumber?: string | null;
+  };
+  branch: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
 };
 
 export type CashDisbursementsResponse = {
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
   count: number;
   total: string | number;
-  transactions: ReportRecord[];
+  transactions: CashDisbursementTransactionRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type BankTransactionReportRow = ReportRecord & {
+  id: string;
+  accountId: string;
+  accountName: string;
+  accountType: string;
+  transactionType: string;
+  direction: string;
+  amount: string | number;
+  transactionDate: string;
+  referenceNo?: string | null;
+  notes?: string | null;
+
+  account: ReportRecord & {
+    id: string;
+    name: string;
+    accountType: string;
+    accountNumber?: string | null;
+  };
+
+  branch: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
 };
 
 export type BankTransactionsResponse = {
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
   count: number;
   totalIn: string | number;
   totalOut: string | number;
   net: string | number;
-  transactions: ReportRecord[];
+
+  transactions: BankTransactionReportRow[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
 
-export type BankReconciliationResponse = ReportRecord[];
+export type BankReconciliationItemRow = ReportRecord & {
+  id: string;
+  type: string;
+  amount: string | number;
+  referenceNo?: string | null;
+  notes?: string | null;
+  cashBankTransactionId?: string | null;
+
+  cashBankTransaction?:
+    | (ReportRecord & {
+        id: string;
+        transactionDate: string;
+        direction: string;
+        transactionType: string;
+        amount: string | number;
+        accountName: string;
+        referenceNo?: string | null;
+      })
+    | null;
+};
+
+export type BankReconciliationRow = ReportRecord & {
+  id: string;
+  reconciliationNo: string;
+  branchId: string;
+  accountId: string;
+  statementDate: string;
+
+  statementEndingBalance: string | number;
+  bookBalance: string | number;
+  adjustedBankBalance: string | number;
+  adjustedBookBalance: string | number;
+  difference: string | number;
+
+  status: string;
+  notes?: string | null;
+
+  branch: ReportRecord & {
+    id: string;
+    code: string;
+    name: string;
+  };
+
+  account: ReportRecord & {
+    id: string;
+    name: string;
+    accountType: string;
+    accountNumber?: string | null;
+  };
+
+  items: BankReconciliationItemRow[];
+};
+
+export type BankReconciliationResponse = {
+  from: string | null;
+  to: string | null;
+  count: number;
+
+  reconciliations: BankReconciliationRow[];
+
+  statusCounts: {
+    status: string;
+    count: number;
+  }[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
 
 export async function getDailyCashReport(
   query: CashBankReportQuery = {},
@@ -828,17 +1023,190 @@ export async function getInventoryAdjustments(
  * Management / Financial
  * ======================================================= */
 
-export type IncomeStatementResponse = ReportRecord;
+type ReportAmount = string | number;
 
-export type BalanceSheetResponse = ReportRecord;
+export type IncomeStatementResponse = {
+  from: string;
+  to: string;
 
-export type CashFlowResponse = ReportRecord;
+  revenue: {
+    sales: ReportAmount;
+    salesReturns: ReportAmount;
+    netSales: ReportAmount;
+    service: ReportAmount;
+    total: ReportAmount;
+  };
 
-export type SalesProfitabilityResponse = ReportRecord;
+  costOfSales: {
+    salesCogs: ReportAmount;
+    repairPartsCost: ReportAmount;
+    total: ReportAmount;
+  };
 
-export type ManagementInventoryValuationResponse = ReportRecord;
+  grossProfit: ReportAmount;
+  grossMargin: ReportAmount;
 
-export type ArApAgingResponse = ReportRecord;
+  operatingExpenses: {
+    cashExpenses: ReportAmount;
+    pettyCashExpenses: ReportAmount;
+    total: ReportAmount;
+  };
+
+  estimatedNetIncome: ReportAmount;
+};
+
+type ManagementReportAmount = string | number;
+
+export type BalanceSheetAccountBalance = {
+  id: string;
+  name: string;
+  accountType: string;
+  openingBalance: ManagementReportAmount;
+  transactionNet: ManagementReportAmount;
+  balance: ManagementReportAmount;
+};
+
+export type BalanceSheetResponse = {
+  asOfDate: string;
+  assets: {
+    cashAndBank: ManagementReportAmount;
+    accountsReceivable: ManagementReportAmount;
+    inventory: ManagementReportAmount;
+    total: ManagementReportAmount;
+  };
+  liabilities: {
+    accountsPayable: ManagementReportAmount;
+    total: ManagementReportAmount;
+  };
+  derivedEquity: ManagementReportAmount;
+  accounts: BalanceSheetAccountBalance[];
+  inventoryCount: number;
+  receivableCount: number;
+  payableCount: number;
+};
+
+type CashFlowAmount = string | number;
+
+export type CashFlowResponse = {
+  from: string;
+  to: string;
+  inflows: {
+    customerCollections: CashFlowAmount;
+    otherReceipts: CashFlowAmount;
+    total: CashFlowAmount;
+  };
+  outflows: {
+    supplierPayments: CashFlowAmount;
+    operatingExpenses: CashFlowAmount;
+    customerRefunds: CashFlowAmount;
+    pettyCashExpenses: CashFlowAmount;
+    total: CashFlowAmount;
+  };
+  netCashFlow: CashFlowAmount;
+  transactionCount: number;
+  pettyCashExpenseCount: number;
+};
+
+type SalesProfitabilityAmount = string | number;
+
+export type SalesProfitabilityResponse = {
+  from: string;
+  to: string;
+  revenue: {
+    sales: SalesProfitabilityAmount;
+    salesReturns: SalesProfitabilityAmount;
+    netSales: SalesProfitabilityAmount;
+    service: SalesProfitabilityAmount;
+    total: SalesProfitabilityAmount;
+  };
+  costOfSales: {
+    salesCogs: SalesProfitabilityAmount;
+    repairPartsCost: SalesProfitabilityAmount;
+    total: SalesProfitabilityAmount;
+  };
+  grossProfit: SalesProfitabilityAmount;
+  grossMargin: SalesProfitabilityAmount;
+  operatingExpenses: {
+    cashExpenses: SalesProfitabilityAmount;
+    pettyCashExpenses: SalesProfitabilityAmount;
+    total: SalesProfitabilityAmount;
+  };
+  estimatedNetProfit: SalesProfitabilityAmount;
+};
+
+type ManagementInventoryValuationAmount = string | number;
+
+export type ManagementInventoryValuationResponse = {
+  asOfDate: string;
+  count: number;
+  totalQuantity: number;
+  totalValue: ManagementInventoryValuationAmount;
+  items: {
+    branchId: string;
+    branchName: string;
+    productId: string;
+    sku: string | null;
+    productName: string;
+    quantity: number;
+    averageCost: ManagementInventoryValuationAmount;
+    inventoryValue: ManagementInventoryValuationAmount;
+  }[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+type ManagementAgingAmount = string | number;
+
+export type ManagementAgingBucketValues = {
+  current: ManagementAgingAmount;
+  "1_30": ManagementAgingAmount;
+  "31_60": ManagementAgingAmount;
+  "61_90": ManagementAgingAmount;
+  "91_plus": ManagementAgingAmount;
+  noDueDate: ManagementAgingAmount;
+};
+
+export type ManagementAgingParty = {
+  id: string;
+  code?: string | null;
+  name: string;
+};
+
+export type ManagementAgingRecord = {
+  id: string;
+  status: string;
+  dueDate: string | null;
+  originalAmount: ManagementAgingAmount;
+  amountPaid: ManagementAgingAmount;
+  balanceDue: ManagementAgingAmount;
+  customer?: ManagementAgingParty;
+  supplier?: ManagementAgingParty;
+};
+
+export type ManagementAgingPagination = {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+};
+
+export type ManagementAgingSection = {
+  count: number;
+  total: ManagementAgingAmount;
+  aging: ManagementAgingBucketValues;
+  records: ManagementAgingRecord[];
+  pagination: ManagementAgingPagination;
+};
+
+export type ArApAgingResponse = {
+  asOfDate: string;
+  accountsReceivable: ManagementAgingSection;
+  accountsPayable: ManagementAgingSection;
+};
 
 export async function getIncomeStatement(
   query: ManagementReportQuery = {},
@@ -880,6 +1248,25 @@ export async function getArApAging(
  * Petty Cash
  * ======================================================= */
 
+export type PettyCashTransactionReportRow = {
+  id: string;
+  type: "VOUCHER" | "REPLENISHMENT";
+  referenceNo: string;
+  date: string;
+  description: string;
+  category: string;
+  payee: string | null;
+  amount: string | number;
+  direction: "IN" | "OUT";
+  fundId: string;
+  fundNo: string;
+  fundName: string;
+  branchId: string;
+  branchCode: string;
+  branchName: string;
+  sourceReferenceNo: string | null;
+};
+
 export type PettyCashTransactionsResponse = {
   from: string | null;
   to: string | null;
@@ -887,7 +1274,38 @@ export type PettyCashTransactionsResponse = {
   totalIn: string | number;
   totalOut: string | number;
   net: string | number;
-  transactions: ReportRecord[];
+  transactions: PettyCashTransactionReportRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+};
+
+export type PettyCashVoucherReportRow = {
+  id: string;
+  voucherNo: string;
+  fundId: string;
+  expenseDate: string;
+  description: string;
+  amount: string | number;
+  category: string;
+  payee?: string | null;
+  referenceNo?: string | null;
+  status: string;
+
+  fund: {
+    id: string;
+    fundNo: string;
+    name: string;
+    branchId: string;
+    branch: {
+      id: string;
+      code: string;
+      name: string;
+    };
+  };
 };
 
 export type PettyCashVouchersResponse = {
@@ -895,7 +1313,13 @@ export type PettyCashVouchersResponse = {
   to: string | null;
   count: number;
   total: string | number;
-  vouchers: ReportRecord[];
+  vouchers: PettyCashVoucherReportRow[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
 
 export type PettyCashReplenishmentsResponse = {
@@ -904,11 +1328,32 @@ export type PettyCashReplenishmentsResponse = {
   count: number;
   total: string | number;
   replenishments: ReportRecord[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
 
 export type PettyCashBalanceResponse = {
   count: number;
+
   funds: ReportRecord[];
+
+  summary: {
+    openingBalance: string | number;
+    currentBalance: string | number;
+    totalExpenses: string | number;
+    totalReplenishments: string | number;
+  };
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 };
 
 export async function getPettyCashTransactions(
