@@ -101,7 +101,8 @@ export const ModelName = {
   PettyCashVoucher: 'PettyCashVoucher',
   PettyCashReplenishment: 'PettyCashReplenishment',
   SalesReturn: 'SalesReturn',
-  SalesReturnItem: 'SalesReturnItem'
+  SalesReturnItem: 'SalesReturnItem',
+  RolePermission: 'RolePermission'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -990,6 +991,19 @@ export const SalesReturnItemScalarFieldEnum = {
 } as const
 
 export type SalesReturnItemScalarFieldEnum = (typeof SalesReturnItemScalarFieldEnum)[keyof typeof SalesReturnItemScalarFieldEnum]
+
+
+export const RolePermissionScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  permissionKey: 'permissionKey',
+  isAllowed: 'isAllowed',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum]
 
 
 export const SortOrder = {

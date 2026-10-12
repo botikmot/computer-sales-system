@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth/session";
 import { hasPermission, type Permission } from "@/features/auth/permissions";
+import type { UserRole } from "@/features/auth/auth-api";
+import { apiFetch } from "@/lib/api/client";
 
 import {
   BarChart3,
@@ -42,6 +44,11 @@ type NavItem = {
     href: string;
     permission?: Permission;
   }[];
+};
+
+type CurrentRolePermissionsResponse = {
+  role: UserRole;
+  permissions: Partial<Record<Permission, boolean>>;
 };
 
 const sections: {
@@ -252,22 +259,74 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const user = getCurrentUser();
   const role = user?.role;
 
+  const [databasePermissions, setDatabasePermissions] =
+    useState<Set<Permission> | null>(null);
+
   const [productsOpen, setProductsOpen] = useState(
     pathname.startsWith("/products"),
   );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPermissions() {
+      if (!role) {
+        setDatabasePermissions(new Set());
+        return;
+      }
+
+      try {
+        const response =
+          await apiFetch<CurrentRolePermissionsResponse>("/permissions/me");
+
+        if (response.role !== role) {
+          throw new Error(
+            "The returned permissions do not match the current role.",
+          );
+        }
+
+        const allowedPermissions = Object.entries(response.permissions)
+          .filter(([, allowed]) => allowed === true)
+          .map(([key]) => key as Permission);
+
+        if (!cancelled) {
+          setDatabasePermissions(new Set(allowedPermissions));
+        }
+      } catch (error) {
+        console.error("Failed to load sidebar permissions:", error);
+
+        if (!cancelled) {
+          // Keep the current fallback behavior if the API is unavailable.
+          setDatabasePermissions(null);
+        }
+      }
+    }
+
+    void loadPermissions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role]);
+
+  function canAccess(permission: Permission): boolean {
+    if (databasePermissions !== null) {
+      return databasePermissions.has(permission);
+    }
+
+    // Fallback to the existing static permissions if API loading fails.
+    return hasPermission(role, permission);
+  }
 
   const visibleSections = sections
     .map((section) => ({
       ...section,
       items: section.items
-        .filter(
-          (item) => !item.permission || hasPermission(role, item.permission),
-        )
+        .filter((item) => !item.permission || canAccess(item.permission))
         .map((item) => ({
           ...item,
           children: item.children?.filter(
-            (child) =>
-              !child.permission || hasPermission(role, child.permission),
+            (child) => !child.permission || canAccess(child.permission),
           ),
         })),
     }))
@@ -496,7 +555,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* User / Settings area */}
       <div className="shrink-0 border-t border-slate-200 p-3">
-        {hasPermission(role, "settings") && (
+        {canAccess("settings") && (
           <Link
             href="/settings"
             className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"

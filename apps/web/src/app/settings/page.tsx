@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useSyncExternalStore, type ReactNode } from "react";
 import {
   Building2,
   ChevronRight,
@@ -15,13 +18,109 @@ import {
 
 import { AppShell } from "@/components/layout/app-shell";
 
+type UserRole =
+  | "ADMIN"
+  | "MANAGER"
+  | "SALES"
+  | "PURCHASING"
+  | "INVENTORY"
+  | "TECHNICIAN"
+  | "CASHIER";
+
+type SettingsItemKey =
+  | "branches"
+  | "users"
+  | "customers"
+  | "suppliers"
+  | "productCategories"
+  | "products"
+  | "cashBankAccounts"
+  | "rolesPermissions"
+  | "account";
+
 type SettingsItemProps = {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
   href?: string;
   available?: boolean;
 };
+
+type SettingsItemConfig = SettingsItemProps & {
+  key: SettingsItemKey;
+  roles: readonly UserRole[];
+};
+
+type SettingsSectionConfig = {
+  key: string;
+  title: string;
+  description: string;
+  icon: ReactNode;
+  iconClassName: string;
+  gridClassName: string;
+  items: SettingsItemConfig[];
+};
+
+const ALL_ROLES: readonly UserRole[] = [
+  "ADMIN",
+  "MANAGER",
+  "SALES",
+  "PURCHASING",
+  "INVENTORY",
+  "TECHNICIAN",
+  "CASHIER",
+];
+
+const ADMIN_MANAGER: readonly UserRole[] = ["ADMIN", "MANAGER"];
+const ADMIN_ONLY: readonly UserRole[] = ["ADMIN"];
+
+function getStoredUserRole(): UserRole | "" {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  try {
+    const rawUser = window.localStorage.getItem("compflow_user");
+
+    if (!rawUser) {
+      return "";
+    }
+
+    const parsed: unknown = JSON.parse(rawUser);
+
+    if (!parsed || typeof parsed !== "object") {
+      return "";
+    }
+
+    const record = parsed as {
+      role?: unknown;
+      user?: { role?: unknown };
+    };
+
+    const candidate =
+      typeof record.role === "string"
+        ? record.role
+        : typeof record.user?.role === "string"
+          ? record.user.role
+          : "";
+
+    return ALL_ROLES.includes(candidate as UserRole)
+      ? (candidate as UserRole)
+      : "";
+  } catch {
+    return "";
+  }
+}
+
+function subscribeToAuthChanges(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener("compflow-auth-change", callback);
+
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("compflow-auth-change", callback);
+  };
+}
 
 function SettingsItem({
   icon,
@@ -52,7 +151,7 @@ function SettingsItem({
       </div>
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
 
           {!available && (
@@ -66,7 +165,10 @@ function SettingsItem({
       </div>
 
       {available && (
-        <ChevronRight className="h-4 w-4 shrink-0 text-slate-300" />
+        <ChevronRight
+          aria-hidden="true"
+          className="h-4 w-4 shrink-0 text-slate-300"
+        />
       )}
     </div>
   );
@@ -78,7 +180,151 @@ function SettingsItem({
   return <Link href={href}>{content}</Link>;
 }
 
+const SETTINGS_SECTIONS: SettingsSectionConfig[] = [
+  {
+    key: "organization",
+    title: "Organization",
+    description: "Manage branches and system users.",
+    icon: <Building2 className="h-4 w-4" />,
+    iconClassName: "bg-blue-50 text-blue-600",
+    gridClassName: "grid gap-4 md:grid-cols-2",
+    items: [
+      {
+        key: "branches",
+        icon: <Building2 className="h-5 w-5" />,
+        title: "Branches",
+        description:
+          "Create and manage company branches, contact information, and branch status.",
+        href: "/settings/branches",
+        available: true,
+        roles: ADMIN_MANAGER,
+      },
+      {
+        key: "users",
+        icon: <UsersRound className="h-5 w-5" />,
+        title: "Users",
+        description:
+          "Create users and manage roles, branch assignments, and account status.",
+        href: "/settings/users",
+        available: true,
+        roles: ADMIN_ONLY,
+      },
+    ],
+  },
+  {
+    key: "master-data",
+    title: "Master Data",
+    description:
+      "Core records used throughout sales, purchasing, inventory, and services.",
+    icon: <Package className="h-4 w-4" />,
+    iconClassName: "bg-emerald-50 text-emerald-600",
+    gridClassName: "grid gap-4 md:grid-cols-2 xl:grid-cols-4",
+    items: [
+      {
+        key: "customers",
+        icon: <CircleUserRound className="h-5 w-5" />,
+        title: "Customers",
+        description: "Manage customers used by sales and accounts receivable.",
+        href: "/settings/customers",
+        available: true,
+        roles: ADMIN_MANAGER,
+      },
+      {
+        key: "suppliers",
+        icon: <Factory className="h-5 w-5" />,
+        title: "Suppliers",
+        description:
+          "Manage suppliers used by purchasing and accounts payable.",
+        href: "/suppliers",
+        available: true,
+        roles: ADMIN_MANAGER,
+      },
+      {
+        key: "productCategories",
+        icon: <Package className="h-5 w-5" />,
+        title: "Product Categories",
+        description: "Organize products into manageable categories.",
+        href: "/products/categories",
+        available: true,
+        roles: ADMIN_MANAGER,
+      },
+      {
+        key: "products",
+        icon: <ShoppingBag className="h-5 w-5" />,
+        title: "Products",
+        description:
+          "Manage product master data, pricing, and inventory settings.",
+        href: "/products",
+        available: true,
+        roles: ADMIN_MANAGER,
+      },
+    ],
+  },
+  {
+    key: "finance",
+    title: "Finance",
+    description:
+      "Manage financial accounts used for cash, bank, and payment transactions.",
+    icon: <WalletCards className="h-4 w-4" />,
+    iconClassName: "bg-cyan-50 text-cyan-600",
+    gridClassName: "grid gap-4 md:grid-cols-2",
+    items: [
+      {
+        key: "cashBankAccounts",
+        icon: <WalletCards className="h-5 w-5" />,
+        title: "Cash & Bank Accounts",
+        description:
+          "Create and manage the cash and bank accounts used for payments and financial transactions.",
+        href: "/cash-bank",
+        available: true,
+        roles: ADMIN_MANAGER,
+      },
+    ],
+  },
+  {
+    key: "security",
+    title: "Security",
+    description: "Access control and account-related configuration.",
+    icon: <ShieldCheck className="h-4 w-4" />,
+    iconClassName: "bg-violet-50 text-violet-600",
+    gridClassName: "grid gap-4 md:grid-cols-2",
+    items: [
+      {
+        key: "rolesPermissions",
+        icon: <LockKeyhole className="h-5 w-5" />,
+        title: "Roles & Permissions",
+        description: "Review and manage system access by role.",
+        href: "/settings/roles-permissions",
+        available: true,
+        roles: ADMIN_ONLY,
+      },
+      {
+        key: "account",
+        icon: <Settings2 className="h-5 w-5" />,
+        title: "Account",
+        description: "Manage your account and personal settings.",
+        href: "/settings/account",
+        available: true,
+        roles: ALL_ROLES,
+      },
+    ],
+  },
+];
+
 export default function SettingsPage() {
+  const userRole = useSyncExternalStore(
+    subscribeToAuthChanges,
+    getStoredUserRole,
+    () => "",
+  );
+
+  const visibleSections = SETTINGS_SECTIONS.map((section) => ({
+    ...section,
+    items: section.items.filter((item) =>
+      item.roles.includes(userRole as UserRole),
+    ),
+  })).filter((section) => section.items.length > 0);
+
   return (
     <AppShell>
       <div className="space-y-8">
@@ -97,155 +343,54 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        <section>
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-              <Building2 className="h-4 w-4" />
-            </div>
-
-            <div>
-              <h2 className="text-base font-semibold text-slate-950">
-                Organization
-              </h2>
-
-              <p className="text-xs text-slate-500">
-                Manage branches and system users.
-              </p>
-            </div>
+        {userRole === "" ? (
+          <div
+            className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500"
+            role="status"
+          >
+            Loading settings available for your role...
           </div>
+        ) : visibleSections.length > 0 ? (
+          visibleSections.map((section) => (
+            <section key={section.key}>
+              <div className="mb-4 flex items-center gap-3">
+                <div
+                  className={`flex h-9 w-9 items-center justify-center rounded-xl ${section.iconClassName}`}
+                >
+                  {section.icon}
+                </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <SettingsItem
-              icon={<Building2 className="h-5 w-5" />}
-              title="Branches"
-              description="Create and manage company branches, contact information, and branch status."
-              href="/settings/branches"
-              available
-            />
+                <div>
+                  <h2 className="text-base font-semibold text-slate-950">
+                    {section.title}
+                  </h2>
 
-            <SettingsItem
-              icon={<UsersRound className="h-5 w-5" />}
-              title="Users"
-              description="Create users and manage roles, branch assignments, and account status."
-              href="/settings/users"
-              available
-            />
+                  <p className="text-xs text-slate-500">
+                    {section.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className={section.gridClassName}>
+                {section.items.map((item) => (
+                  <SettingsItem
+                    key={item.key}
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                    href={item.href}
+                    available={item.available}
+                  />
+                ))}
+              </div>
+            </section>
+          ))
+        ) : (
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500">
+            No system configuration options are assigned to your role. Use the
+            main navigation to access your operational modules.
           </div>
-        </section>
-
-        <section>
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-              <Package className="h-4 w-4" />
-            </div>
-
-            <div>
-              <h2 className="text-base font-semibold text-slate-950">
-                Master Data
-              </h2>
-
-              <p className="text-xs text-slate-500">
-                Core records used throughout sales, purchasing, inventory, and
-                services.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <SettingsItem
-              icon={<CircleUserRound className="h-5 w-5" />}
-              title="Customers"
-              description="Manage customers used by sales and accounts receivable."
-              href="/settings/customers"
-              available
-            />
-
-            <SettingsItem
-              icon={<Factory className="h-5 w-5" />}
-              title="Suppliers"
-              description="Manage suppliers used by purchasing and accounts payable."
-              href="/suppliers"
-              available
-            />
-
-            <SettingsItem
-              icon={<Package className="h-5 w-5" />}
-              title="Product Categories"
-              description="Organize products into manageable categories."
-              href="/products/categories"
-              available
-            />
-
-            <SettingsItem
-              icon={<ShoppingBag className="h-5 w-5" />}
-              title="Products"
-              description="Manage product master data, pricing, and inventory settings."
-              href="/products"
-              available
-            />
-          </div>
-        </section>
-
-        <section>
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
-              <WalletCards className="h-4 w-4" />
-            </div>
-
-            <div>
-              <h2 className="text-base font-semibold text-slate-950">
-                Finance
-              </h2>
-
-              <p className="text-xs text-slate-500">
-                Manage financial accounts used for cash, bank, and payment
-                transactions.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <SettingsItem
-              icon={<WalletCards className="h-5 w-5" />}
-              title="Cash & Bank Accounts"
-              description="Create and manage the cash and bank accounts used for payments and financial transactions."
-              href="/cash-bank"
-              available
-            />
-          </div>
-        </section>
-
-        <section>
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-              <ShieldCheck className="h-4 w-4" />
-            </div>
-
-            <div>
-              <h2 className="text-base font-semibold text-slate-950">
-                Security
-              </h2>
-
-              <p className="text-xs text-slate-500">
-                Access control and account-related configuration.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <SettingsItem
-              icon={<LockKeyhole className="h-5 w-5" />}
-              title="Roles & Permissions"
-              description="Review and manage system access by role."
-            />
-
-            <SettingsItem
-              icon={<Settings2 className="h-5 w-5" />}
-              title="Account"
-              description="Manage your account and personal settings."
-            />
-          </div>
-        </section>
+        )}
       </div>
     </AppShell>
   );

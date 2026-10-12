@@ -272,3 +272,8 @@ export type SalesReturn = Prisma.SalesReturnModel
  * 
  */
 export type SalesReturnItem = Prisma.SalesReturnItemModel
+/**
+ * Model RolePermission
+ * 
+ */
+export type RolePermission = Prisma.RolePermissionModel

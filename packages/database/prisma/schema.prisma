@@ -1860,3 +1860,18 @@ model SalesReturnItem {
   @@index([salesInvoiceItemId])
   @@index([productId])
 }
+
+model RolePermission {
+  id           String   @id @default(uuid())
+  role         UserRole
+  permissionKey String
+  isAllowed    Boolean  @default(false)
+
+  updatedById  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([role, permissionKey])
+  @@index([role])
+  @@index([permissionKey])
+}

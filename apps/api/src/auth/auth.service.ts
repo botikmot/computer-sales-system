@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -9,6 +10,8 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../database/prisma.service.js';
 import { LoginDto } from './dto/login.dto.js';
 import { RegisterDto } from './dto/register.dto.js';
+import { UpdateMyProfileDto } from './dto/update-my-profile.dto.js';
+import { ChangeMyPasswordDto } from './dto/change-my-password.dto.js';
 
 @Injectable()
 export class AuthService {
@@ -179,5 +182,85 @@ export class AuthService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
+  }
+
+  async updateMyProfile(userId: string, dto: UpdateMyProfileDto) {
+    const currentUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, email: true },
+    });
+
+    if (!currentUser) {
+      throw new UnauthorizedException('User not found.');
+    }
+
+    const normalizedEmail =
+      dto.email === undefined
+        ? undefined
+        : dto.email?.trim().toLowerCase() || null;
+
+    if (normalizedEmail && normalizedEmail !== currentUser.email) {
+      const existingEmail = await this.prisma.user.findUnique({
+        where: { email: normalizedEmail },
+        select: { id: true },
+      });
+
+      if (existingEmail && existingEmail.id !== userId) {
+        throw new ConflictException('Email address is already in use.');
+      }
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(dto.fullName !== undefined
+          ? { fullName: dto.fullName.trim() }
+          : {}),
+        ...(normalizedEmail !== undefined ? { email: normalizedEmail } : {}),
+      },
+    });
+
+    // Reuse the existing safe-user selector; never return passwordHash.
+    return this.getMe(userId);
+  }
+
+  async changeMyPassword(userId: string, dto: ChangeMyPasswordDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, passwordHash: true },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found.');
+    }
+
+    const currentPasswordMatches = await bcrypt.compare(
+      dto.currentPassword,
+      user.passwordHash,
+    );
+
+    if (!currentPasswordMatches) {
+      throw new BadRequestException('Current password is incorrect.');
+    }
+
+    const newPasswordMatches = await bcrypt.compare(
+      dto.newPassword,
+      user.passwordHash,
+    );
+
+    if (newPasswordMatches) {
+      throw new BadRequestException(
+        'New password must be different from the current password.',
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(dto.newPassword, 12);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
+    });
+
+    return { message: 'Password updated successfully.' };
   }
 }

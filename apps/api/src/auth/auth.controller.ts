@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Patch } from '@nestjs/common';
 
 //import { UserRole } from '@computer-sales/database';
 
@@ -10,6 +10,8 @@ import { RegisterDto } from './dto/register.dto.js';
 //import { Roles } from './decorators/roles.decorator.js';
 //import { RolesGuard } from './guards/roles.guard.js';
 import { Public } from './decorators/public.decorator.js';
+import { UpdateMyProfileDto } from './dto/update-my-profile.dto.js';
+import { ChangeMyPasswordDto } from './dto/change-my-password.dto.js';
 
 @Controller('auth')
 export class AuthController {
@@ -30,5 +32,15 @@ export class AuthController {
   @Get('me')
   getMe(@Req() req: any) {
     return this.authService.getMe(req.user.id);
+  }
+
+  @Patch('me')
+  updateMyProfile(@Req() req: any, @Body() dto: UpdateMyProfileDto) {
+    return this.authService.updateMyProfile(req.user.id, dto);
+  }
+
+  @Post('change-password')
+  changeMyPassword(@Req() req: any, @Body() dto: ChangeMyPasswordDto) {
+    return this.authService.changeMyPassword(req.user.id, dto);
   }
 }

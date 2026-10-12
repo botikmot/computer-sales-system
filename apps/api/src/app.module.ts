@@ -19,6 +19,7 @@ import { CategoriesModule } from './categories/categories.module.js';
 import { ProductsModule } from './products/products.module.js';
 import { SuppliersModule } from './suppliers/suppliers.module.js';
 import { AssemblyModule } from './assembly/assembly.module.js';
+import { PermissionsModule } from './permissions/permissions.module.js';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AssemblyModule } from './assembly/assembly.module.js';
     ProductsModule,
     SuppliersModule,
     AssemblyModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
