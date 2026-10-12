@@ -21,6 +21,7 @@ import { SuppliersModule } from './suppliers/suppliers.module.js';
 import { AssemblyModule } from './assembly/assembly.module.js';
 import { PermissionsModule } from './permissions/permissions.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
+import { SearchModule } from './search/search.module.js';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { NotificationsModule } from './notifications/notifications.module.js';
     AssemblyModule,
     PermissionsModule,
     NotificationsModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

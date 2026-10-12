@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import {
   Bell,
@@ -32,12 +32,34 @@ type PendingActionsResponse = {
   count: number;
 };
 
+type GlobalSearchResult = {
+  id: string;
+  type: string;
+  title: string;
+  subtitle: string;
+  status?: string;
+  href: string;
+  createdAt: string;
+};
+
+type GlobalSearchResponse = {
+  items: GlobalSearchResult[];
+  count: number;
+};
+
 type BrowserPermissionState = NotificationPermission | "unsupported";
 
 export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const [profileOpen, setProfileOpen] = useState(false);
 
   const user = getCurrentUser();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<GlobalSearchResult[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [selectedSearchIndex, setSelectedSearchIndex] = useState(-1);
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [pendingActions, setPendingActions] = useState<PendingAction[]>([]);
@@ -112,6 +134,101 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!searchOpen) return;
+
+    let cancelled = false;
+    const query = searchQuery.trim();
+
+    const timer = window.setTimeout(
+      () => {
+        if (query.length < 2) {
+          setSearchResults([]);
+          setSearchError(null);
+          setSearchLoading(false);
+          setSelectedSearchIndex(-1);
+          return;
+        }
+
+        setSearchLoading(true);
+        setSearchError(null);
+
+        void apiFetch<GlobalSearchResponse>(
+          `/search?q=${encodeURIComponent(query)}`,
+        )
+          .then((result) => {
+            if (cancelled) return;
+
+            setSearchResults(Array.isArray(result.items) ? result.items : []);
+            setSelectedSearchIndex(-1);
+          })
+          .catch((error: unknown) => {
+            if (cancelled) return;
+
+            setSearchResults([]);
+            setSearchError(
+              error instanceof Error
+                ? error.message
+                : "Unable to search records.",
+            );
+          })
+          .finally(() => {
+            if (!cancelled) {
+              setSearchLoading(false);
+            }
+          });
+      },
+      query.length < 2 ? 0 : 300,
+    );
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [searchQuery, searchOpen]);
+
+  function handleSearchKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Escape") {
+      setSearchOpen(false);
+      setSelectedSearchIndex(-1);
+      return;
+    }
+
+    if (event.key === "ArrowDown" && searchResults.length > 0) {
+      event.preventDefault();
+
+      setSelectedSearchIndex((current) =>
+        current >= searchResults.length - 1 ? 0 : current + 1,
+      );
+
+      return;
+    }
+
+    if (event.key === "ArrowUp" && searchResults.length > 0) {
+      event.preventDefault();
+
+      setSelectedSearchIndex((current) =>
+        current <= 0 ? searchResults.length - 1 : current - 1,
+      );
+
+      return;
+    }
+
+    if (event.key === "Enter" && searchResults.length > 0) {
+      event.preventDefault();
+
+      const index = selectedSearchIndex >= 0 ? selectedSearchIndex : 0;
+
+      const result = searchResults[index];
+
+      if (result) {
+        setSearchOpen(false);
+        setSearchQuery("");
+        window.location.assign(result.href);
+      }
+    }
+  }
+
   async function enableBrowserNotifications() {
     if (!("Notification" in window)) {
       setBrowserPermission("unsupported");
@@ -155,18 +272,140 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
             <Menu className="h-5 w-5" />
           </button>
 
-          <div className="hidden items-center gap-2 rounded-xl border border-border bg-slate-50 px-3 py-2 sm:flex sm:w-[260px] lg:w-[320px]">
-            <Search className="h-4 w-4 text-slate-400" />
+          <div className="relative hidden items-center gap-2 rounded-xl border border-border bg-slate-50 px-3 py-2 sm:flex sm:w-[260px] lg:w-[320px]">
+            <Search className="h-4 w-4 shrink-0 text-slate-400" />
 
             <input
               type="search"
               placeholder="Search anything..."
-              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+              value={searchQuery}
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                setSearchOpen(true);
+                setSelectedSearchIndex(-1);
+              }}
+              onFocus={() => setSearchOpen(true)}
+              onKeyDown={handleSearchKeyDown}
+              aria-label="Search records"
+              aria-expanded={searchOpen}
+              aria-controls="global-search-results"
+              autoComplete="off"
+              className="w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-slate-400"
             />
 
-            <kbd className="hidden rounded-md border border-border bg-white px-1.5 py-0.5 text-[10px] text-slate-400 lg:inline">
-              /
-            </kbd>
+            {searchLoading ? (
+              <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-300 border-t-primary" />
+            ) : (
+              <kbd className="hidden rounded-md border border-border bg-white px-1.5 py-0.5 text-[10px] text-slate-400 lg:inline">
+                /
+              </kbd>
+            )}
+
+            {searchOpen && searchQuery.trim().length > 0 && (
+              <div
+                id="global-search-results"
+                className="absolute left-0 top-[calc(100%+10px)] z-50 w-[min(34rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+              >
+                <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900">
+                      Search Results
+                    </p>
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      {searchQuery.trim().length < 2
+                        ? "Type at least 2 characters"
+                        : `${searchResults.length} result${searchResults.length === 1 ? "" : "s"}`}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSearchResults([]);
+                      setSearchError(null);
+                      setSearchOpen(false);
+                      setSelectedSearchIndex(-1);
+                    }}
+                    className="rounded-lg px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100"
+                  >
+                    Clear
+                  </button>
+                </div>
+
+                <div className="max-h-[60vh] overflow-y-auto">
+                  {searchQuery.trim().length < 2 && (
+                    <p className="px-4 py-6 text-center text-xs text-slate-500">
+                      Enter another character to start searching.
+                    </p>
+                  )}
+
+                  {searchLoading && (
+                    <p className="px-4 py-6 text-center text-xs text-slate-500">
+                      Searching records...
+                    </p>
+                  )}
+
+                  {searchError && !searchLoading && (
+                    <p role="alert" className="px-4 py-5 text-sm text-rose-600">
+                      {searchError}
+                    </p>
+                  )}
+
+                  {!searchLoading &&
+                    !searchError &&
+                    searchQuery.trim().length >= 2 &&
+                    searchResults.length === 0 && (
+                      <p className="px-4 py-8 text-center text-sm text-slate-500">
+                        No matching records found.
+                      </p>
+                    )}
+
+                  {!searchLoading &&
+                    !searchError &&
+                    searchResults.map((result, index) => (
+                      <Link
+                        key={`${result.type}:${result.id}`}
+                        href={result.href}
+                        onClick={() => {
+                          setSearchOpen(false);
+                          setSearchQuery("");
+                          setSelectedSearchIndex(-1);
+                        }}
+                        className={`flex items-start gap-3 border-b border-slate-100 px-4 py-3 transition last:border-b-0 ${
+                          index === selectedSearchIndex
+                            ? "bg-violet-50"
+                            : "hover:bg-slate-50"
+                        }`}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-semibold text-slate-900">
+                            {result.title}
+                          </p>
+
+                          <p className="mt-1 truncate text-xs text-slate-500">
+                            {result.type} · {result.subtitle}
+                          </p>
+                        </div>
+
+                        {result.status && (
+                          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-600">
+                            {result.status.replaceAll("_", " ")}
+                          </span>
+                        )}
+                      </Link>
+                    ))}
+                </div>
+
+                {searchResults.length > 0 && !searchLoading && (
+                  <div className="border-t border-slate-100 px-4 py-2">
+                    <p className="text-[10px] text-slate-400">
+                      Use ↑ ↓ to navigate, Enter to open, Esc to close.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="truncate text-sm font-medium text-slate-600 sm:hidden">
