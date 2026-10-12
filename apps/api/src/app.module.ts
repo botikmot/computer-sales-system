@@ -20,6 +20,7 @@ import { ProductsModule } from './products/products.module.js';
 import { SuppliersModule } from './suppliers/suppliers.module.js';
 import { AssemblyModule } from './assembly/assembly.module.js';
 import { PermissionsModule } from './permissions/permissions.module.js';
+import { NotificationsModule } from './notifications/notifications.module.js';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { PermissionsModule } from './permissions/permissions.module.js';
     SuppliersModule,
     AssemblyModule,
     PermissionsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
