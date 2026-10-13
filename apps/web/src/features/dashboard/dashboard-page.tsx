@@ -436,12 +436,12 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                <button
-                  type="button"
+                <Link
+                  href="/reports"
                   className="text-sm font-semibold text-primary hover:text-blue-700"
                 >
                   View report
-                </button>
+                </Link>
               </div>
 
               <div className="px-5 pb-5 pt-6">
@@ -506,12 +506,12 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                <button
-                  type="button"
+                <Link
+                  href="/sales/orders"
                   className="text-sm font-semibold text-primary hover:text-blue-700"
                 >
                   View all
-                </button>
+                </Link>
               </div>
 
               {loading ? (
@@ -767,13 +767,13 @@ export default function DashboardPage() {
               )}
 
               <div className="border-t border-slate-100 p-4">
-                <button
-                  type="button"
+                <Link
+                  href="/stock"
                   className="flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-primary"
                 >
                   <Package className="h-4 w-4" />
                   View Inventory
-                </button>
+                </Link>
               </div>
             </article>
           </div>
